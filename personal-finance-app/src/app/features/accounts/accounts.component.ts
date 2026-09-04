@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
 import { Account } from '../../core/models/account.model';
 import { AccountService } from './services/account.service';
+import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
   selector: 'app-accounts',
@@ -22,6 +23,7 @@ import { AccountService } from './services/account.service';
     MatButtonModule,
     MatIconModule,
     CurrencyFormatPipe,
+    SectionHelpComponent,
   ],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',

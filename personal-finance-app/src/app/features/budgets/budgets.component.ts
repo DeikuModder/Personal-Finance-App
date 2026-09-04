@@ -8,12 +8,14 @@ import { Transaction } from '../../core/models/transaction.model';
 import { BudgetService } from './services/budget.service';
 import { TransactionService } from '../transactions/services/transaction.service';
 import { BudgetFormComponent } from './components/budget-form/budget-form.component';
+import { toLocalDate } from '../../core/utils/date.util';
 import { BudgetListComponent, BudgetWithSpend } from './components/budget-list/budget-list.component';
+import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
   selector: 'app-budgets',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, BudgetFormComponent, BudgetListComponent],
+  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, BudgetFormComponent, BudgetListComponent, SectionHelpComponent],
   templateUrl: './budgets.html',
   styleUrl: './budgets.scss',
 })
@@ -31,7 +33,7 @@ export class BudgetsComponent {
     this.budgetService.getBudgetsForMonth(now.getFullYear(), now.getMonth() + 1).subscribe((budgets) => {
       this.transactionService.getTransactions().subscribe((transactions) => {
         const monthTransactions = transactions.filter((t) => {
-          const date = new Date(t.date);
+          const date = toLocalDate(t.date);
           return (
             t.type === 'expense' &&
             date.getFullYear() === now.getFullYear() &&

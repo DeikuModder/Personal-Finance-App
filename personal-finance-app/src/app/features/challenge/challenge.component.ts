@@ -11,6 +11,8 @@ import { WeekCardComponent } from './components/week-card/week-card.component';
 import { MonthResultComponent } from './components/month-result/month-result.component';
 import { MonthBarsComponent } from './components/charts/month-bars/month-bars.component';
 import { CumulativeLineComponent } from './components/charts/cumulative-line/cumulative-line.component';
+import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { toLocalDate } from '../../core/utils/date.util';
 
 interface Level {
   name: string;
@@ -36,6 +38,7 @@ const LEVELS: Level[] = [
     MonthResultComponent,
     MonthBarsComponent,
     CumulativeLineComponent,
+    SectionHelpComponent,
   ],
   templateUrl: './challenge.html',
   styleUrl: './challenge.scss',
@@ -74,7 +77,7 @@ export class ChallengeComponent implements OnInit {
     this.transactionService.getTransactions().subscribe((all) => {
       this.monthTransactions.set(
         all.filter((t) => {
-          const d = new Date(t.date);
+          const d = toLocalDate(t.date);
           return d.getFullYear() === this.year && d.getMonth() === this.month;
         })
       );

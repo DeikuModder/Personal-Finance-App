@@ -5,6 +5,7 @@ import { Transaction } from '../../../../core/models/transaction.model';
 import { CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { MatIconModule } from '@angular/material/icon';
+import { toLocalDate } from '../../../../core/utils/date.util';
 
 @Component({
   selector: 'app-recent-transactions',
@@ -21,7 +22,7 @@ export class RecentTransactionsComponent {
   }
 
   formatDate(dateStr: string): string {
-    const date = new Date(dateStr);
+    const date = toLocalDate(dateStr);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);

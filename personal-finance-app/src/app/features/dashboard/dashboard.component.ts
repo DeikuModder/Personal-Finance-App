@@ -11,6 +11,8 @@ import { RecentTransactionsComponent } from './components/recent-transactions/re
 import { SpendingByCategoryComponent } from './components/spending-by-category/spending-by-category.component';
 import { MonthlyTrendComponent } from './components/monthly-trend/monthly-trend.component';
 import { NetWorthCardComponent } from './components/net-worth-card/net-worth-card.component';
+import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { toLocalDate } from '../../core/utils/date.util';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +26,7 @@ import { NetWorthCardComponent } from './components/net-worth-card/net-worth-car
     SpendingByCategoryComponent,
     MonthlyTrendComponent,
     NetWorthCardComponent,
+    SectionHelpComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -63,7 +66,7 @@ export class DashboardComponent implements OnInit {
 
   applyPeriod(transactions: Transaction[]): void {
     const periodTransactions = transactions.filter((t) => {
-      const date = new Date(t.date);
+      const date = toLocalDate(t.date);
       return (
         date.getFullYear() === this.currentYear() &&
         date.getMonth() === this.currentMonth()

@@ -8,7 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { Transaction } from '../../core/models/transaction.model';
 import { TransactionCategory, INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../../core/models/category.model';
 import { TransactionService } from './services/transaction.service';
+import { toLocalDate } from '../../core/utils/date.util';
 import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
+import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
   selector: 'app-transactions',
@@ -20,6 +22,7 @@ import { TransactionListComponent } from './components/transaction-list/transact
     MatSelectModule,
     MatButtonModule,
     TransactionListComponent,
+    SectionHelpComponent,
   ],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',
@@ -40,7 +43,7 @@ export class TransactionsComponent {
   constructor() {
     this.transactionService.getTransactions().subscribe((transactions) => {
       this.allTransactions.set(
-        [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        [...transactions].sort((a, b) => toLocalDate(b.date).getTime() - toLocalDate(a.date).getTime())
       );
       this.applyFilters();
     });
@@ -60,18 +63,18 @@ export class TransactionsComponent {
     const now = new Date();
     if (this.monthFilter() === 'current') {
       result = result.filter((t) => {
-        const d = new Date(t.date);
+        const d = toLocalDate(t.date);
         return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
       });
     } else if (this.monthFilter() === 'last') {
       const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       result = result.filter((t) => {
-        const d = new Date(t.date);
+        const d = toLocalDate(t.date);
         return d.getFullYear() === lastMonth.getFullYear() && d.getMonth() === lastMonth.getMonth();
       });
     } else if (this.monthFilter() === 'thisYear') {
       result = result.filter((t) => {
-        const d = new Date(t.date);
+        const d = toLocalDate(t.date);
         return d.getFullYear() === now.getFullYear();
       });
     }

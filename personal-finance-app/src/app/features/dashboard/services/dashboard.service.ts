@@ -4,6 +4,7 @@ import { Transaction } from '../../../core/models/transaction.model';
 import { Account } from '../../../core/models/account.model';
 import { TransactionService } from '../../../features/transactions/services/transaction.service';
 import { AccountService } from '../../../features/accounts/services/account.service';
+import { toLocalDate } from '../../../core/utils/date.util';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
@@ -37,7 +38,7 @@ export class DashboardService {
 
   getRecentTransactions(transactions: Transaction[], count = 5): Transaction[] {
     return [...transactions]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .sort((a, b) => toLocalDate(b.date).getTime() - toLocalDate(a.date).getTime())
       .slice(0, count);
   }
 }

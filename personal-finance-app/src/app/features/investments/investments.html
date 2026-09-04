@@ -6,6 +6,19 @@
     </button>
   </div>
 
+  <app-section-help
+    title="Investments — track your portfolio"
+    [description]="'Keep track of everything you have invested — stocks, crypto, bonds, savings accounts, real estate and more. For each holding you record how many units you own and the current price, so the app can show your total portfolio value and an estimate of the income your investments produce each year and month.'"
+    [howTo]="[
+      'Tap the + button and choose the type of investment, then pick the asset or enter its symbol.',
+      'Enter how many shares/units you own and what you paid (purchase price).',
+      'Set the current price (and dividend per share if applicable) — you can update these any time.',
+      'Portfolio Value and Estimated Income update automatically from your holdings.',
+      'Optional: paste a free Alpha Vantage API key in Settings to auto-fill live prices and dividends.',
+      'The allocation chart shows how your portfolio is divided across holdings.'
+    ]"
+  />
+
   @if (investments().length > 0) {
     <div class="total-card">
       <div class="total-row">

@@ -1,3 +1,14 @@
+<app-section-help
+  title="Money Quest — turn saving into a game"
+  [description]="'Money Quest is a monthly spending challenge that turns your budget into a game. You set your monthly income and a weekly maximum. Each week the app tracks your actual spending from your Expense transactions against a rolling cap, and rewards you for staying under it with levels, streaks, hearts and confetti. Blow a week and you lose a heart.'"
+  [howTo]="[
+    'Tap Start Your Challenge, then enter your monthly income and your target weekly maximum spend.',
+    'Each week begins at your cap, then adjusts: under-spend and next week\u0027s cap gets a bonus; over-spend and it drops.',
+    'Stay under each Weekly cap to save and keep your 5 hearts — every week over your cap costs a heart.',
+    'Earn XP and level up (Rookie → Legend), build streaks, and check the charts for weekly and cumulative results.',
+    'At the end of the month see your total saved vs lost. You can reconfigure from Home via the game header.'
+  ]"
+/>
 @if (!isConfigured && !showSetup()) {
   <div class="challenge-page">
     <div class="hero">

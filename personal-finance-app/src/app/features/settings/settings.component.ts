@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PinService } from '../../core/services/pin.service';
 import { ApiKeyService } from '../investments/services/api-key.service';
+import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
   selector: 'app-settings',
@@ -19,6 +20,7 @@ import { ApiKeyService } from '../investments/services/api-key.service';
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
+    SectionHelpComponent,
   ],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',

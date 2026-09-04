@@ -4,6 +4,7 @@ import { CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { toLocalDate } from '../../../../core/utils/date.util';
 
 @Component({
   selector: 'app-transaction-list',
@@ -21,7 +22,7 @@ export class TransactionListComponent {
   }
 
   formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('en-US', {
+    return toLocalDate(dateStr).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
     });

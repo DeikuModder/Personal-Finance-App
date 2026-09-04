@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { WeekBucket } from '../../services/challenge.service';
+import { toLocalDate } from '../../../../core/utils/date.util';
 
 interface DayChip {
   day: number;
@@ -33,7 +34,7 @@ export class DayStripeComponent {
       const spent = this.transactions()
         .filter((t) => {
           if (t.type !== 'expense') return false;
-          const d = new Date(t.date);
+          const d = toLocalDate(t.date);
           return (
             d.getFullYear() === this.year() &&
             d.getMonth() === this.month() &&

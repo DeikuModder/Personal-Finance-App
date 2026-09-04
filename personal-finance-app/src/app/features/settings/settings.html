@@ -1,6 +1,16 @@
 <div class="settings-page">
   <h1>Settings</h1>
 
+  <app-section-help
+    title="Settings — manage your app"
+    [description]="'Settings lets you lock the app with a PIN, connect live market data, and back up or restore all of your data.'"
+    [howTo]="[
+      'Security: set a 6-digit PIN so the app asks for a passcode on open (this is a local convenience lock).',
+      'Market Data: paste a free Alpha Vantage API key to auto-fill live stock prices and dividends in Investments.',
+      'Data: Export Data downloads a full JSON backup; Import Data restores one. Clear All Data wipes everything on this device (transactions, accounts, budget, investments, PIN and API key).'
+    ]"
+  />
+
   <div class="settings-section">
     <h3>Security</h3>
     <button mat-button class="settings-item" (click)="resetPin()">

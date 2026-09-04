@@ -1,0 +1,20 @@
+<details class="section-help" [open]="expanded()">
+  <summary class="help-header">
+    <mat-icon class="help-icon">help_outline</mat-icon>
+    <span class="help-title">{{ title() }}</span>
+    <mat-icon class="chevron">expand_more</mat-icon>
+  </summary>
+  <div class="help-body">
+    <p class="help-description">{{ description() }}</p>
+    @if (howTo().length > 0) {
+      <div class="help-steps">
+        <div class="steps-label">How to use</div>
+        <ol>
+          @for (step of howTo(); track $index) {
+            <li>{{ step }}</li>
+          }
+        </ol>
+      </div>
+    }
+  </div>
+</details>

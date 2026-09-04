@@ -17,6 +17,18 @@
     </div>
   </div>
 
+  <app-section-help
+    title="Home — your money at a glance"
+    [description]="'The Home screen summarizes your finances for the month you have selected. It pulls directly from your Transactions, Accounts and Investments, so the numbers always stay in sync with what you have recorded.'"
+    [howTo]="[
+      'Use the arrow buttons next to the month name to view past (or future) months.',
+      'The top cards show your Balance, Income and Expenses for that month.',
+      'Net Worth compares your account totals against your investments on the date shown.',
+      'Spending by category and the monthly trend chart break down where your money goes.',
+      'Recent transactions show your latest activity — tap the gear to reach Settings.'
+    ]"
+  />
+
   <app-summary-cards
     [balance]="balance()"
     [income]="income()"

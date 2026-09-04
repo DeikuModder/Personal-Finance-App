@@ -1,8 +1,10 @@
 @use '@angular/material' as mat;
 
 html {
+  color-scheme: dark;
   @include mat.theme((
     color: (
+      theme-type: dark,
       primary: mat.$azure-palette,
       tertiary: mat.$green-palette,
     ),
@@ -45,4 +47,127 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* ============================================================
+   High-contrast form fields (dark theme)
+   Forces readable input text, labels, placeholders and accents
+   for every mat-form-field / select / datepicker in the app.
+   ============================================================ */
+
+$input-accent: #8ab4ff; /* bright azure, readable on #121212 */
+
+/* Typed text inside inputs and selects */
+.mat-mdc-form-field {
+  .mat-mdc-input-element,
+  textarea.mat-mdc-input-element {
+    color: #ffffff;
+    caret-color: $input-accent;
+    -webkit-text-fill-color: #ffffff;
+  }
+
+  /* Input placeholder */
+  .mat-mdc-input-element::placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.45);
+  }
+
+  /* Floating / static labels */
+  .mdc-floating-label,
+  .mat-mdc-form-field-label,
+  .mat-mdc-select-value-text {
+    color: rgba(255, 255, 255, 0.65);
+  }
+  .mdc-floating-label--float-above,
+  .mat-mdc-form-field-label.mat-mdc-floating-label--float-above {
+    color: $input-accent;
+  }
+
+  /* Select value + placeholder */
+  .mat-mdc-select-value-text {
+    color: #ffffff !important;
+  }
+  .mat-mdc-select-placeholder {
+    color: rgba(255, 255, 255, 0.45) !important;
+  }
+  .mat-mdc-select-arrow {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Prefix / suffix icons (e.g. $, datepicker toggle) */
+  .mat-mdc-form-field-icon-prefix > *,
+  .mat-mdc-form-field-icon-suffix > * {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Outline (idle / hover) */
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.23) !important;
+  }
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.45) !important;
+  }
+
+  /* Focused state: bright accent outline + label */
+  &.mat-focused .mdc-notched-outline__leading,
+  &.mat-focused .mdc-notched-outline__notch,
+  &.mat-focused .mdc-notched-outline__trailing {
+    border-color: $input-accent !important;
+  }
+  &.mat-focused .mdc-floating-label {
+    color: $input-accent;
+  }
+}
+
+/* Number input spinners keep some visibility */
+input[type='number']::-webkit-inner-spin-button {
+  opacity: 0.5;
+}
+
+/* Select dropdown panel (dark) */
+.mat-mdc-select-panel {
+  background: #1e1e1e !important;
+  color: #ffffff;
+  --mat-option-label-text-color: #ffffff;
+  --mat-option-active-state-label-text-color: #ffffff;
+  --mat-option-selected-state-label-text-color: #ffffff;
+}
+.mat-mdc-option {
+  color: #ffffff !important;
+}
+.mat-mdc-option .mdc-list-item__primary-text {
+  color: #ffffff !important;
+}
+.mat-mdc-option-active,
+.mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
+  background: rgba(138, 180, 255, 0.15) !important;
+}
+.mat-mdc-option.mdc-list-item--selected {
+  color: $input-accent !important;
+}
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: $input-accent !important;
+}
+
+/* Datepicker panel (dark) */
+.mat-datepicker-content,
+.mat-datepicker-content .mat-calendar {
+  background: #1e1e1e !important;
+  color: #e0e0e0;
+}
+.mat-calendar-body-cell-content {
+  color: #e0e0e0;
+}
+.mat-calendar-body-selected {
+  background-color: $input-accent !important;
+  color: #121212 !important;
+}
+.mat-calendar-period-button,
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: #e0e0e0;
 }

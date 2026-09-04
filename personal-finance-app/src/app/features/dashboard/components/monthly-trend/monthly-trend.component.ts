@@ -10,6 +10,7 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { Transaction } from '../../../../core/models/transaction.model';
+import { toLocalDate } from '../../../../core/utils/date.util';
 
 echarts.use([LineChart, TooltipComponent, LegendComponent, GridComponent, CanvasRenderer]);
 
@@ -42,14 +43,14 @@ export class MonthlyTrendComponent {
 
       const monthIncome = income
         .filter((t) => {
-          const d = new Date(t.date);
+          const d = toLocalDate(t.date);
           return d.getFullYear() === y && d.getMonth() === mo;
         })
         .reduce((sum, t) => sum + t.amount, 0);
 
       const monthExpense = expenses
         .filter((t) => {
-          const d = new Date(t.date);
+          const d = toLocalDate(t.date);
           return d.getFullYear() === y && d.getMonth() === mo;
         })
         .reduce((sum, t) => sum + t.amount, 0);

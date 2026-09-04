@@ -11,6 +11,18 @@
     <span class="total-value">{{ getTotalBalance() | currencyFormat }}</span>
   </div>
 
+  <app-section-help
+    title="Accounts — your money places"
+    [description]="'Accounts represent the real places your money lives — a checking account, savings, cash, a credit card, and so on. Each account has a current balance. Transactions are linked to an account, and the total balance feeds your Home screen and Net Worth.'"
+    [howTo]="[
+      'Tap the + button to add an account: give it a name, choose the type and enter its current balance.',
+      'Choose the account that best matches reality (e.g. Checking, Savings, Credit Card).',
+      'When you add a Transaction, assign it to one of your accounts to keep each balance accurate.',
+      'Delete an account you no longer need with the trash icon (this does not delete its history).',
+      'Total Balance is the sum of all account balances and is shown on this page and on Home.'
+    ]"
+  />
+
   @if (showForm()) {
     <div class="form-card">
       <mat-form-field appearance="outline" class="full-width">

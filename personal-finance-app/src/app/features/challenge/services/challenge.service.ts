@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChallengeConfig } from '../../../core/models/challenge.model';
 import { Transaction } from '../../../core/models/transaction.model';
+import { toLocalDate } from '../../../core/utils/date.util';
 
 export interface WeekBucket {
   index: number;
@@ -69,7 +70,7 @@ export class ChallengeService {
     return transactions
       .filter((t) => {
         if (t.type !== 'expense') return false;
-        const d = new Date(t.date);
+        const d = toLocalDate(t.date);
         return (
           d.getFullYear() === year &&
           d.getMonth() === month &&

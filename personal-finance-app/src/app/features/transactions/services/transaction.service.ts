@@ -3,6 +3,7 @@ import { Observable, map, BehaviorSubject } from 'rxjs';
 import { Transaction } from '../../../core/models/transaction.model';
 import { TRANSACTION_REPOSITORY } from '../../../core/tokens/tokens';
 import { Repository } from '../../../core/repositories/repository.interface';
+import { toLocalDate } from '../../../core/utils/date.util';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +15,16 @@ export class TransactionService {
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((t) => this.transactions$.next(t));
+    this.repo.getAll().subscribe((server) => {
+      const current = this.transactions$.value;
+      if (current.length === 0) {
+        this.transactions$.next(server);
+        return;
+      }
+      const serverIds = new Set(server.map((t) => t.id));
+      const localOnly = current.filter((t) => !serverIds.has(t.id));
+      this.transactions$.next([...localOnly, ...server]);
+    });
   }
 
   getTransactions(): Observable<Transaction[]> {
@@ -26,7 +36,7 @@ export class TransactionService {
     return this.getTransactions().pipe(
       map((transactions) =>
         transactions.filter((t) => {
-          const date = new Date(t.date);
+          const date = toLocalDate(t.date);
           return date.getFullYear() === year && date.getMonth() === month;
         })
       )

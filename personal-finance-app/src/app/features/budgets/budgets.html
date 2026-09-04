@@ -8,6 +8,17 @@
 
   <span class="month-label">{{ currentMonth }}</span>
 
+  <app-section-help
+    title="Budgets — plan your spending"
+    [description]="'Budgets let you set a monthly spending limit per category (for example groceries, transport or entertainment). The app automatically compares what you have spent on those categories from your Expense transactions and shows a progress bar, so you always know whether you are on track or over.'"
+    [howTo]="[
+      'Tap the + button to add a budget for the current month: pick a category and set the maximum amount.',
+      'The totals card shows your combined budget and how much you have spent so far this month.',
+      'Each budget shows a progress bar — it turns red as you get close to or exceed the limit.',
+      'Budgets are per month. Add budgets again next month; delete any you no longer need with the trash icon.'
+    ]"
+  />
+
   <div class="total-card">
     <div class="total-row">
       <span class="total-label">Total Budget</span>
