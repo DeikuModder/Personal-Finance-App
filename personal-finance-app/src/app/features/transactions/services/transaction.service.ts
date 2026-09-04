@@ -1,0 +1,82 @@
+import { Injectable, inject } from '@angular/core';
+import { Observable, map, BehaviorSubject } from 'rxjs';
+import { Transaction } from '../../../core/models/transaction.model';
+import { TRANSACTION_REPOSITORY } from '../../../core/tokens/tokens';
+import { Repository } from '../../../core/repositories/repository.interface';
+import { v4 as uuidv4 } from 'uuid';
+
+@Injectable({ providedIn: 'root' })
+export class TransactionService {
+  private repo = inject(TRANSACTION_REPOSITORY) as Repository<Transaction>;
+  private transactions$ = new BehaviorSubject<Transaction[]>([]);
+  private initialized = false;
+
+  init(): void {
+    if (this.initialized) return;
+    this.initialized = true;
+    this.repo.getAll().subscribe((t) => this.transactions$.next(t));
+  }
+
+  getTransactions(): Observable<Transaction[]> {
+    this.init();
+    return this.transactions$.asObservable();
+  }
+
+  getTransactionsByMonth(year: number, month: number): Observable<Transaction[]> {
+    return this.getTransactions().pipe(
+      map((transactions) =>
+        transactions.filter((t) => {
+          const date = new Date(t.date);
+          return date.getFullYear() === year && date.getMonth() === month;
+        })
+      )
+    );
+  }
+
+  addTransaction(data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>): Observable<Transaction> {
+    const now = new Date().toISOString();
+    const transaction: Transaction = {
+      ...data,
+      id: uuidv4(),
+      createdAt: now,
+      updatedAt: now,
+    };
+    return this.repo.create(transaction).pipe(
+      map((t) => {
+        this.transactions$.next([...this.transactions$.value, t]);
+        return t;
+      })
+    );
+  }
+
+  updateTransaction(transaction: Transaction): Observable<Transaction> {
+    const updated = { ...transaction, updatedAt: new Date().toISOString() };
+    return this.repo.update(updated).pipe(
+      map((t) => {
+        const list = this.transactions$.value.map((item) => (item.id === t.id ? t : item));
+        this.transactions$.next(list);
+        return t;
+      })
+    );
+  }
+
+  deleteTransaction(id: string): Observable<void> {
+    return this.repo.delete(id).pipe(
+      map(() => {
+        this.transactions$.next(this.transactions$.value.filter((t) => t.id !== id));
+      })
+    );
+  }
+
+  getTotalIncome(transactions: Transaction[]): number {
+    return transactions.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+  }
+
+  getTotalExpenses(transactions: Transaction[]): number {
+    return transactions.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+  }
+
+  getBalance(transactions: Transaction[]): number {
+    return this.getTotalIncome(transactions) - this.getTotalExpenses(transactions);
+  }
+}

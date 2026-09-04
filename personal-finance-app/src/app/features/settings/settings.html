@@ -1,0 +1,71 @@
+<div class="settings-page">
+  <h1>Settings</h1>
+
+  <div class="settings-section">
+    <h3>Security</h3>
+    <button mat-button class="settings-item" (click)="resetPin()">
+      <mat-icon>lock</mat-icon>
+      <span>{{ pinSet() ? 'Change PIN' : 'Set PIN' }}</span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <h3>Market Data</h3>
+    <div class="settings-item static api-key-item">
+      <mat-icon>data_object</mat-icon>
+      <div class="api-key-body">
+        <span>Alpha Vantage API Key</span>
+        <small>Free key for live stock prices & dividends</small>
+        <mat-form-field appearance="outline" class="key-field">
+          <input
+            matInput
+            type="password"
+            [ngModel]="apiKey()"
+            (ngModelChange)="apiKey.set($event); apiKeySaved.set(false)"
+            placeholder="Paste your free API key"
+          />
+        </mat-form-field>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="saveApiKey()"
+          [disabled]="!apiKey().trim()"
+        >
+          Save Key
+        </button>
+        @if (apiKeySaved()) {
+          <span class="key-saved">Saved</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>Data</h3>
+    <button mat-button class="settings-item" (click)="exportData()">
+      <mat-icon>download</mat-icon>
+      <span>Export Data</span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </button>
+    <label class="settings-item import-item" for="import-file">
+      <mat-icon>upload</mat-icon>
+      <span>Import Data</span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+      <input id="import-file" type="file" accept="application/json" hidden (change)="onFileSelected($event)" />
+    </label>
+    <button mat-button class="settings-item danger" (click)="clearData()">
+      <mat-icon>delete_forever</mat-icon>
+      <span>Clear All Data</span>
+      <mat-icon class="chevron">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <h3>About</h3>
+    <div class="settings-item static">
+      <mat-icon>info</mat-icon>
+      <span>Version 1.0.0</span>
+    </div>
+  </div>
+</div>

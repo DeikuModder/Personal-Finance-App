@@ -1,0 +1,80 @@
+<div class="form-container">
+  <div class="type-toggle">
+    <button
+      mat-button
+      [class.active]="type() === 'expense'"
+      (click)="type() !== 'expense' && toggleType()"
+      class="toggle-btn expense"
+    >Expense</button>
+    <button
+      mat-button
+      [class.active]="type() === 'income'"
+      (click)="type() !== 'income' && toggleType()"
+      class="toggle-btn income"
+    >Income</button>
+  </div>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Amount</mat-label>
+    <input
+      matInput
+      type="number"
+      [ngModel]="amount()"
+      (ngModelChange)="amount.set($event)"
+      placeholder="0.00"
+      min="0"
+      step="0.01"
+    />
+    <span matPrefix>$&nbsp;</span>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <input
+      matInput
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+      placeholder="What was this for?"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Category</mat-label>
+    <mat-select [ngModel]="category()" (ngModelChange)="category.set($event)">
+      @for (cat of categories; track cat.value) {
+        <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Account</mat-label>
+    <mat-select [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
+      @for (account of accounts(); track account.id) {
+        <mat-option [value]="account.id">{{ account.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="picker"
+      [ngModel]="date()"
+      (ngModelChange)="date.set($event)"
+    />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <div class="form-actions">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="amount() <= 0 || !description()"
+    >Save</button>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<a routerLink="/investments" class="net-worth-card">
+  <div class="nw-main">
+    <span class="nw-label">Net Worth</span>
+    <span class="nw-value">{{ getNetWorth() | currencyFormat }}</span>
+  </div>
+
+  <div class="nw-row">
+    <div class="nw-cell">
+      <span class="cell-label">Accounts</span>
+      <span class="cell-value">{{ accountsTotal() | currencyFormat }}</span>
+    </div>
+    <div class="nw-cell">
+      <span class="cell-label">Investments</span>
+      <span class="cell-value">{{ investmentsValue() | currencyFormat }}</span>
+    </div>
+  </div>
+
+  <div class="nw-income">
+    <mat-icon>payments</mat-icon>
+    <span>Est. investment income</span>
+    <span class="income-value">{{ investmentsIncome() | currencyFormat }}/yr</span>
+  </div>
+
+  <mat-icon class="nw-arrow">chevron_right</mat-icon>
+</a>

@@ -1,0 +1,38 @@
+@if (budgets().length === 0) {
+  <div class="empty-state">
+    <mat-icon>savings</mat-icon>
+    <p>No budgets set for this month</p>
+    <span>Add a budget to track spending</span>
+  </div>
+} @else {
+  <div class="list">
+    @for (item of budgets(); track item.budget.id) {
+      <div class="budget-card">
+        <div class="budget-header">
+          <div class="budget-info">
+            <span class="budget-category">{{ getCategoryLabel(item.budget.category) }}</span>
+            <span class="budget-progress-text">
+              {{ item.spent | currencyFormat }} / {{ item.budget.amount | currencyFormat }}
+            </span>
+          </div>
+          <div class="budget-right">
+            @if (getRemaining(item.spent, item.budget.amount) >= 0) {
+              <span class="remaining">{{ getRemaining(item.spent, item.budget.amount) | currencyFormat }} left</span>
+            } @else {
+              <span class="remaining over">{{ abs(getRemaining(item.spent, item.budget.amount)) | currencyFormat }} over</span>
+            }
+            <button mat-icon-button class="delete-btn" (click)="onDelete(item.budget.id, $event)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="getProgress(item.spent, item.budget.amount)"
+          [color]="getProgressClass(item.spent, item.budget.amount) === 'over' ? 'warn' : 'primary'"
+          class="budget-progress"
+        />
+      </div>
+    }
+  </div>
+}

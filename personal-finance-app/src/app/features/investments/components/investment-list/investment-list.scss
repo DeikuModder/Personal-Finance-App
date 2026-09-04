@@ -1,0 +1,135 @@
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #424242;
+  }
+
+  p {
+    color: #9e9e9e;
+    margin: 0;
+  }
+
+  span {
+    color: #666;
+    font-size: 0.75rem;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inv-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.inv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.inv-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  .inv-symbol {
+    color: #bb86fc;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .inv-name {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+.delete-btn {
+  opacity: 0.5;
+
+  mat-icon {
+    color: #cf6679;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.inv-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.inv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  .label {
+    color: #666;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .value {
+    color: #e0e0e0;
+    font-size: 0.9rem;
+
+    &.strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+  }
+}
+
+.income-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #2a2a2a;
+
+  &.muted .income-label {
+    color: #666;
+    font-size: 0.75rem;
+  }
+
+  .income-label {
+    color: #9e9e9e;
+    font-size: 0.75rem;
+  }
+
+  .positive {
+    color: #03dac6;
+  }
+
+  .income-yield {
+    color: #9e9e9e;
+    font-size: 0.75rem;
+  }
+}

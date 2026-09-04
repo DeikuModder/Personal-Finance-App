@@ -1,0 +1,35 @@
+<div class="investments-page">
+  <div class="page-header">
+    <h1>Investments</h1>
+    <button mat-fab class="fab" (click)="showForm.set(!showForm())">
+      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
+    </button>
+  </div>
+
+  @if (investments().length > 0) {
+    <div class="total-card">
+      <div class="total-row">
+        <span class="total-label">Portfolio Value</span>
+        <span class="total-value">{{ getTotalValue() | currencyFormat }}</span>
+      </div>
+      <div class="total-row">
+        <span class="total-label">Est. Income / Year</span>
+        <span class="total-value positive">{{ getTotalAnnualIncome() | currencyFormat }}</span>
+      </div>
+      <div class="total-row">
+        <span class="total-label">Est. Income / Month</span>
+        <span class="total-value positive">{{ getMonthlyIncome() | currencyFormat }}</span>
+      </div>
+    </div>
+
+    <app-portfolio-allocation [investments]="investments()" />
+  }
+
+  @if (showForm()) {
+    <div class="form-card">
+      <app-investment-form (saved)="addInvestment($event)" (cancelled)="onCancel()" />
+    </div>
+  }
+
+  <app-investment-list [investments]="investments()" (deleted)="onDelete($event)" />
+</div>

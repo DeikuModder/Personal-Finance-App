@@ -1,0 +1,36 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <div class="header-title-row">
+      <h1>FinTrack</h1>
+      <a routerLink="/settings" mat-icon-button aria-label="Settings" class="settings-btn">
+        <mat-icon>settings</mat-icon>
+      </a>
+    </div>
+    <div class="period-nav">
+      <button mat-icon-button class="nav-btn" (click)="prevMonth()" aria-label="Previous month">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="month-label">{{ periodLabel }}</span>
+      <button mat-icon-button class="nav-btn" (click)="nextMonth()" aria-label="Next month">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <app-summary-cards
+    [balance]="balance()"
+    [income]="income()"
+    [expenses]="expenses()"
+  />
+
+  <app-net-worth-card
+    [accountsTotal]="accountsTotal()"
+    [investmentsValue]="investmentsValue()"
+    [investmentsIncome]="investmentsIncome()"
+  />
+
+  <app-spending-by-category [transactions]="allTransactions()" />
+  <app-monthly-trend [transactions]="allTransactions()" />
+
+  <app-recent-transactions [transactions]="recentTransactions()" />
+</div>

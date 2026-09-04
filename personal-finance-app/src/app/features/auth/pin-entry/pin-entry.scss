@@ -1,0 +1,98 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.pin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.pin-header {
+  text-align: center;
+
+  .lock-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #bb86fc;
+  }
+
+  h2 {
+    margin: 0.5rem 0 0.25rem;
+    color: #ffffff;
+  }
+
+  p {
+    margin: 0;
+    color: #9e9e9e;
+    font-size: 0.875rem;
+  }
+}
+
+.pin-dots {
+  display: flex;
+  gap: 1rem;
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #bb86fc;
+    transition: all 0.2s ease;
+
+    &.filled {
+      background-color: #bb86fc;
+    }
+
+    &.error {
+      border-color: #cf6679;
+      animation: shake 0.3s ease;
+    }
+  }
+}
+
+.pin-pad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pin-row {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.pin-btn {
+  width: 56px;
+  height: 56px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  background: #2c2c2c !important;
+  color: #ffffff !important;
+  border: none;
+
+  &:hover:not([disabled]) {
+    background: #3c3c3c !important;
+  }
+
+  &:disabled {
+    background: transparent !important;
+  }
+
+  mat-icon {
+    color: #bb86fc;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}

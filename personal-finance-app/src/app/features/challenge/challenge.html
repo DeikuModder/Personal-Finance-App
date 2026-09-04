@@ -1,0 +1,67 @@
+@if (!isConfigured && !showSetup()) {
+  <div class="challenge-page">
+    <div class="hero">
+      <mat-icon class="hero-icon">sports_esports</mat-icon>
+      <h1>Money Quest</h1>
+      <p>Turn your monthly budget into a game. Stay under each week's cap to save, and watch your money glow.</p>
+      <button mat-flat-button color="primary" (click)="startSetup()">
+        <mat-icon>play_arrow</mat-icon>
+        Start Your Challenge
+      </button>
+    </div>
+  </div>
+} @else if (showSetup()) {
+  <div class="challenge-page">
+    <app-challenge-config [config]="config()" (saved)="onSaved($event)" (cancelled)="onCancelSetup()" />
+  </div>
+} @else {
+  <div class="challenge-page">
+    <div class="game-header" [class.low-hearts]="hearts <= 1">
+      <div class="header-top">
+        <h1>{{ currentLabel }}</h1>
+        <div class="hearts">
+          @for (h of [1,2,3,4,5]; track h) {
+            <mat-icon [class.lost-heart]="h > hearts">favorite</mat-icon>
+          }
+        </div>
+      </div>
+
+      <div class="level-bar">
+        <div class="level-info">
+          <span class="level-badge">{{ level.name }}</span>
+          <span class="streak" [class.on-fire]="streak >= 2">
+            <mat-icon>local_fire_department</mat-icon>
+            <span>{{ streak }} streak</span>
+          </span>
+        </div>
+        <div class="xp-track">
+          <div class="xp-fill" [style.width.%]="levelProgress"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week-list">
+      @for (w of weeks(); track w.bucket.index) {
+        <app-week-card
+          [week]="w"
+          [current]="w.bucket.index === currentWeekIndex"
+          [year]="year"
+          [month]="month"
+          [transactions]="monthTransactions()"
+        />
+      }
+    </div>
+
+    <app-month-bars [weeks]="barData()" />
+    <app-cumulative-line [labels]="cumLabels()" [values]="stats().cumulative" />
+  </div>
+
+  @if (monthComplete) {
+    <app-month-result
+      [monthlyIncome]="config().monthlyIncome"
+      [totalSpent]="stats().totalSpent"
+      [savedLost]="stats().savedLost"
+      (closed)="onCloseResult()"
+    />
+  }
+}

@@ -1,0 +1,88 @@
+<div class="form-container">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Stock / ETF</mat-label>
+    <mat-select [ngModel]="selectedSymbol()" (ngModelChange)="onSymbolChange($event)">
+      @for (stock of catalog; track stock.symbol) {
+        <mat-option [value]="stock.symbol">{{ stock.symbol }} — {{ stock.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="row">
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Shares</mat-label>
+      <input
+        matInput
+        type="number"
+        [ngModel]="shares()"
+        (ngModelChange)="shares.set($event)"
+        min="0"
+        step="0.01"
+      />
+    </mat-form-field>
+
+    <div class="fetch-cell">
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="fetchData()"
+        [disabled]="!selectedSymbol() || !hasKey || loading()"
+      >
+        <mat-icon>{{ loading() ? 'sync' : 'cloud_download' }}</mat-icon>
+        {{ loading() ? 'Loading…' : 'Fetch price' }}
+      </button>
+      @if (!hasKey) {
+        <span class="hint">Add an Alpha Vantage key in Settings to auto-fill prices</span>
+      }
+    </div>
+  </div>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Current Price (per share)</mat-label>
+    <input
+      matInput
+      type="number"
+      [ngModel]="currentPrice()"
+      (ngModelChange)="currentPrice.set($event)"
+      placeholder="0.00"
+      min="0"
+      step="0.01"
+    />
+    <span matPrefix>$&nbsp;</span>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Purchase Price (per share)</mat-label>
+    <input
+      matInput
+      type="number"
+      [ngModel]="purchasePrice()"
+      (ngModelChange)="purchasePrice.set($event)"
+      placeholder="0.00"
+      min="0"
+      step="0.01"
+    />
+    <span matPrefix>$&nbsp;</span>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Dividend per share / year</mat-label>
+    <input
+      matInput
+      type="number"
+      [ngModel]="dividendPerShare()"
+      (ngModelChange)="dividendPerShare.set($event)"
+      placeholder="0.00"
+      min="0"
+      step="0.01"
+    />
+    <span matPrefix>$&nbsp;</span>
+  </mat-form-field>
+
+  <div class="form-actions">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!selectedSymbol()">
+      Save Investment
+    </button>
+  </div>
+</div>

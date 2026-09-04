@@ -1,0 +1,46 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.type-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.toggle-btn {
+  flex: 1;
+  border-radius: 12px !important;
+  padding: 0.5rem !important;
+
+  &.expense {
+    color: #cf6679;
+
+    &.active {
+      background: rgba(207, 102, 121, 0.15) !important;
+      border: 1px solid #cf6679;
+    }
+  }
+
+  &.income {
+    color: #03dac6;
+
+    &.active {
+      background: rgba(3, 218, 198, 0.15) !important;
+      border: 1px solid #03dac6;
+    }
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}

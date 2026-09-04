@@ -1,0 +1,28 @@
+@if (transactions().length === 0) {
+  <div class="empty-state">
+    <mat-icon>receipt_long</mat-icon>
+    <p>No transactions found</p>
+  </div>
+} @else {
+  <div class="list">
+    @for (transaction of transactions(); track transaction.id) {
+      <div class="item">
+        <div class="item-icon">
+          <mat-icon>{{ getCategoryIcon(transaction.category) }}</mat-icon>
+        </div>
+        <div class="item-info">
+          <span class="item-desc">{{ transaction.description }}</span>
+          <span class="item-meta">{{ formatDate(transaction.date) }}</span>
+        </div>
+        <div class="item-right">
+          <span class="item-amount" [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'">
+            {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currencyFormat }}
+          </span>
+          <button mat-icon-button class="delete-btn" (click)="onDelete(transaction.id, $event)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+}

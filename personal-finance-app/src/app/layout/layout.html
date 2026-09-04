@@ -1,0 +1,33 @@
+<div class="app-shell">
+  <main class="main-content">
+    <router-outlet />
+  </main>
+
+  <nav class="bottom-nav">
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <mat-icon>dashboard</mat-icon>
+      <span>Home</span>
+    </a>
+    <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Activity</span>
+    </a>
+    <a routerLink="/add" class="nav-item add-btn">
+      <div class="add-icon-wrapper">
+        <mat-icon>add</mat-icon>
+      </div>
+    </a>
+    <a routerLink="/budgets" routerLinkActive="active" class="nav-item">
+      <mat-icon>savings</mat-icon>
+      <span>Budgets</span>
+    </a>
+    <a routerLink="/accounts" routerLinkActive="active" class="nav-item">
+      <mat-icon>account_balance_wallet</mat-icon>
+      <span>Accounts</span>
+    </a>
+    <a routerLink="/challenge" routerLinkActive="active" class="nav-item">
+      <mat-icon>sports_esports</mat-icon>
+      <span>Challenge</span>
+    </a>
+  </nav>
+</div>

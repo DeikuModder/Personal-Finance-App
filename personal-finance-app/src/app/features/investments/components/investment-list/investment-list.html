@@ -1,0 +1,54 @@
+@if (investments().length === 0) {
+  <div class="empty-state">
+    <mat-icon>trending_up</mat-icon>
+    <p>No investments yet</p>
+    <span>Add a stock or ETF to estimate dividend income</span>
+  </div>
+} @else {
+  <div class="list">
+    @for (item of investments(); track item.id) {
+      <div class="inv-card">
+        <div class="inv-header">
+          <div class="inv-info">
+            @if (item.symbol) {
+              <span class="inv-symbol">{{ item.symbol }}</span>
+            }
+            <span class="inv-name">{{ item.name }}</span>
+          </div>
+          <button mat-icon-button class="delete-btn" (click)="onDelete(item.id, $event)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+
+        <div class="inv-body">
+          <div class="inv-field">
+            <span class="label">Shares</span>
+            <span class="value">{{ item.shares ?? 1 }}</span>
+          </div>
+          <div class="inv-field">
+            <span class="label">Price</span>
+            <span class="value">{{ item.currentPrice | currencyFormat }}</span>
+          </div>
+          <div class="inv-field">
+            <span class="label">Value</span>
+            <span class="value strong">{{ getValue(item) | currencyFormat }}</span>
+          </div>
+        </div>
+
+        @if (hasIncome(item)) {
+          <div class="income-row">
+            <span class="income-label">Est. income</span>
+            <span class="income value strong positive">
+              {{ getAnnualIncome(item) | currencyFormat }}/yr
+            </span>
+            <span class="income-yield">{{ getYield(item) }}% yield</span>
+          </div>
+        } @else {
+          <div class="income-row muted">
+            <span class="income-label">No dividend data</span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

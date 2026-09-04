@@ -1,0 +1,158 @@
+.accounts-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .fab {
+    background: linear-gradient(135deg, #bb86fc, #6200ee) !important;
+    color: #ffffff !important;
+  }
+}
+
+.total-card {
+  background: linear-gradient(135deg, #2d1b69, #1a1a2e);
+  border: 1px solid rgba(187, 134, 252, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  .total-label {
+    font-size: 0.75rem;
+    color: #9e9e9e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .total-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #bb86fc;
+  }
+}
+
+.form-card {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .full-width {
+    width: 100%;
+  }
+
+  button {
+    align-self: flex-end;
+  }
+}
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.account-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: #1e1e1e;
+  border-radius: 12px;
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .account-icon {
+    color: #bb86fc;
+  }
+
+  .account-details {
+    display: flex;
+    flex-direction: column;
+
+    .account-name {
+      color: #ffffff;
+      font-size: 0.9375rem;
+      font-weight: 500;
+    }
+
+    .account-type {
+      color: #9e9e9e;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.account-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .account-balance {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .delete-btn {
+    opacity: 0.5;
+
+    mat-icon {
+      color: #cf6679;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  text-align: center;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #424242;
+  }
+
+  p {
+    color: #9e9e9e;
+    margin: 0;
+  }
+
+  span {
+    color: #666;
+    font-size: 0.75rem;
+  }
+}

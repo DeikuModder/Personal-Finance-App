@@ -1,0 +1,8 @@
+<div class="day-stripe">
+  @for (day of days; track day.day) {
+    <div class="day-chip" [class.over]="day.over" [title]="'Day ' + day.day">
+      <span class="day-num">{{ day.day }}</span>
+      <span class="day-dot"></span>
+    </div>
+  }
+</div>

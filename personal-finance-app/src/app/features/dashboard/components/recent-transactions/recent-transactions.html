@@ -1,0 +1,36 @@
+<div class="recent-section">
+  <div class="section-header">
+    <h3>Recent Transactions</h3>
+    @if (transactions().length > 0) {
+      <a routerLink="/transactions" class="see-all">See all</a>
+    }
+  </div>
+
+  @if (transactions().length === 0) {
+    <div class="empty-state">
+      <mat-icon>receipt_long</mat-icon>
+      <p>No transactions yet</p>
+      <span>Tap + to add your first transaction</span>
+    </div>
+  } @else {
+    <div class="transaction-list">
+      @for (transaction of transactions(); track transaction.id) {
+        <div class="transaction-item">
+          <div class="transaction-icon">
+            <mat-icon>{{ getCategoryIcon(transaction.category) }}</mat-icon>
+          </div>
+          <div class="transaction-info">
+            <span class="transaction-desc">{{ transaction.description }}</span>
+            <span class="transaction-category">{{ transaction.category | titlecase }}</span>
+          </div>
+          <div class="transaction-right">
+            <span class="transaction-amount" [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'">
+              {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currencyFormat }}
+            </span>
+            <span class="transaction-date">{{ formatDate(transaction.date) }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

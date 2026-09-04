@@ -1,0 +1,36 @@
+<div class="budgets-page">
+  <div class="page-header">
+    <h1>Budgets</h1>
+    <button mat-fab class="fab" (click)="showForm.set(!showForm())">
+      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
+    </button>
+  </div>
+
+  <span class="month-label">{{ currentMonth }}</span>
+
+  <div class="total-card">
+    <div class="total-row">
+      <span class="total-label">Total Budget</span>
+      <span class="total-value">{{ getTotalBudget() | currencyFormat }}</span>
+    </div>
+    <div class="total-row">
+      <span class="total-label">Spent</span>
+      <span class="total-value warn">{{ getTotalSpent() | currencyFormat }}</span>
+    </div>
+    @if (getTotalBudget() > 0) {
+      <mat-progress-bar
+        mode="determinate"
+        [value]="getTotalSpent() / getTotalBudget() * 100"
+        class="total-progress"
+      />
+    }
+  </div>
+
+  @if (showForm()) {
+    <div class="form-card">
+      <app-budget-form (saved)="addBudget($event)" (cancelled)="onCancel()" />
+    </div>
+  }
+
+  <app-budget-list [budgets]="budgets()" (deleted)="onDelete($event)" />
+</div>

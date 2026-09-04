@@ -1,0 +1,57 @@
+@if (week(); as w) {
+  <div class="week-card" [class.over-card]="w.status === 'over'" [class.good-card]="w.status === 'good'">
+    <div class="week-head">
+      <div class="week-title">
+        <span class="week-label">{{ w.bucket.label }}</span>
+        <span class="week-range">
+          Days {{ w.bucket.dayStart }}–{{ w.bucket.dayEnd }}
+        </span>
+        @if (current()) {
+          <span class="current-badge">NOW</span>
+        }
+      </div>
+      <div class="week-remaining" [class.over]="w.remaining < 0">
+        @if (w.remaining < 0) {
+          <mat-icon>south_west</mat-icon>
+          <span>{{ abs(w.remaining) | currencyFormat }} over</span>
+        } @else if (w.status === 'good') {
+          <mat-icon>trending_up</mat-icon>
+          <span>{{ w.remaining | currencyFormat }} saved</span>
+        } @else {
+          <mat-icon>hourglass_bottom</mat-icon>
+          <span>{{ w.remaining | currencyFormat }} left</span>
+        }
+      </div>
+    </div>
+
+    <div class="week-body">
+      <app-week-gauge [cap]="w.cap" [spent]="w.spent" />
+      <div class="week-figures">
+        <div class="fig">
+          <span class="fig-label">Cap</span>
+          <span class="fig-value">{{ w.cap | currencyFormat }}</span>
+        </div>
+        <div class="fig">
+          <span class="fig-label">Spent</span>
+          <span class="fig-value" [class.over]="w.remaining < 0">{{ w.spent | currencyFormat }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="carry-row">
+      @if (w.remaining >= 0) {
+        <span class="carry-pos">+{{ w.remaining | currencyFormat }} carries to next week</span>
+      } @else {
+        <span class="carry-neg">Next week's cap shrinks by {{ abs(w.remaining) | currencyFormat }}</span>
+      }
+    </div>
+
+    <app-day-stripe
+      [transactions]="transactions()"
+      [year]="year()"
+      [month]="month()"
+      [bucket]="w.bucket"
+      [cap]="w.cap"
+    />
+  </div>
+}

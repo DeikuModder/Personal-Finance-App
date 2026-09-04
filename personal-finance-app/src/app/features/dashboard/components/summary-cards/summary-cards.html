@@ -1,0 +1,18 @@
+<div class="cards-grid">
+  <div class="card balance-card">
+    <span class="card-label">Total Balance</span>
+    <span class="card-value">{{ balance() | currencyFormat }}</span>
+  </div>
+
+  <div class="card-row">
+    <div class="card income-card">
+      <span class="card-label">Income</span>
+      <span class="card-value positive">{{ income() | currencyFormat }}</span>
+    </div>
+
+    <div class="card expense-card">
+      <span class="card-label">Expenses</span>
+      <span class="card-value negative">{{ expenses() | currencyFormat }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.half {
+  flex: 1;
+}
+
+.fetch-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.25rem;
+
+  .hint {
+    color: #666;
+    font-size: 0.65rem;
+    max-width: 160px;
+    line-height: 1.2;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}

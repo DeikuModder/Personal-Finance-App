@@ -1,0 +1,75 @@
+.budgets-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .fab {
+    background: linear-gradient(135deg, #bb86fc, #6200ee) !important;
+    color: #ffffff !important;
+  }
+}
+
+.month-label {
+  color: #9e9e9e;
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.total-card {
+  background: linear-gradient(135deg, #2d1b69, #1a1a2e);
+  border: 1px solid rgba(187, 134, 252, 0.2);
+  border-radius: 16px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .total-label {
+    font-size: 0.75rem;
+    color: #9e9e9e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .total-value {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #ffffff;
+
+    &.warn {
+      color: #cf6679;
+    }
+  }
+}
+
+.total-progress {
+  border-radius: 4px;
+}
+
+.form-card {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}

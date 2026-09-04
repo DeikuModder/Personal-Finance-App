@@ -1,0 +1,33 @@
+<div class="pin-container">
+  <div class="pin-header">
+    <mat-icon class="lock-icon">lock</mat-icon>
+    <h2>Enter PIN</h2>
+    <p>Enter your 6-digit PIN to unlock</p>
+  </div>
+
+  <div class="pin-dots">
+    @for (i of [0, 1, 2, 3, 4, 5]; track i) {
+      <div class="dot" [class.filled]="i < pin().length" [class.error]="error()"></div>
+    }
+  </div>
+
+  <div class="pin-pad">
+    @for (row of [[1,2,3],[4,5,6],[7,8,9],['',0,'⌫']]; track row) {
+      <div class="pin-row">
+        @for (digit of row; track digit) {
+          <button
+            mat-fab
+            [disabled]="digit === ''"
+            (click)="digit === '⌫' ? removeDigit() : addDigit('' + digit)"
+            class="pin-btn"
+          >
+            {{ digit === '⌫' ? '' : digit }}
+            @if (digit === '⌫') {
+              <mat-icon>backspace</mat-icon>
+            }
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
