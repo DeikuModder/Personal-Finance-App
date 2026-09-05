@@ -8,16 +8,28 @@
     @for (transaction of transactions(); track transaction.id) {
       <div class="item">
         <div class="item-icon">
-          <mat-icon>{{ getCategoryIcon(transaction.category) }}</mat-icon>
+          <mat-icon>{{ getCategoryIcon(transaction) }}</mat-icon>
         </div>
         <div class="item-info">
           <span class="item-desc">{{ transaction.description }}</span>
-          <span class="item-meta">{{ formatDate(transaction.date) }}</span>
+          @if (isTransfer(transaction)) {
+            <span class="item-meta transfer-meta">{{ accountName(transaction.sourceAccountId) }} &rarr; {{ accountName(transaction.accountId) }} &middot; {{ formatDate(transaction.date) }}</span>
+          } @else {
+            <span class="item-meta">{{ formatDate(transaction.date) }}</span>
+          }
         </div>
         <div class="item-right">
-          <span class="item-amount" [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'">
-            {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currencyFormat }}
+          <span
+            class="item-amount"
+            [class.income]="transaction.type === 'income'"
+            [class.expense]="transaction.type === 'expense'"
+            [class.transfer]="isTransfer(transaction)"
+          >
+            {{ signFor(transaction) }}{{ transaction.amount | currencyFormat }}
           </span>
+          <button mat-icon-button class="edit-btn" (click)="onEdit(transaction.id, $event)">
+            <mat-icon>edit_outline</mat-icon>
+          </button>
           <button mat-icon-button class="delete-btn" (click)="onDelete(transaction.id, $event)">
             <mat-icon>delete_outline</mat-icon>
           </button>

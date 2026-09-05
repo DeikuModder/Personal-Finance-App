@@ -34,7 +34,7 @@ export class TransactionsComponent {
   allTransactions = signal<Transaction[]>([]);
   filteredTransactions = signal<Transaction[]>([]);
 
-  typeFilter = signal<'all' | 'income' | 'expense'>('all');
+  typeFilter = signal<'all' | 'income' | 'expense' | 'transfer'>('all');
   categoryFilter = signal<TransactionCategory | 'all'>('all');
   monthFilter = signal<'all' | 'current' | 'last' | 'thisYear'>('current');
 
@@ -93,6 +93,10 @@ export class TransactionsComponent {
     this.transactionService.deleteTransaction(id).subscribe(() => {
       this.applyFilters();
     });
+  }
+
+  onEdit(id: string): void {
+    this.router.navigate(['/transactions', id, 'edit']);
   }
 
   goToAdd(): void {

@@ -32,8 +32,10 @@ let TransactionsService = class TransactionsService {
             createdAt: existing?.createdAt ?? dto.createdAt ?? new Date().toISOString(),
             updatedAt: dto.updatedAt ?? new Date().toISOString(),
             accountId: dto.accountId ?? '',
+            sourceAccountId: dto.sourceAccountId ?? '',
         });
-        return this.repo.save(entity);
+        await this.repo.save(entity);
+        return entity;
     }
     async remove(userId, id) {
         const existing = await this.repo.findOne({ where: { id, userId } });

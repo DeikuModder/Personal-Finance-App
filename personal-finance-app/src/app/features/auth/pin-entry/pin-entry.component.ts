@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, HostListener, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,5 +40,24 @@ export class PinEntryComponent {
     setTimeout(() => {
       this.clear();
     }, 800);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+      return;
+    }
+
+    if (event.key === 'Backspace') {
+      event.preventDefault();
+      this.removeDigit();
+      return;
+    }
+
+    if (event.key.length === 1 && event.key >= '0' && event.key <= '9') {
+      event.preventDefault();
+      this.addDigit(event.key);
+    }
   }
 }

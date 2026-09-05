@@ -53,6 +53,10 @@ __decorate([
     __metadata("design:type", String)
 ], Transaction.prototype, "accountId", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'source_account_id', default: '' }),
+    __metadata("design:type", String)
+], Transaction.prototype, "sourceAccountId", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
     __metadata("design:type", String)
 ], Transaction.prototype, "createdAt", void 0);

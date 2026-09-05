@@ -8,7 +8,7 @@ export class EffectsService {
       particleCount: 120,
       spread: 80,
       startVelocity: 45,
-      colors: ['#bb86fc', '#03dac6', '#ffd54f', '#ffffff', '#6200ee'],
+      colors: ['#ff6e6e', '#03dac6', '#ffd54f', '#ffffff', '#d62020'],
       disableForReducedMotion: true,
       zIndex: 2200,
     });

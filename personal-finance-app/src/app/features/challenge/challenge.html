@@ -56,9 +56,8 @@
         <app-week-card
           [week]="w"
           [current]="w.bucket.index === currentWeekIndex"
-          [year]="year"
-          [month]="month"
           [transactions]="monthTransactions()"
+          [startDate]="startDate()"
         />
       }
     </div>

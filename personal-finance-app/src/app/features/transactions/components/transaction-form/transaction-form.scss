@@ -32,6 +32,15 @@
       border: 1px solid #03dac6;
     }
   }
+
+  &.transfer {
+    color: #ff6e6e;
+
+    &.active {
+      background: rgba(255, 110, 110, 0.15) !important;
+      border: 1px solid #ff6e6e;
+    }
+  }
 }
 
 .full-width {

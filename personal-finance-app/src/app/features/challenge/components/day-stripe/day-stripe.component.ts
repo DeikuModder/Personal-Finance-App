@@ -1,10 +1,12 @@
 import { Component, input } from '@angular/core';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { WeekBucket } from '../../services/challenge.service';
-import { toLocalDate } from '../../../../core/utils/date.util';
+import { toLocalDate, dateKey, addDays } from '../../../../core/utils/date.util';
 
 interface DayChip {
   day: number;
+  date: Date;
+  marked: boolean;
   spent: number;
   target: number;
   over: boolean;
@@ -18,40 +20,59 @@ interface DayChip {
 })
 export class DayStripeComponent {
   transactions = input<Transaction[]>([]);
-  year = input(0);
-  month = input(0);
   bucket = input<WeekBucket | null>(null);
   cap = input(0);
+  startDate = input<Date | null>(null);
 
   get days(): DayChip[] {
     const bucket = this.bucket();
     if (!bucket) return [];
-    const target = bucket.dayEnd - bucket.dayStart + 1;
-    const daily = target > 0 ? this.cap() / target : 0;
+
+    const todayKey = dateKey(new Date());
+    const start = this.startDate();
+    const startKey = start ? dateKey(start) : null;
 
     const chips: DayChip[] = [];
-    for (let day = bucket.dayStart; day <= bucket.dayEnd; day++) {
-      const spent = this.transactions()
-        .filter((t) => {
-          if (t.type !== 'expense') return false;
-          const d = toLocalDate(t.date);
-          return (
-            d.getFullYear() === this.year() &&
-            d.getMonth() === this.month() &&
-            d.getDate() === day
-          );
-        })
-        .reduce((sum, t) => sum + t.amount, 0);
-      chips.push({ day, spent, target: daily, over: spent > daily });
+    let cursor = new Date(bucket.startDate);
+    while (cursor.getTime() <= bucket.endDate.getTime()) {
+      const key = dateKey(cursor);
+      const marked = !!startKey && key >= startKey && key <= todayKey;
+      const spent = this.spentOn(cursor);
+      chips.push({ day: cursor.getDate(), date: new Date(cursor), marked, spent, target: 0, over: false });
+      cursor = addDays(cursor, 1);
     }
+
+    const markedCount = chips.filter((c) => c.marked).length;
+    const daily = markedCount > 0 ? this.cap() / markedCount : 0;
+
+    for (const chip of chips) {
+      if (chip.marked) {
+        chip.target = daily;
+        chip.over = chip.spent > daily;
+      }
+    }
+
     return chips;
   }
 
   get todayIsInBucket(): boolean {
     const bucket = this.bucket();
     if (!bucket) return false;
-    const now = new Date();
-    if (now.getFullYear() !== this.year() || now.getMonth() !== this.month()) return false;
-    return now.getDate() >= bucket.dayStart && now.getDate() <= bucket.dayEnd;
+    const todayKey = dateKey(new Date());
+    return todayKey >= dateKey(bucket.startDate) && todayKey <= dateKey(bucket.endDate);
+  }
+
+  formatDate(day: DayChip): string {
+    return day.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+
+  private spentOn(date: Date): number {
+    const key = dateKey(date);
+    return this.transactions()
+      .filter((t) => {
+        if (t.type !== 'expense') return false;
+        return dateKey(toLocalDate(t.date)) === key;
+      })
+      .reduce((sum, t) => sum + t.amount, 0);
   }
 }

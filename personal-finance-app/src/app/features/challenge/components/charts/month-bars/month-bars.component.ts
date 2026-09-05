@@ -74,7 +74,7 @@ export class MonthBarsComponent {
           itemStyle: {
             borderRadius: [4, 4, 0, 0],
             color: (params: any) =>
-              params.value > caps[params.dataIndex] ? '#cf6679' : '#bb86fc',
+              params.value > caps[params.dataIndex] ? '#cf6679' : '#ff6e6e',
           },
         },
         {

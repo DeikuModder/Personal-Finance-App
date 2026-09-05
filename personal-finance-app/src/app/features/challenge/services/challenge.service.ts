@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChallengeConfig } from '../../../core/models/challenge.model';
 import { Transaction } from '../../../core/models/transaction.model';
-import { toLocalDate } from '../../../core/utils/date.util';
+import { toLocalDate, startOfWeek, addDays, dateKey } from '../../../core/utils/date.util';
 
 export interface WeekBucket {
   index: number;
-  dayStart: number;
-  dayEnd: number;
+  startDate: Date;
+  endDate: Date;
   label: string;
 }
 
@@ -47,43 +47,41 @@ export class ChallengeService {
   }
 
   getWeekBuckets(year: number, month: number): WeekBucket[] {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstOfMonth = new Date(year, month, 1);
+    const lastOfMonth = new Date(year, month + 1, 0);
     const buckets: WeekBucket[] = [];
-    let dayStart = 1;
+    let cursor = startOfWeek(firstOfMonth);
     let index = 1;
 
-    while (dayStart <= daysInMonth) {
-      const dayEnd = Math.min(dayStart + 6, daysInMonth);
+    while (cursor.getTime() <= lastOfMonth.getTime()) {
+      const end = addDays(cursor, 6);
       buckets.push({
         index,
-        dayStart,
-        dayEnd,
+        startDate: cursor,
+        endDate: end,
         label: `W${index}`,
       });
-      dayStart = dayEnd + 1;
+      cursor = addDays(end, 1);
       index++;
     }
     return buckets;
   }
 
-  getSpentForBucket(transactions: Transaction[], year: number, month: number, bucket: WeekBucket): number {
+  getSpentForBucket(transactions: Transaction[], bucket: WeekBucket): number {
+    const startKey = dateKey(bucket.startDate);
+    const endKey = dateKey(bucket.endDate);
     return transactions
       .filter((t) => {
         if (t.type !== 'expense') return false;
-        const d = toLocalDate(t.date);
-        return (
-          d.getFullYear() === year &&
-          d.getMonth() === month &&
-          d.getDate() >= bucket.dayStart &&
-          d.getDate() <= bucket.dayEnd
-        );
+        const key = dateKey(toLocalDate(t.date));
+        return key >= startKey && key <= endKey;
       })
       .reduce((sum, t) => sum + t.amount, 0);
   }
 
   getAllSpent(transactions: Transaction[], year: number, month: number): number[] {
     return this.getWeekBuckets(year, month).map((bucket) =>
-      this.getSpentForBucket(transactions, year, month, bucket)
+      this.getSpentForBucket(transactions, bucket)
     );
   }
 

@@ -33,10 +33,10 @@ export class AccountsComponent {
 
   accounts = signal<Account[]>([]);
   showForm = signal(false);
+  editingId = signal<string | null>(null);
 
   name = signal('');
   type = signal<Account['type']>('checking');
-  balance = signal(0);
 
   accountTypes: { value: Account['type']; label: string }[] = [
     { value: 'checking', label: 'Checking' },
@@ -50,21 +50,55 @@ export class AccountsComponent {
     this.accountService.getAccounts().subscribe((a) => this.accounts.set(a));
   }
 
-  addAccount(): void {
+  toggleForm(): void {
+    if (this.showForm()) {
+      this.resetForm();
+    } else {
+      this.showForm.set(true);
+    }
+  }
+
+  editAccount(account: Account): void {
+    this.editingId.set(account.id);
+    this.name.set(account.name);
+    this.type.set(account.type);
+    this.showForm.set(true);
+  }
+
+  saveAccount(): void {
     if (!this.name()) return;
+    const editing = this.editingId();
+    if (editing) {
+      const current = this.accounts().find((a) => a.id === editing);
+      if (!current) return;
+      this.accountService
+        .updateAccount({
+          ...current,
+          name: this.name(),
+          type: this.type(),
+        })
+        .subscribe(() => this.resetForm());
+    } else {
+      this.addAccount();
+    }
+  }
+
+  addAccount(): void {
     this.accountService.addAccount({
       name: this.name(),
       type: this.type(),
-      balance: this.balance(),
+      balance: 0,
       currency: 'USD',
-      color: '#bb86fc',
+      color: '#ff6e6e',
       icon: 'account_balance_wallet',
-    }).subscribe(() => {
-      this.name.set('');
-      this.type.set('checking');
-      this.balance.set(0);
-      this.showForm.set(false);
-    });
+    }).subscribe(() => this.resetForm());
+  }
+
+  resetForm(): void {
+    this.name.set('');
+    this.type.set('checking');
+    this.editingId.set(null);
+    this.showForm.set(false);
   }
 
   deleteAccount(id: string): void {

@@ -10,8 +10,9 @@ export class UpsertAccountDto {
   @IsIn(['checking', 'savings', 'cash', 'credit_card', 'other'])
   type: 'checking' | 'savings' | 'cash' | 'credit_card' | 'other';
 
+  @IsOptional()
   @IsNumber()
-  balance: number;
+  balance?: number;
 
   @IsOptional()
   @IsString()

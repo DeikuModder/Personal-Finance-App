@@ -22,7 +22,7 @@ export class Transaction {
   user: User;
 
   @Column()
-  type: 'income' | 'expense';
+  type: 'income' | 'expense' | 'transfer';
 
   @Column('numeric', { transformer: { to: (v: number) => v, from: (v: string) => Number(v) } })
   amount: number;
@@ -38,6 +38,9 @@ export class Transaction {
 
   @Column({ name: 'account_id', default: '' })
   accountId: string;
+
+  @Column({ name: 'source_account_id', default: '' })
+  sourceAccountId: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

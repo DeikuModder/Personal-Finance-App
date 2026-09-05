@@ -8,12 +8,12 @@
 
   <app-section-help
     title="Transactions — what this is"
-    [description]="'This is your full activity ledger. Every income payment and expense you add is recorded here, dated and tagged with a category and an account. It is the single source of truth that powers the Home dashboard, Budgets, Money Quest, and your net worth calculation.'"
+    [description]="'This is your full activity ledger. Every income payment, expense and transfer between your accounts is recorded here, dated and tagged with an account. It is the single source of truth that powers the Home dashboard, Budgets, Money Quest, and your net worth calculation.'"
     [howTo]="[
-      'Tap the + button to add a new income or expense (or use the + button in the bottom nav).',
+      'Tap the + button to add a new income, expense or transfer (or use the + button in the bottom nav).',
       'Use the Type, Category and Period filters at the top to narrow the list, then Clear filters to reset.',
-      'Tap the trash icon on any entry to delete it. Deleting here also updates the dashboard, budgets and challenge.',
-      'Everything is saved automatically and synced to your account, so it stays in sync across your devices.'
+      'Tap the pencil icon to edit an entry (amount, date, category or account), or the trash icon to delete it. Editing and deleting here also update the linked account balance, dashboard, budgets and challenge.',
+      'Transfers move money between your own accounts — they never appear as income or spending, so they won\'t affect budgets or the challenge.'
     ]"
   />
 
@@ -24,6 +24,7 @@
         <mat-option value="all">All</mat-option>
         <mat-option value="income">Income</mat-option>
         <mat-option value="expense">Expense</mat-option>
+        <mat-option value="transfer">Transfer</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -54,5 +55,5 @@
     </button>
   }
 
-  <app-transaction-list [transactions]="filteredTransactions()" (deleted)="onDelete($event)" />
+  <app-transaction-list [transactions]="filteredTransactions()" (deleted)="onDelete($event)" (edited)="onEdit($event)" />
 </div>

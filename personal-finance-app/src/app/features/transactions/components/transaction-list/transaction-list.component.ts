@@ -1,10 +1,11 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { toLocalDate } from '../../../../core/utils/date.util';
+import { AccountService } from '../../../accounts/services/account.service';
 
 @Component({
   selector: 'app-transaction-list',
@@ -14,11 +15,42 @@ import { toLocalDate } from '../../../../core/utils/date.util';
   styleUrl: './transaction-list.scss',
 })
 export class TransactionListComponent {
+  private accountService = inject(AccountService);
+
   transactions = input<Transaction[]>([]);
   deleted = output<string>();
+  edited = output<string>();
 
-  getCategoryIcon(category: string): string {
-    return (CATEGORY_ICONS as Record<string, string>)[category] || 'more_horiz';
+  accountNames = signal<Record<string, string>>({});
+
+  constructor() {
+    this.accountService.getAccounts().subscribe((accounts) => {
+      const map: Record<string, string> = {};
+      for (const account of accounts) {
+        map[account.id] = account.name;
+      }
+      this.accountNames.set(map);
+    });
+  }
+
+  getCategoryIcon(transaction: Transaction): string {
+    if (transaction.type === 'transfer') return 'swap_horiz';
+    return (CATEGORY_ICONS as Record<string, string>)[transaction.category] || 'more_horiz';
+  }
+
+  accountName(id: string | undefined): string {
+    if (!id) return '';
+    return this.accountNames()[id] ?? id.slice(0, 8);
+  }
+
+  isTransfer(transaction: Transaction): boolean {
+    return transaction.type === 'transfer';
+  }
+
+  signFor(transaction: Transaction): string {
+    if (transaction.type === 'income') return '+';
+    if (transaction.type === 'expense') return '-';
+    return '';
   }
 
   formatDate(dateStr: string): string {
@@ -31,5 +63,10 @@ export class TransactionListComponent {
   onDelete(id: string, event: Event): void {
     event.stopPropagation();
     this.deleted.emit(id);
+  }
+
+  onEdit(id: string, event: Event): void {
+    event.stopPropagation();
+    this.edited.emit(id);
   }
 }

@@ -1,14 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, BehaviorSubject } from 'rxjs';
+import { Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { Transaction } from '../../../core/models/transaction.model';
 import { TRANSACTION_REPOSITORY } from '../../../core/tokens/tokens';
 import { Repository } from '../../../core/repositories/repository.interface';
 import { toLocalDate } from '../../../core/utils/date.util';
+import { AccountService } from '../../accounts/services/account.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
   private repo = inject(TRANSACTION_REPOSITORY) as Repository<Transaction>;
+  private accountService = inject(AccountService);
   private transactions$ = new BehaviorSubject<Transaction[]>([]);
   private initialized = false;
 
@@ -52,6 +54,7 @@ export class TransactionService {
       updatedAt: now,
     };
     return this.repo.create(transaction).pipe(
+      tap(() => this.accountService.refresh()),
       map((t) => {
         this.transactions$.next([...this.transactions$.value, t]);
         return t;
@@ -62,6 +65,7 @@ export class TransactionService {
   updateTransaction(transaction: Transaction): Observable<Transaction> {
     const updated = { ...transaction, updatedAt: new Date().toISOString() };
     return this.repo.update(updated).pipe(
+      tap(() => this.accountService.refresh()),
       map((t) => {
         const list = this.transactions$.value.map((item) => (item.id === t.id ? t : item));
         this.transactions$.next(list);
@@ -72,6 +76,7 @@ export class TransactionService {
 
   deleteTransaction(id: string): Observable<void> {
     return this.repo.delete(id).pipe(
+      tap(() => this.accountService.refresh()),
       map(() => {
         this.transactions$.next(this.transactions$.value.filter((t) => t.id !== id));
       })

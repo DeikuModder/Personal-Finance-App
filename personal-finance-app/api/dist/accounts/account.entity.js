@@ -45,7 +45,7 @@ __decorate([
     __metadata("design:type", String)
 ], Account.prototype, "currency", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: '#bb86fc' }),
+    (0, typeorm_1.Column)({ default: '#ff6e6e' }),
     __metadata("design:type", String)
 ], Account.prototype, "color", void 0);
 __decorate([

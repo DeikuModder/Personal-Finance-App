@@ -19,7 +19,7 @@ __decorate([
     __metadata("design:type", String)
 ], UpsertTransactionDto.prototype, "id", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)(['income', 'expense']),
+    (0, class_validator_1.IsIn)(['income', 'expense', 'transfer']),
     __metadata("design:type", String)
 ], UpsertTransactionDto.prototype, "type", void 0);
 __decorate([
@@ -45,6 +45,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpsertTransactionDto.prototype, "accountId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpsertTransactionDto.prototype, "sourceAccountId", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

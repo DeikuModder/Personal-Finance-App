@@ -1,18 +1,26 @@
 <div class="form-container">
-  <div class="type-toggle">
-    <button
-      mat-button
-      [class.active]="type() === 'expense'"
-      (click)="type() !== 'expense' && toggleType()"
-      class="toggle-btn expense"
-    >Expense</button>
-    <button
-      mat-button
-      [class.active]="type() === 'income'"
-      (click)="type() !== 'income' && toggleType()"
-      class="toggle-btn income"
-    >Income</button>
-  </div>
+  @if (!editing) {
+    <div class="type-toggle">
+      <button
+        mat-button
+        [class.active]="type() === 'expense'"
+        (click)="setType('expense')"
+        class="toggle-btn expense"
+      >Expense</button>
+      <button
+        mat-button
+        [class.active]="type() === 'income'"
+        (click)="setType('income')"
+        class="toggle-btn income"
+      >Income</button>
+      <button
+        mat-button
+        [class.active]="type() === 'transfer'"
+        (click)="setType('transfer')"
+        class="toggle-btn transfer"
+      >Transfer</button>
+    </div>
+  }
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Amount</mat-label>
@@ -38,23 +46,45 @@
     />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Category</mat-label>
-    <mat-select [ngModel]="category()" (ngModelChange)="category.set($event)">
-      @for (cat of categories; track cat.value) {
-        <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+  @if (type() !== 'transfer') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Category</mat-label>
+      <mat-select [ngModel]="category()" (ngModelChange)="category.set($event)">
+        @for (cat of categories; track cat.value) {
+          <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Account</mat-label>
-    <mat-select [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
-      @for (account of accounts(); track account.id) {
-        <mat-option [value]="account.id">{{ account.name }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+  @if (type() === 'transfer') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>From account</mat-label>
+      <mat-select [ngModel]="transferFromId()" (ngModelChange)="transferFromId.set($event)">
+        @for (account of accounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>To account</mat-label>
+      <mat-select [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
+        @for (account of accounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  } @else {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Account</mat-label>
+      <mat-select [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
+        @for (account of accounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Date</mat-label>
@@ -74,7 +104,7 @@
       mat-flat-button
       color="primary"
       (click)="onSubmit()"
-      [disabled]="amount() <= 0 || !description()"
+      [disabled]="amount() <= 0 || !description() || (type() === 'transfer' && transferInvalid)"
     >Save</button>
   </div>
 </div>

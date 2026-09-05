@@ -27,6 +27,20 @@
     box-shadow: 0 0 6px rgba(3, 218, 198, 0.6);
   }
 
+  &.dimmed {
+    background: #161616;
+
+    .day-num {
+      color: #4a4a4a;
+    }
+
+    .day-dot {
+      background: transparent;
+      border: 1px solid #333333;
+      box-shadow: none;
+    }
+  }
+
   &.over {
     background: rgba(207, 102, 121, 0.15);
 

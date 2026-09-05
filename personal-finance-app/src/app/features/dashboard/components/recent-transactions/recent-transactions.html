@@ -24,8 +24,8 @@
             <span class="transaction-category">{{ transaction.category | titlecase }}</span>
           </div>
           <div class="transaction-right">
-            <span class="transaction-amount" [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'">
-              {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currencyFormat }}
+            <span class="transaction-amount" [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'" [class.transfer]="transaction.type === 'transfer'">
+              {{ transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : '' }}{{ transaction.amount | currencyFormat }}
             </span>
             <span class="transaction-date">{{ formatDate(transaction.date) }}</span>
           </div>

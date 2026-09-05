@@ -4,7 +4,7 @@
       <div class="week-title">
         <span class="week-label">{{ w.bucket.label }}</span>
         <span class="week-range">
-          Days {{ w.bucket.dayStart }}–{{ w.bucket.dayEnd }}
+          {{ formatRange(w.bucket.startDate, w.bucket.endDate) }}
         </span>
         @if (current()) {
           <span class="current-badge">NOW</span>
@@ -48,10 +48,9 @@
 
     <app-day-stripe
       [transactions]="transactions()"
-      [year]="year()"
-      [month]="month()"
       [bucket]="w.bucket"
       [cap]="w.cap"
+      [startDate]="startDate()"
     />
   </div>
 }

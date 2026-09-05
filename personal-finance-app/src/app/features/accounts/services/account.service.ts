@@ -22,6 +22,10 @@ export class AccountService {
     return this.accounts$.asObservable();
   }
 
+  refresh(): void {
+    this.repo.getAll().subscribe((a) => this.accounts$.next(a));
+  }
+
   addAccount(data: Omit<Account, 'id' | 'createdAt'>): Observable<Account> {
     const account: Account = {
       ...data,

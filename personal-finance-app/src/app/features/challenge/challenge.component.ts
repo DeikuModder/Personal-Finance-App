@@ -12,7 +12,7 @@ import { MonthResultComponent } from './components/month-result/month-result.com
 import { MonthBarsComponent } from './components/charts/month-bars/month-bars.component';
 import { CumulativeLineComponent } from './components/charts/cumulative-line/cumulative-line.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
-import { toLocalDate } from '../../core/utils/date.util';
+import { toLocalDate, dateKey } from '../../core/utils/date.util';
 
 interface Level {
   name: string;
@@ -51,6 +51,7 @@ export class ChallengeComponent implements OnInit {
   config = signal<ChallengeConfig>({ ...DEFAULT_CHALLENGE_CONFIG });
   showSetup = signal(false);
   monthTransactions = signal<Transaction[]>([]);
+  startDate = signal<Date | null>(null);
 
   year = new Date().getFullYear();
   month = new Date().getMonth();
@@ -75,14 +76,29 @@ export class ChallengeComponent implements OnInit {
       this.detectEffects();
     });
     this.transactionService.getTransactions().subscribe((all) => {
-      this.monthTransactions.set(
-        all.filter((t) => {
-          const d = toLocalDate(t.date);
-          return d.getFullYear() === this.year && d.getMonth() === this.month;
-        })
-      );
+      this.setGameWindow(all);
       this.detectEffects();
     });
+  }
+
+  private setGameWindow(all: Transaction[]): void {
+    let min: Date | null = null;
+    for (const t of all) {
+      const d = toLocalDate(t.date);
+      if (!min || d.getTime() < min.getTime()) min = d;
+    }
+    this.startDate.set(min);
+
+    const buckets = this.challengeService.getWeekBuckets(this.year, this.month);
+    const startKey = dateKey(buckets[0]?.startDate ?? new Date(this.year, this.month, 1));
+    const endKey = dateKey(buckets[buckets.length - 1]?.endDate ?? new Date(this.year, this.month + 1, 0));
+
+    this.monthTransactions.set(
+      all.filter((t) => {
+        const key = dateKey(toLocalDate(t.date));
+        return key >= startKey && key <= endKey;
+      })
+    );
   }
 
   private lastSignatures = new Map<number, string>();
@@ -143,20 +159,18 @@ export class ChallengeComponent implements OnInit {
   }
 
   get monthComplete(): boolean {
-    const weeks = this.weeks();
-    if (weeks.length === 0) return false;
-    const last = weeks[weeks.length - 1];
-    const today = new Date();
-    return today.getDate() > last.bucket.dayEnd;
+    const lastDay = new Date(this.year, this.month + 1, 0);
+    return dateKey(new Date()) > dateKey(lastDay);
   }
 
   get currentWeekIndex(): number {
-    const day = new Date().getDate();
-    const weeks = this.weeks();
-    for (const w of weeks) {
-      if (day >= w.bucket.dayStart && day <= w.bucket.dayEnd) return w.bucket.index;
+    const todayKey = dateKey(new Date());
+    for (const w of this.weeks()) {
+      if (todayKey >= dateKey(w.bucket.startDate) && todayKey <= dateKey(w.bucket.endDate)) {
+        return w.bucket.index;
+      }
     }
-    return weeks[weeks.length - 1]?.bucket.index ?? 0;
+    return this.weeks()[this.weeks().length - 1]?.bucket.index ?? 0;
   }
 
   barData = computed(() => {

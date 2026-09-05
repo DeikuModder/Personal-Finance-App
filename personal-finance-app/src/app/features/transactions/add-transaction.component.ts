@@ -14,13 +14,13 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
       <h1>Add Transaction</h1>
       <app-section-help
         title="How adding works"
-        description="Record every time money comes in (Income) or goes out (Expense). Each transaction needs an amount, a description, a category and an account. It is saved instantly and feeds the dashboard, budgets and Money Quest."
+        description="Record every time money comes in (Income), goes out (Expense), or moves between your own accounts (Transfer). Each entry needs an amount, a description and an account. It is saved instantly and feeds the dashboard, budgets and Money Quest."
         [howTo]="[
-          'Pick Expense or Income at the top — this decides whether it adds to or subtracts from your totals.',
+          'Pick Expense, Income or Transfer at the top — this decides how it affects your balance.',
           'Enter the amount (numbers only, e.g. 45.50) and a short description.',
-          'Choose a category so your spending/income is grouped correctly on the Home charts.',
-          'Choose which account it belongs to and set the date (defaults to today).',
-          'Tap Save. You can review or delete it later from the Transactions list.'
+          'For Income/Expense, choose a category so your spending and income are grouped correctly on the Home charts.',
+          'For a Transfer, pick the From account (where the money leaves) and the To account (where it lands) — it never counts as spending or income.',
+          'Choose the account and date, then tap Save. You can review or edit it later from the Transactions list.'
         ]"
       />
       <app-transaction-form

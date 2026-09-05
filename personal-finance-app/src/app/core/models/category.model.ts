@@ -18,6 +18,7 @@ export type TransactionCategory =
   | 'personal_care'
   | 'investments'
   | 'gifts_sent'
+  | 'transfer'
   | 'other';
 
 export const INCOME_CATEGORIES: { value: TransactionCategory; label: string }[] = [
@@ -67,5 +68,6 @@ export const CATEGORY_ICONS: Record<TransactionCategory, string> = {
   personal_care: 'spa',
   investments: 'show_chart',
   gifts_sent: 'card_giftcard',
+  transfer: 'swap_horiz',
   other: 'more_horiz',
 };

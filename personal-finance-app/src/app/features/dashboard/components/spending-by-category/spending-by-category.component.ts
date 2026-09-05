@@ -93,7 +93,7 @@ export class SpendingByCategoryComponent {
         },
       ],
       color: [
-        '#bb86fc', '#03dac6', '#cf6679', '#ffb74d', '#4fc3f7',
+        '#ff6e6e', '#03dac6', '#cf6679', '#ffb74d', '#4fc3f7',
         '#aed581', '#f06292', '#ba68c8', '#4db6ac', '#ffd54f',
       ],
     };

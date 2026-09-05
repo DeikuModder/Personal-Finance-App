@@ -1,7 +1,7 @@
 <div class="accounts-page">
   <div class="page-header">
     <h1>Accounts</h1>
-    <button mat-fab class="fab" (click)="showForm.set(!showForm())">
+    <button mat-fab class="fab" (click)="toggleForm()">
       <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
     </button>
   </div>
@@ -13,18 +13,21 @@
 
   <app-section-help
     title="Accounts — your money places"
-    [description]="'Accounts represent the real places your money lives — a checking account, savings, cash, a credit card, and so on. Each account has a current balance. Transactions are linked to an account, and the total balance feeds your Home screen and Net Worth.'"
+    [description]="'Accounts represent the real places your money lives — a checking account, savings, cash, a credit card, and so on. You don\'t set a balance: each account balance is calculated automatically from its transactions — income adds to it, expenses subtract from it, and transfers between your own accounts move money from one to the other. The balance feeds your Home screen and Net Worth.'"
     [howTo]="[
-      'Tap the + button to add an account: give it a name, choose the type and enter its current balance.',
+      'Tap the + button to add an account: give it a name and choose the type. There is nothing else to set up.',
       'Choose the account that best matches reality (e.g. Checking, Savings, Credit Card).',
-      'When you add a Transaction, assign it to one of your accounts to keep each balance accurate.',
-      'Delete an account you no longer need with the trash icon (this does not delete its history).',
+      'When you add a Transaction, assign it to one of your accounts — its balance updates instantly and automatically.',
+      'To move money between your own accounts, add a Transfer transaction instead of an expense or income — it shifts the balance from the From account to the To account without affecting your totals.',
+      'Tap the pencil icon to rename an account or change its type, and the trash icon to delete it (deleting does not delete its transaction history).',
       'Total Balance is the sum of all account balances and is shown on this page and on Home.'
     ]"
   />
 
   @if (showForm()) {
     <div class="form-card">
+      <h3 class="form-title">{{ editingId() ? 'Edit Account' : 'New Account' }}</h3>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Account Name</mat-label>
         <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" placeholder="e.g. Main Bank" />
@@ -39,14 +42,8 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Balance</mat-label>
-        <input matInput type="number" [ngModel]="balance()" (ngModelChange)="balance.set($event)" />
-        <span matPrefix>$&nbsp;</span>
-      </mat-form-field>
-
-      <button mat-flat-button color="primary" (click)="addAccount()" [disabled]="!name()">
-        Add Account
+      <button mat-flat-button color="primary" (click)="saveAccount()" [disabled]="!name()">
+        {{ editingId() ? 'Save Changes' : 'Add Account' }}
       </button>
     </div>
   }
@@ -63,6 +60,9 @@
         </div>
         <div class="account-right">
           <span class="account-balance">{{ account.balance | currencyFormat }}</span>
+          <button mat-icon-button class="edit-btn" (click)="editAccount(account)">
+            <mat-icon>edit_outline</mat-icon>
+          </button>
           <button mat-icon-button class="delete-btn" (click)="deleteAccount(account.id)">
             <mat-icon>delete_outline</mat-icon>
           </button>

@@ -4,8 +4,8 @@ export class UpsertTransactionDto {
   @IsString()
   id: string;
 
-  @IsIn(['income', 'expense'])
-  type: 'income' | 'expense';
+  @IsIn(['income', 'expense', 'transfer'])
+  type: 'income' | 'expense' | 'transfer';
 
   @IsNumber()
   amount: number;
@@ -24,6 +24,10 @@ export class UpsertTransactionDto {
   @IsOptional()
   @IsString()
   accountId?: string;
+
+  @IsOptional()
+  @IsString()
+  sourceAccountId?: string;
 
   @IsOptional()
   @IsString()

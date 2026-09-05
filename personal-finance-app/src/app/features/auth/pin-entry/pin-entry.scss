@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  touch-action: manipulation;
 }
 
 .pin-container {
@@ -20,7 +21,7 @@
     font-size: 48px;
     width: 48px;
     height: 48px;
-    color: #bb86fc;
+    color: #ff6e6e;
   }
 
   h2 {
@@ -43,11 +44,11 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 2px solid #bb86fc;
+    border: 2px solid #ff6e6e;
     transition: all 0.2s ease;
 
     &.filled {
-      background-color: #bb86fc;
+      background-color: #ff6e6e;
     }
 
     &.error {
@@ -77,6 +78,9 @@
   background: #2c2c2c !important;
   color: #ffffff !important;
   border: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 
   &:hover:not([disabled]) {
     background: #3c3c3c !important;
@@ -87,7 +91,7 @@
   }
 
   mat-icon {
-    color: #bb86fc;
+    color: #ff6e6e;
   }
 }
 

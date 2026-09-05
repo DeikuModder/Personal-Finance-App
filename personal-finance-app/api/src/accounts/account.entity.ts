@@ -32,7 +32,7 @@ export class Account {
   @Column({ default: 'USD' })
   currency: string;
 
-  @Column({ default: '#bb86fc' })
+  @Column({ default: '#ff6e6e' })
   color: string;
 
   @Column({ default: 'account_balance_wallet' })

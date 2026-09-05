@@ -16,11 +16,19 @@ import { DayStripeComponent } from '../day-stripe/day-stripe.component';
 export class WeekCardComponent {
   week = input<WeekStatus | null>(null);
   current = input(false);
-  year = input(0);
-  month = input(0);
   transactions = input<Transaction[]>([]);
+  startDate = input<Date | null>(null);
 
   abs(value: number): number {
     return Math.abs(value);
+  }
+
+  formatRange(start: Date, end: Date): string {
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+    if (start.getFullYear() !== end.getFullYear()) {
+      options.year = 'numeric';
+    }
+    const fmt = (d: Date) => d.toLocaleDateString('en-US', options);
+    return `${fmt(start)} – ${fmt(end)}`;
   }
 }

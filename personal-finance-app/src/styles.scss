@@ -1,11 +1,30 @@
 @use '@angular/material' as mat;
 
+$fin-red: (
+  0: #000000,
+  10: #410606,
+  20: #5c0d0d,
+  25: #6a1111,
+  30: #791515,
+  35: #8b1515,
+  40: #a81212,
+  50: #d62020,
+  60: #ff4b3e,
+  70: #ff8a72,
+  80: #ffb4a6,
+  90: #ffdad4,
+  95: #ffedea,
+  98: #fff8f7,
+  99: #fffbff,
+  100: #ffffff,
+);
+
 html {
   color-scheme: dark;
   @include mat.theme((
     color: (
       theme-type: dark,
-      primary: mat.$azure-palette,
+      primary: $fin-red,
       tertiary: mat.$green-palette,
     ),
     typography: Roboto,
@@ -55,7 +74,7 @@ body {
    for every mat-form-field / select / datepicker in the app.
    ============================================================ */
 
-$input-accent: #8ab4ff; /* bright azure, readable on #121212 */
+$input-accent: #ff6e6e; /* bright red, readable on #121212 */
 
 /* Typed text inside inputs and selects */
 .mat-mdc-form-field {
@@ -144,7 +163,7 @@ input[type='number']::-webkit-inner-spin-button {
 }
 .mat-mdc-option-active,
 .mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
-  background: rgba(138, 180, 255, 0.15) !important;
+  background: rgba(255, 110, 110, 0.15) !important;
 }
 .mat-mdc-option.mdc-list-item--selected {
   color: $input-accent !important;
