@@ -32,7 +32,7 @@
       <mat-label>Category</mat-label>
       <mat-select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event); applyFilters()">
         <mat-option value="all">All</mat-option>
-        @for (cat of categories; track cat.value) {
+        @for (cat of categories(); track cat.value) {
           <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
         }
       </mat-select>

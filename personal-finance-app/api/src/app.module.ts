@@ -9,6 +9,7 @@ import { AccountsModule } from './accounts/accounts.module';
 import { BudgetsModule } from './budgets/budgets.module';
 import { InvestmentsModule } from './investments/investments.module';
 import { ChallengeModule } from './challenge/challenge.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ChallengeModule } from './challenge/challenge.module';
     BudgetsModule,
     InvestmentsModule,
     ChallengeModule,
+    CategoriesModule,
   ],
   providers: [
     {

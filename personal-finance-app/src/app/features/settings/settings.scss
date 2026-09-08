@@ -91,6 +91,24 @@
   }
 }
 
+.ai-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ai-status {
+  font-size: 0.75rem;
+
+  &.ok {
+    color: #03dac6;
+  }
+
+  &.bad {
+    color: #cf6679;
+  }
+}
+
 .import-item {
   cursor: pointer;
 }

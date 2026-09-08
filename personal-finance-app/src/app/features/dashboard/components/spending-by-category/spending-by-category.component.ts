@@ -1,4 +1,4 @@
-import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts/core';
@@ -6,7 +6,7 @@ import { PieChart } from 'echarts/charts';
 import { TooltipComponent, LegendComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { EXPENSE_CATEGORIES } from '../../../../core/models/category.model';
+import { CategoryService } from '../../../../core/services/category.service';
 
 echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
 
@@ -20,11 +20,17 @@ echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
   styleUrl: './spending-by-category.scss',
 })
 export class SpendingByCategoryComponent {
+  private categoryService = inject(CategoryService);
   transactions = input<Transaction[]>([]);
 
-  private categoryLabelMap = new Map<string, string>(
-    EXPENSE_CATEGORIES.map((c) => [c.value, c.label])
-  );
+  private labels = signal<Record<string, string>>({});
+
+  constructor() {
+    this.labels.set({ ...this.categoryService.labels });
+    this.categoryService.getCategories().subscribe(() => {
+      this.labels.set({ ...this.categoryService.labels });
+    });
+  }
 
   chartOptions = computed<EChartsOption>(() => {
     const expenses = this.transactions().filter((t) => t.type === 'expense');
@@ -37,7 +43,7 @@ export class SpendingByCategoryComponent {
 
     const data = [...byCategory.entries()]
       .map(([category, value]) => ({
-        name: this.categoryLabelMap.get(category) || category,
+        name: this.labels()[category] || category,
         value: Math.round(value * 100) / 100,
       }))
       .sort((a, b) => b.value - a.value);

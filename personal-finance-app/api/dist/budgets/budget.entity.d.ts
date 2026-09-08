@@ -1,4 +1,5 @@
 import { User } from '../users/user.entity';
+import { BudgetItem } from './budget-item.entity';
 export declare class Budget {
     id: string;
     userId: string;
@@ -8,4 +9,5 @@ export declare class Budget {
     month: number;
     year: number;
     createdAt: string;
+    items: BudgetItem[];
 }

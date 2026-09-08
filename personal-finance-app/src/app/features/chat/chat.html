@@ -1,0 +1,103 @@
+<div class="chat-page">
+  <div class="page-header">
+    <div class="title">
+      <h1>Chat</h1>
+      <small>{{ baseUrl }}</small>
+    </div>
+    <button
+      mat-mini-fab
+      class="new-chat"
+      title="New chat"
+      (click)="newChat()"
+      [disabled]="sending()"
+    >
+      <mat-icon>autorenew</mat-icon>
+    </button>
+  </div>
+
+  <div #thread class="chat-thread">
+    @if (messages().length === 0) {
+      <div class="empty-state">
+        <mat-icon>smart_toy</mat-icon>
+        <p>Ask EV anything about your finances.</p>
+        <ul>
+          <li>It reads your FinTrack data itself — accounts, transactions, budgets, and more.</li>
+          <li>Write suggestions are only applied after you confirm them.</li>
+          <li>Calls the assistant running on this device at {{ baseUrl }}.</li>
+        </ul>
+      </div>
+    }
+
+    @for (message of messages(); track trackByMessageId($index, message)) {
+      <div class="bubble-row {{ message.role }}">
+        <div class="bubble">
+          @if (message.streaming && !message.text) {
+            <span class="typing">…</span>
+          } @else {
+            <span class="bubble-text">{{ message.text }}</span>
+          }
+          @if (message.role === 'assistant' && message.pendingWrite) {
+            <div class="pending-write">
+              <span>{{ message.pendingWrite.echo }}</span>
+              <div class="pending-actions">
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  [disabled]="sending()"
+                  (click)="confirmPending(true)"
+                >
+                  Confirm
+                </button>
+                <button
+                  mat-stroked-button
+                  [disabled]="sending()"
+                  (click)="confirmPending(false)"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="composer">
+    @if (pendingAction) {
+      <div class="proposal-bar">
+        <mat-icon>pending_actions</mat-icon>
+        <span>{{ pendingAction.action }}</span>
+      </div>
+    }
+    <textarea
+      class="composer-input"
+      [ngModel]="input()"
+      (ngModelChange)="input.set($event)"
+      name="chatInput"
+      rows="1"
+      maxlength="4000"
+      placeholder="Ask your assistant…"
+      (keydown)="onKeydown($event)"
+    ></textarea>
+    <div class="composer-footer">
+      <small>{{
+        input().length > MAX_TEXT
+          ? 'Keep it under 4000 characters (EV limit).'
+          : input().length + ' / 4000'
+      }}</small>
+      <button
+        mat-mini-fab
+        class="send-btn"
+        (click)="send()"
+        [disabled]="!canSend"
+      >
+        @if (sending()) {
+          <mat-icon>more_horiz</mat-icon>
+        } @else {
+          <mat-icon>send</mat-icon>
+        }
+      </button>
+    </div>
+  </div>
+</div>

@@ -3,10 +3,11 @@
 
   <app-section-help
     title="Settings — manage your app"
-    [description]="'Settings lets you lock the app with a PIN, connect live market data, and back up or restore all of your data.'"
+    [description]="'Settings lets you lock the app with a PIN, connect live market data, point the Chat page at your local AI assistant, and back up or restore all of your data.'"
     [howTo]="[
       'Security: set a 6-digit PIN so the app asks for a passcode on open (this is a local convenience lock).',
       'Market Data: paste a free Alpha Vantage API key to auto-fill live stock prices and dividends in Investments.',
+      'AI Assistant: set the address of your local EV service and test the connection before using the Chat page.',
       'Data: Export Data downloads a full JSON backup; Import Data restores one. Clear All Data wipes everything on this device (transactions, accounts, budget, investments, PIN and API key).'
     ]"
   />
@@ -46,6 +47,43 @@
         </button>
         @if (apiKeySaved()) {
           <span class="key-saved">Saved</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>AI Assistant</h3>
+    <div class="settings-item static ai-item">
+      <mat-icon>smart_toy</mat-icon>
+      <div class="api-key-body">
+        <span>Assistant address</span>
+        <small>Base URL of your local EV assistant (Chat page)</small>
+        <mat-form-field appearance="outline" class="key-field">
+          <input
+            matInput
+            type="url"
+            [ngModel]="aiBaseUrl()"
+            (ngModelChange)="aiBaseUrl.set($event); aiStatus.set(null)"
+            placeholder="http://localhost:8200"
+          />
+        </mat-form-field>
+        <div class="ai-actions">
+          <button mat-stroked-button color="primary" (click)="saveAiBaseUrl()">
+            Save Address
+          </button>
+          <button
+            mat-stroked-button
+            (click)="testAiConnection()"
+            [disabled]="aiTesting()"
+          >
+            Test Connection
+          </button>
+        </div>
+        @if (aiStatus()) {
+          <span class="ai-status {{ aiStatus()!.ok ? 'ok' : 'bad' }}">
+            {{ aiStatus()!.text }}
+          </span>
         }
       </div>
     </div>

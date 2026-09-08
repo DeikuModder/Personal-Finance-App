@@ -1,31 +1,70 @@
 <div class="form-container">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Category</mat-label>
-    <mat-select [ngModel]="category()" (ngModelChange)="category.set($event)">
-      @for (cat of categories; track cat.value) {
-        <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+    <mat-select [ngModel]="category()" (ngModelChange)="onCategoryChange($event)">
+      @for (cat of categories(); track cat.value) {
+        <mat-option [value]="cat.value">
+          <mat-icon class="option-icon">{{ cat.icon }}</mat-icon>
+          {{ cat.label }}
+        </mat-option>
       }
+      <mat-option [value]="newCategoryValue">
+        <mat-icon class="option-icon">add_circle_outline</mat-icon>
+        New category…
+      </mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Monthly Budget</mat-label>
-    <input
-      matInput
-      type="number"
-      [ngModel]="amount()"
-      (ngModelChange)="amount.set($event)"
-      placeholder="0.00"
-      min="0"
-      step="0.01"
-    />
-    <span matPrefix>$&nbsp;</span>
-  </mat-form-field>
+  @if (showNewCategory()) {
+    <div class="new-category-box">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Category name</mat-label>
+        <input
+          matInput
+          [ngModel]="newCategoryLabel()"
+          (ngModelChange)="newCategoryLabel.set($event)"
+          [maxlength]="40"
+          placeholder="e.g. Home & Garden"
+        />
+      </mat-form-field>
+
+      <span class="new-category-title">Pick an icon</span>
+      <div class="icon-grid">
+        @for (icon of customIcons; track icon) {
+          <button
+            mat-icon-button
+            class="icon-cell"
+            [class.selected]="newCategoryIcon() === icon"
+            (click)="newCategoryIcon.set(icon)"
+          >
+            <mat-icon>{{ icon }}</mat-icon>
+          </button>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button mat-button (click)="cancelNewCategory()">Cancel</button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="addNewCategory()"
+          [disabled]="!newCategoryLabel().trim() || addingCategory()"
+        >
+          Create category
+        </button>
+      </div>
+    </div>
+  }
+
+  <p class="form-hint">
+    You will set up this budget by adding products to it — the total budget is the sum
+    of their prices.
+  </p>
 
   <div class="form-actions">
     <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="amount() <= 0">
-      Save Budget
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!category()">
+      Create Budget
     </button>
   </div>
 </div>

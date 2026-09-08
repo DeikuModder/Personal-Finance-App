@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PinService } from '../../core/services/pin.service';
 import { ApiKeyService } from '../investments/services/api-key.service';
+import { AiAssistantService } from '../chat/services/ai-assistant.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
@@ -28,15 +29,41 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
 export class SettingsComponent {
   private pinService = inject(PinService);
   private apiKeyService = inject(ApiKeyService);
+  private aiAssistant = inject(AiAssistantService);
   private router = inject(Router);
 
   pinSet = signal(this.pinService.isPinSet());
   apiKey = signal(this.apiKeyService.getKey());
   apiKeySaved = signal(false);
+  aiBaseUrl = signal(this.aiAssistant.getBaseUrl());
+  aiStatus = signal<{ ok: boolean; text: string } | null>(null);
+  aiTesting = signal(false);
 
   saveApiKey(): void {
     this.apiKeyService.setKey(this.apiKey());
     this.apiKeySaved.set(true);
+  }
+
+  saveAiBaseUrl(): void {
+    this.aiAssistant.setBaseUrl(this.aiBaseUrl());
+    this.aiStatus.set({ ok: true, text: 'Saved.' });
+  }
+
+  testAiConnection(): void {
+    this.aiTesting.set(true);
+    this.aiStatus.set(null);
+    this.aiAssistant.health().subscribe({
+      next: (h) => {
+        this.aiStatus.set({ ok: true, text: `Connected — ${h.status} (${h.timestamp})` });
+      },
+      error: () => {
+        this.aiStatus.set({
+          ok: false,
+          text: 'Could not reach the assistant. Check that EV is running and allows this origin (CORS).',
+        });
+      },
+      complete: () => this.aiTesting.set(false),
+    });
   }
 
   clearData(): void {

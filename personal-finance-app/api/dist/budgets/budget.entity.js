@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Budget = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../users/user.entity");
+const budget_item_entity_1 = require("./budget-item.entity");
 let Budget = class Budget {
 };
 exports.Budget = Budget;
@@ -48,6 +49,10 @@ __decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
     __metadata("design:type", String)
 ], Budget.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => budget_item_entity_1.BudgetItem, (b) => b.budget, { cascade: ['remove'], onDelete: 'CASCADE' }),
+    __metadata("design:type", Array)
+], Budget.prototype, "items", void 0);
 exports.Budget = Budget = __decorate([
     (0, typeorm_1.Entity)('budgets')
 ], Budget);

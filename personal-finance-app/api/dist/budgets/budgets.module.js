@@ -12,14 +12,17 @@ const typeorm_1 = require("@nestjs/typeorm");
 const budget_entity_1 = require("./budget.entity");
 const budgets_service_1 = require("./budgets.service");
 const budgets_controller_1 = require("./budgets.controller");
+const budget_item_entity_1 = require("./budget-item.entity");
+const budget_items_service_1 = require("./budget-items.service");
+const budget_items_controller_1 = require("./budget-items.controller");
 let BudgetsModule = class BudgetsModule {
 };
 exports.BudgetsModule = BudgetsModule;
 exports.BudgetsModule = BudgetsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([budget_entity_1.Budget])],
-        providers: [budgets_service_1.BudgetsService],
-        controllers: [budgets_controller_1.BudgetsController],
+        imports: [typeorm_1.TypeOrmModule.forFeature([budget_entity_1.Budget, budget_item_entity_1.BudgetItem])],
+        providers: [budgets_service_1.BudgetsService, budget_items_service_1.BudgetItemsService],
+        controllers: [budgets_controller_1.BudgetsController, budget_items_controller_1.BudgetItemsController],
     })
 ], BudgetsModule);
 //# sourceMappingURL=budgets.module.js.map

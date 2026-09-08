@@ -71,3 +71,51 @@ export const CATEGORY_ICONS: Record<TransactionCategory, string> = {
   transfer: 'swap_horiz',
   other: 'more_horiz',
 };
+
+export interface Category {
+  id: string;
+  label: string;
+  icon: string;
+  type: 'income' | 'expense';
+  createdAt: string;
+}
+
+export interface CategoryOption {
+  value: string;
+  label: string;
+  icon: string;
+}
+
+export const CUSTOM_CATEGORY_TYPE = 'custom';
+export const NEW_CATEGORY_VALUE = '__new__';
+
+export const CUSTOM_CATEGORY_ICONS: string[] = [
+  'star',
+  'bolt',
+  'pets',
+  'celebration',
+  'coffee',
+  'fastfood',
+  'cake',
+  'sports_soccer',
+  'fitness_center',
+  'flight',
+  'hotel',
+  'child_care',
+  'palette',
+  'music_note',
+  'videogame_asset',
+  'smartphone',
+  'laptop',
+  'local_cafe',
+  'card_membership',
+  'eco',
+  'delete_sweep',
+  'water_drop',
+  'lightbulb',
+  'devices',
+  'volunteer_activism',
+  'sentiment_satisfied',
+  'kitchen',
+  'logout',
+];

@@ -46,3 +46,6 @@ Thumbs.db
 # Environment secrets
 .env
 serve.log
+
+github-oauth-secret.txt
+

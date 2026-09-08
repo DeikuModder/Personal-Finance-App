@@ -10,6 +10,8 @@ import { Account } from '../accounts/account.entity';
 import { Budget } from '../budgets/budget.entity';
 import { Investment } from '../investments/investment.entity';
 import { ChallengeConfig } from '../challenge/challenge-config.entity';
+import { Category } from '../categories/category.entity';
+import { BudgetItem } from '../budgets/budget-item.entity';
 
 @Entity('users')
 export class User {
@@ -36,4 +38,10 @@ export class User {
 
   @OneToMany(() => ChallengeConfig, (c) => c.user)
   challengeConfigs: ChallengeConfig[];
+
+  @OneToMany(() => Category, (c) => c.user)
+  categories: Category[];
+
+  @OneToMany(() => BudgetItem, (b) => b.user)
+  budgetItems: BudgetItem[];
 }

@@ -1,11 +1,11 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { toLocalDate } from '../../../../core/utils/date.util';
 import { AccountService } from '../../../accounts/services/account.service';
+import { CategoryService } from '../../../../core/services/category.service';
 
 @Component({
   selector: 'app-transaction-list',
@@ -16,6 +16,7 @@ import { AccountService } from '../../../accounts/services/account.service';
 })
 export class TransactionListComponent {
   private accountService = inject(AccountService);
+  private categoryService = inject(CategoryService);
 
   transactions = input<Transaction[]>([]);
   deleted = output<string>();
@@ -35,7 +36,7 @@ export class TransactionListComponent {
 
   getCategoryIcon(transaction: Transaction): string {
     if (transaction.type === 'transfer') return 'swap_horiz';
-    return (CATEGORY_ICONS as Record<string, string>)[transaction.category] || 'more_horiz';
+    return this.categoryService.getIcon(transaction.category);
   }
 
   accountName(id: string | undefined): string {

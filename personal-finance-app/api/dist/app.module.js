@@ -18,6 +18,7 @@ const accounts_module_1 = require("./accounts/accounts.module");
 const budgets_module_1 = require("./budgets/budgets.module");
 const investments_module_1 = require("./investments/investments.module");
 const challenge_module_1 = require("./challenge/challenge.module");
+const categories_module_1 = require("./categories/categories.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,6 +38,7 @@ exports.AppModule = AppModule = __decorate([
             budgets_module_1.BudgetsModule,
             investments_module_1.InvestmentsModule,
             challenge_module_1.ChallengeModule,
+            categories_module_1.CategoriesModule,
         ],
         providers: [
             {

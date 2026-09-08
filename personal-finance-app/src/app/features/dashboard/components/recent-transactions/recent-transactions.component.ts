@@ -1,11 +1,11 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { toLocalDate } from '../../../../core/utils/date.util';
+import { CategoryService } from '../../../../core/services/category.service';
 
 @Component({
   selector: 'app-recent-transactions',
@@ -15,10 +15,11 @@ import { toLocalDate } from '../../../../core/utils/date.util';
   styleUrl: './recent-transactions.scss',
 })
 export class RecentTransactionsComponent {
+  private categoryService = inject(CategoryService);
   transactions = input<Transaction[]>([]);
 
   getCategoryIcon(category: string): string {
-    return (CATEGORY_ICONS as Record<string, string>)[category] || 'more_horiz';
+    return this.categoryService.getIcon(category);
   }
 
   formatDate(dateStr: string): string {

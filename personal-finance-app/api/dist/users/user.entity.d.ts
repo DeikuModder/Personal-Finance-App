@@ -3,6 +3,8 @@ import { Account } from '../accounts/account.entity';
 import { Budget } from '../budgets/budget.entity';
 import { Investment } from '../investments/investment.entity';
 import { ChallengeConfig } from '../challenge/challenge-config.entity';
+import { Category } from '../categories/category.entity';
+import { BudgetItem } from '../budgets/budget-item.entity';
 export declare class User {
     id: string;
     email: string;
@@ -12,4 +14,6 @@ export declare class User {
     budgets: Budget[];
     investments: Investment[];
     challengeConfigs: ChallengeConfig[];
+    categories: Category[];
+    budgetItems: BudgetItem[];
 }

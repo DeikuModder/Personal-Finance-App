@@ -8,7 +8,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { TransactionCategory, INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../../../../core/models/category.model';
+import { CategoryOption, NEW_CATEGORY_VALUE, CUSTOM_CATEGORY_ICONS } from '../../../../core/models/category.model';
+import { CategoryService } from '../../../../core/services/category.service';
 import { Account } from '../../../../core/models/account.model';
 import { AccountService } from '../../../accounts/services/account.service';
 import { toLocalDate } from '../../../../core/utils/date.util';
@@ -33,6 +34,7 @@ type TransactionType = 'income' | 'expense' | 'transfer';
 })
 export class TransactionFormComponent {
   private accountService = inject(AccountService);
+  private categoryService = inject(CategoryService);
 
   transaction = input<Transaction | null>(null);
   saved = output<Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>>();
@@ -41,14 +43,21 @@ export class TransactionFormComponent {
   type = signal<TransactionType>('expense');
   amount = signal(0);
   description = signal('');
-  category = signal<TransactionCategory>('other');
+  category = signal<string>('other');
   date = signal(new Date());
   accountId = signal('');
   transferFromId = signal('');
 
   accounts = signal<Account[]>([]);
-  incomeCategories = INCOME_CATEGORIES;
-  expenseCategories = EXPENSE_CATEGORIES;
+  incomeCategories = signal<CategoryOption[]>([]);
+  expenseCategories = signal<CategoryOption[]>([]);
+  showNewCategory = signal(false);
+  newCategoryLabel = signal('');
+  newCategoryIcon = signal(CUSTOM_CATEGORY_ICONS[0]);
+  addingCategory = signal(false);
+
+  readonly customIcons = CUSTOM_CATEGORY_ICONS;
+  readonly newCategoryValue = NEW_CATEGORY_VALUE;
 
   constructor() {
     this.accountService.getAccounts().subscribe((accounts) => {
@@ -56,6 +65,12 @@ export class TransactionFormComponent {
       if (!this.transaction()) {
         this.ensureAccountDefaults();
       }
+    });
+    this.categoryService.getOptions('income').subscribe((options) => {
+      this.incomeCategories.set(options);
+    });
+    this.categoryService.getOptions('expense').subscribe((options) => {
+      this.expenseCategories.set(options);
     });
   }
 
@@ -75,10 +90,49 @@ export class TransactionFormComponent {
     return this.transaction() !== null;
   }
 
-  get categories() {
-    if (this.type() === 'income') return this.incomeCategories;
-    if (this.type() === 'expense') return this.expenseCategories;
+  get categories(): CategoryOption[] {
+    if (this.type() === 'income') return this.incomeCategories();
+    if (this.type() === 'expense') return this.expenseCategories();
     return [];
+  }
+
+  onCategoryChange(value: string): void {
+    if (value === NEW_CATEGORY_VALUE) {
+      this.showNewCategory.set(true);
+      return;
+    }
+    this.category.set(value);
+    this.showNewCategory.set(false);
+  }
+
+  addNewCategory(): void {
+    const label = this.newCategoryLabel().trim();
+    if (!label || this.addingCategory()) return;
+    this.addingCategory.set(true);
+    this.categoryService
+      .create({
+        label,
+        icon: this.newCategoryIcon(),
+        type: this.type() === 'income' ? 'income' : 'expense',
+      })
+      .subscribe({
+        next: (category) => {
+          this.category.set(category.id);
+          this.showNewCategory.set(false);
+          this.newCategoryLabel.set('');
+          this.newCategoryIcon.set(CUSTOM_CATEGORY_ICONS[0]);
+          this.addingCategory.set(false);
+        },
+        error: () => {
+          this.addingCategory.set(false);
+        },
+      });
+  }
+
+  cancelNewCategory(): void {
+    this.showNewCategory.set(false);
+    this.newCategoryLabel.set('');
+    this.newCategoryIcon.set(CUSTOM_CATEGORY_ICONS[0]);
   }
 
   setType(next: TransactionType): void {

@@ -6,7 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Transaction } from '../../core/models/transaction.model';
-import { TransactionCategory, INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../../core/models/category.model';
+import { CategoryOption } from '../../core/models/category.model';
+import { CategoryService } from '../../core/services/category.service';
 import { TransactionService } from './services/transaction.service';
 import { toLocalDate } from '../../core/utils/date.util';
 import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
@@ -29,18 +30,22 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
 })
 export class TransactionsComponent {
   private transactionService = inject(TransactionService);
+  private categoryService = inject(CategoryService);
   private router = inject(Router);
 
   allTransactions = signal<Transaction[]>([]);
   filteredTransactions = signal<Transaction[]>([]);
 
   typeFilter = signal<'all' | 'income' | 'expense' | 'transfer'>('all');
-  categoryFilter = signal<TransactionCategory | 'all'>('all');
+  categoryFilter = signal<string | 'all'>('all');
   monthFilter = signal<'all' | 'current' | 'last' | 'thisYear'>('current');
 
-  categories = [...INCOME_CATEGORIES, ...EXPENSE_CATEGORIES];
+  categories = signal<CategoryOption[]>([]);
 
   constructor() {
+    this.categoryService.getAllOptions().subscribe((options) => {
+      this.categories.set(options);
+    });
     this.transactionService.getTransactions().subscribe((transactions) => {
       this.allTransactions.set(
         [...transactions].sort((a, b) => toLocalDate(b.date).getTime() - toLocalDate(a.date).getTime())

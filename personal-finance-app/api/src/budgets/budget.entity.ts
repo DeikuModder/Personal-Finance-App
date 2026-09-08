@@ -4,9 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
+import { BudgetItem } from './budget-item.entity';
 
 @Entity('budgets')
 export class Budget {
@@ -34,4 +36,7 @@ export class Budget {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
+
+  @OneToMany(() => BudgetItem, (b) => b.budget, { cascade: ['remove'], onDelete: 'CASCADE' })
+  items: BudgetItem[];
 }
