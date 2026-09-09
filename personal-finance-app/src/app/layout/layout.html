@@ -21,6 +21,13 @@
       <mat-icon>savings</mat-icon>
       <span>Budgets</span>
     </a>
+    <a routerLink="/debts" routerLinkActive="active" class="nav-item">
+      <mat-icon>credit_score</mat-icon>
+      <span>Debts</span>
+      @if (reminderCount() > 0) {
+        <span class="nav-badge">{{ reminderCount() }}</span>
+      }
+    </a>
     <a routerLink="/accounts" routerLinkActive="active" class="nav-item">
       <mat-icon>account_balance_wallet</mat-icon>
       <span>Accounts</span>

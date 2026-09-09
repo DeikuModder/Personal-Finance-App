@@ -6,9 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PinService } from '../../core/services/pin.service';
 import { ApiKeyService } from '../investments/services/api-key.service';
 import { AiAssistantService } from '../chat/services/ai-assistant.service';
+import { DebtReminderService } from '../debts/services/debt-reminder.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
@@ -21,6 +23,7 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSlideToggleModule,
     SectionHelpComponent,
   ],
   templateUrl: './settings.html',
@@ -30,6 +33,7 @@ export class SettingsComponent {
   private pinService = inject(PinService);
   private apiKeyService = inject(ApiKeyService);
   private aiAssistant = inject(AiAssistantService);
+  private reminderService = inject(DebtReminderService);
   private router = inject(Router);
 
   pinSet = signal(this.pinService.isPinSet());
@@ -38,6 +42,12 @@ export class SettingsComponent {
   aiBaseUrl = signal(this.aiAssistant.getBaseUrl());
   aiStatus = signal<{ ok: boolean; text: string } | null>(null);
   aiTesting = signal(false);
+  remindersEnabled = signal(this.reminderService.isEnabled());
+
+  toggleReminders(enable: boolean): void {
+    this.remindersEnabled.set(enable);
+    this.reminderService.setEnabled(enable);
+  }
 
   saveApiKey(): void {
     this.apiKeyService.setKey(this.apiKey());

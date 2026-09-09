@@ -1,0 +1,75 @@
+@if (debts().length === 0) {
+  <div class="empty-state">
+    <mat-icon>credit_score</mat-icon>
+    <p>No debts yet</p>
+    <span>Add a debt to start tracking it</span>
+  </div>
+} @else {
+  <div class="list">
+    @for (debt of debts(); track debt.id) {
+      <div class="debt-card" [class.paid]="debt.status === 'paid'">
+        <div class="debt-header">
+          <div class="debt-info">
+            <span class="debt-creditor">{{ debt.creditor }}</span>
+            <span class="status-badge" [class]="getStatusKind(debt)">
+              {{ getStatusLabel(debt) }}
+            </span>
+            @if (debt.description) {
+              <span class="debt-desc">{{ debt.description }}</span>
+            }
+          </div>
+          <div class="debt-actions">
+            @if (debt.status === 'active') {
+              <button mat-flat-button class="pay-btn" (click)="onPay(debt, $event)">Pay off</button>
+            }
+            <button mat-icon-button class="edit-btn" (click)="onEdit(debt, $event)">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-icon-button class="delete-btn" (click)="onDelete(debt.id, $event)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="debt-body">
+          <div class="debt-field">
+            <span class="label">Amount owed</span>
+            <span class="value strong">{{ debt.amountOwed | currencyFormat }}</span>
+          </div>
+          @if (debt.interestRate > 0) {
+            <div class="debt-field">
+              <span class="label">Interest</span>
+              <span class="value">{{ debt.interestRate }}%</span>
+              <span class="sub value">{{ getAnnualInterest(debt) | currencyFormat }}/yr</span>
+            </div>
+          }
+          @if (debt.minimumPayment > 0) {
+            <div class="debt-field">
+              <span class="label">Min. payment</span>
+              <span class="value">{{ debt.minimumPayment | currencyFormat }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="debt-footer">
+          @if (debt.status === 'paid') {
+            <span class="paid-date">Paid on {{ debt.paidAt }}</span>
+          } @else {
+            @if (debt.dueDate) {
+              <span class="due-date" [class.overdue]="getStatusKind(debt) === 'overdue'">
+                <mat-icon>event</mat-icon>
+                {{ getStatusKind(debt) === 'overdue' ? 'Was due' : 'Due' }} {{ debt.dueDate }}
+              </span>
+            }
+            @if (debt.remindOn) {
+              <span class="remind-date">
+                <mat-icon>notifications</mat-icon>
+                Reminder {{ debt.remindOn }}
+              </span>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

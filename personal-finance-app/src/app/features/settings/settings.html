@@ -53,6 +53,21 @@
   </div>
 
   <div class="settings-section">
+    <h3>Notifications</h3>
+    <div class="settings-item static">
+      <mat-icon>notifications</mat-icon>
+      <div class="toggle-body">
+        <span>Debt reminders</span>
+        <small>Browser notifications when a debt payment is due or overdue</small>
+      </div>
+      <mat-slide-toggle
+        [checked]="remindersEnabled()"
+        (change)="toggleReminders($event.checked)"
+      />
+    </div>
+  </div>
+
+  <div class="settings-section">
     <h3>AI Assistant</h3>
     <div class="settings-item static ai-item">
       <mat-icon>smart_toy</mat-icon>

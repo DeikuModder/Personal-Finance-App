@@ -18,6 +18,7 @@ const investment_entity_1 = require("../investments/investment.entity");
 const challenge_config_entity_1 = require("../challenge/challenge-config.entity");
 const category_entity_1 = require("../categories/category.entity");
 const budget_item_entity_1 = require("../budgets/budget-item.entity");
+const debt_entity_1 = require("../debts/debt.entity");
 let User = class User {
 };
 exports.User = User;
@@ -61,6 +62,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => budget_item_entity_1.BudgetItem, (b) => b.user),
     __metadata("design:type", Array)
 ], User.prototype, "budgetItems", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => debt_entity_1.Debt, (d) => d.user),
+    __metadata("design:type", Array)
+], User.prototype, "debts", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);

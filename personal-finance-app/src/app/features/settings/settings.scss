@@ -112,3 +112,20 @@
 .import-item {
   cursor: pointer;
 }
+
+.toggle-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+
+  span {
+    color: #e0e0e0;
+  }
+
+  small {
+    color: #666;
+    font-size: 0.7rem;
+  }
+}

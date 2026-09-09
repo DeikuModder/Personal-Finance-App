@@ -5,7 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { routes } from './app.routes';
-import { TRANSACTION_REPOSITORY, ACCOUNT_REPOSITORY, BUDGET_REPOSITORY, BUDGET_ITEM_REPOSITORY, CATEGORY_REPOSITORY, INVESTMENT_REPOSITORY } from './core/tokens/tokens';
+import { TRANSACTION_REPOSITORY, ACCOUNT_REPOSITORY, BUDGET_REPOSITORY, BUDGET_ITEM_REPOSITORY, CATEGORY_REPOSITORY, INVESTMENT_REPOSITORY, DEBT_REPOSITORY } from './core/tokens/tokens';
 import { HttpRepository } from './core/repositories/http.repository';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { Transaction } from './core/models/transaction.model';
@@ -14,6 +14,7 @@ import { Budget } from './core/models/budget.model';
 import { Investment } from './core/models/investment.model';
 import { BudgetItem } from './core/models/budget.model';
 import { Category } from './core/models/category.model';
+import { Debt } from './core/models/debt.model';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -59,6 +60,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: INVESTMENT_REPOSITORY,
       useFactory: (http: HttpClient) => new HttpRepository<Investment>('/api/investments', http),
+      deps: [HttpClient],
+    },
+    {
+      provide: DEBT_REPOSITORY,
+      useFactory: (http: HttpClient) => new HttpRepository<Debt>('/api/debts', http),
       deps: [HttpClient],
     },
   ],

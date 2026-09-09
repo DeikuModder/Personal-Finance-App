@@ -10,6 +10,7 @@ import { BudgetsModule } from './budgets/budgets.module';
 import { InvestmentsModule } from './investments/investments.module';
 import { ChallengeModule } from './challenge/challenge.module';
 import { CategoriesModule } from './categories/categories.module';
+import { DebtsModule } from './debts/debts.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CategoriesModule } from './categories/categories.module';
     InvestmentsModule,
     ChallengeModule,
     CategoriesModule,
+    DebtsModule,
   ],
   providers: [
     {
