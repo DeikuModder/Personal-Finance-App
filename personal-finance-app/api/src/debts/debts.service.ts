@@ -23,6 +23,8 @@ export class DebtsService {
     const entity = this.repo.create({
       ...dto,
       userId,
+      type: dto.type ?? 'payable',
+      accountId: dto.accountId ?? null,
       status: dto.status ?? 'active',
       description: dto.description ?? null,
       interestRate: dto.interestRate ?? 0,

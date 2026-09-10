@@ -72,13 +72,19 @@ export class DebtService {
 
   getTotalOwed(debts: Debt[]): number {
     return debts
-      .filter((d) => d.status === 'active')
+      .filter((d) => d.status === 'active' && d.type !== 'receivable')
+      .reduce((sum, d) => sum + d.amountOwed, 0);
+  }
+
+  getTotalOwedToYou(debts: Debt[]): number {
+    return debts
+      .filter((d) => d.status === 'active' && d.type === 'receivable')
       .reduce((sum, d) => sum + d.amountOwed, 0);
   }
 
   getTotalMinimumPayments(debts: Debt[]): number {
     return debts
-      .filter((d) => d.status === 'active')
+      .filter((d) => d.status === 'active' && d.type !== 'receivable')
       .reduce((sum, d) => sum + (d.minimumPayment || 0), 0);
   }
 

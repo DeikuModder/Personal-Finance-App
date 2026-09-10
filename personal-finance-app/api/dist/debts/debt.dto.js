@@ -23,6 +23,17 @@ __decorate([
     __metadata("design:type", String)
 ], UpsertDebtDto.prototype, "creditor", void 0);
 __decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(['payable', 'receivable']),
+    __metadata("design:type", String)
+], UpsertDebtDto.prototype, "type", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpsertDebtDto.prototype, "accountId", void 0);
+__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

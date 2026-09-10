@@ -7,25 +7,32 @@
   </div>
 
   <app-section-help
-    title="Debts — track what you owe"
-    [description]="'Keep track of any money you owe: credit cards, loans, car payments, or borrowing from friends. Record the amount, interest rate, minimum payment and due date for each debt, and set a reminder so you never miss a payment.'"
+    title="Debts — what you owe and what you're owed"
+    [description]="'Track money you owe (loans, credit cards, friends) and money owed to you (borrowed by friends, unpaid invoices). Record the amount, interest and due date, and set a reminder so you never miss a payment or a follow-up.'"
     [howTo]="[
-      'Tap the + button to add a debt: fill in the creditor, the amount you currently owe and optionally the interest rate, minimum payment and due date.',
-      'Set a “Remind me” date to get alerted (a banner and badge here, plus browser notifications once enabled in Settings) when a payment is due or overdue.',
+      'Tap the + button and pick “I owe money” or “Someone owes me” to record the other party and the amount involved.',
+      'Recording a “Someone owes me” debt deducts the amount from the account you choose — lending money is a real outflow. When they pay you back, tap “Collected” and the money comes back to an account as income; if they never pay, it stays a loss.',
+      'Set a “Remind me” date to get alerted (a banner and badge here, plus browser notifications once enabled in Settings) when something is due or overdue.',
       'When you pay a debt off, tap “Pay off”: it creates an expense transaction recorded against one of your accounts, then marks the debt as paid.',
-      'Paid debts stay listed at the bottom so you can still see your history; delete any debt you no longer want with the trash icon.'
+      'Settled items stay listed at the bottom so you keep your history.'
     ]"
   />
 
   <div class="total-card">
     <div class="total-row">
-      <span class="total-label">Total owed</span>
+      <span class="total-label">You owe</span>
       <span class="total-value">{{ getTotalOwed() | currencyFormat }}</span>
     </div>
     <div class="total-row">
-      <span class="total-label">Min. payments / month</span>
-      <span class="total-value">{{ getMinPayments() | currencyFormat }}</span>
+      <span class="total-label">Owed to you</span>
+      <span class="total-value receivable">{{ getTotalOwedToYou() | currencyFormat }}</span>
     </div>
+    @if (hasPayableDebts()) {
+      <div class="total-row">
+        <span class="total-label">Min. payments / month</span>
+        <span class="total-value">{{ getMinPayments() | currencyFormat }}</span>
+      </div>
+    }
     <div class="total-row">
       <span class="total-label">Overdue</span>
       <span class="total-value warn">{{ getOverdueCount() }}</span>
@@ -43,7 +50,7 @@
           <div class="reminder-row">
             <span class="reminder-badge" [class]="r.kind">{{ r.kind === 'overdue' ? 'Overdue' : 'Due' }}</span>
             <span class="reminder-text">
-              {{ r.debt.creditor }} — {{ r.debt.amountOwed | currencyFormat }} {{ r.kind === 'overdue' ? 'was due on' : 'due on' }} {{ r.date }}
+              {{ getReminderText(r) }}
             </span>
             <button mat-icon-button class="reminder-dismiss" (click)="dismissReminder(r.debt.id)">
               <mat-icon>close</mat-icon>
@@ -69,5 +76,6 @@
     (deleted)="onDelete($event)"
     (edited)="startEdit($event)"
     (payed)="onPayOff($event)"
+    (collected)="onCollected($event)"
   />
 </div>

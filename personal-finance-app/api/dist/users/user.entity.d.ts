@@ -6,6 +6,7 @@ import { ChallengeConfig } from '../challenge/challenge-config.entity';
 import { Category } from '../categories/category.entity';
 import { BudgetItem } from '../budgets/budget-item.entity';
 import { Debt } from '../debts/debt.entity';
+import { Goal } from '../goals/goal.entity';
 export declare class User {
     id: string;
     email: string;
@@ -18,4 +19,5 @@ export declare class User {
     categories: Category[];
     budgetItems: BudgetItem[];
     debts: Debt[];
+    goals: Goal[];
 }

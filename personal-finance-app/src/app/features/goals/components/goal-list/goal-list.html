@@ -1,0 +1,78 @@
+@if (goals().length === 0) {
+  <div class="empty-state">
+    <mat-icon>flag</mat-icon>
+    <p>No goals yet</p>
+    <span>Set a savings goal or a habit streak to start</span>
+  </div>
+} @else {
+  <div class="list">
+    @for (goal of goals(); track goal.id) {
+      <div class="goal-card" [class.achieved]="goal.achievedAt">
+        <div class="goal-header">
+          <div class="goal-main">
+            @if (goal.picture) {
+              <img [src]="goal.picture" alt="Goal" class="goal-picture" />
+            } @else {
+              <div class="goal-avatar">
+                <mat-icon>{{ goal.icon }}</mat-icon>
+              </div>
+            }
+            <div class="goal-info">
+              <span class="goal-title">{{ goal.title }}</span>
+              @if (goal.type === 'savings') {
+                <span class="goal-sub">{{ goal.targetAmount | currencyFormat }} target</span>
+              } @else {
+                <span class="goal-sub">{{ getCategoryLabel(goal) }} · {{ getAllowanceLabel(goal) }}</span>
+              }
+            </div>
+          </div>
+          <div class="goal-actions">
+            @if (goal.achievedAt) {
+              <span class="achieved-chip">Achieved {{ goal.achievedAt }}</span>
+            } @else if (isFunded(goal)) {
+              <span class="funded-chip">Funded</span>
+            }
+            <button mat-icon-button class="edit-btn" (click)="onEdit(goal, $event)">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-icon-button class="delete-btn" (click)="onDelete(goal.id, $event)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <mat-progress-bar
+          mode="determinate"
+          [value]="getProgress(goal) * 100"
+          [color]="goal.achievedAt || isFunded(goal) ? 'accent' : 'primary'"
+          class="goal-progress"
+        />
+
+        <div class="goal-body">
+          @if (goal.type === 'savings') {
+            <span class="goal-amount">{{ getSaved(goal) | currencyFormat }} saved</span>
+            @if (getDaysLeft(goal) !== null) {
+              <span class="goal-deadline" [class.warn]="getDaysLeft(goal)! < 7">
+                @if (getDaysLeft(goal)! < 0) {
+                  <mat-icon>event_busy</mat-icon> Deadline passed
+                } @else if (getDaysLeft(goal) === 0) {
+                  <mat-icon>event</mat-icon> Due today
+                } @else {
+                  <mat-icon>event</mat-icon> {{ getDaysLeft(goal) }}d left
+                }
+              </span>
+            }
+          } @else {
+            <span class="goal-streak">
+              <mat-icon>local_fire_department</mat-icon>
+              {{ getStreak(goal) }} {{ getUnit(goal) }}
+            </span>
+            @if (goal.streakTarget) {
+              <span class="goal-streak-target">{{ goal.streakTarget }} {{ getUnit(goal) }} goal</span>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+}

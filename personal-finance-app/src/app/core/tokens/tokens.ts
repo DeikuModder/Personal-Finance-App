@@ -8,3 +8,4 @@ export const BUDGET_ITEM_REPOSITORY = new InjectionToken<Repository<any>>('Budge
 export const CATEGORY_REPOSITORY = new InjectionToken<Repository<any>>('CategoryRepository');
 export const INVESTMENT_REPOSITORY = new InjectionToken<Repository<any>>('InvestmentRepository');
 export const DEBT_REPOSITORY = new InjectionToken<Repository<any>>('DebtRepository');
+export const GOAL_REPOSITORY = new InjectionToken<Repository<any>>('GoalRepository');

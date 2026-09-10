@@ -1,0 +1,35 @@
+<app-section-help
+  title="Goals"
+  description="Set a savings goal measured against your total savings pool, or a habit streak that counts how many days (or weeks) you keep a category under an allowance."
+></app-section-help>
+
+<div class="pool-card">
+  <div class="pool-label">
+    <mat-icon>savings</mat-icon>
+    Savings pool
+  </div>
+  <div class="pool-amount">{{ pool() | currencyFormat }}</div>
+  @if (getMoneyGoalCount() > 0) {
+  <div class="pool-sub">
+    {{ getFundedMoneyGoals() }} of {{ getMoneyGoalCount() }}
+    {{ getMoneyGoalCount() === 1 ? 'money goal funded' : 'money goals funded' }}
+  </div>
+}
+</div>
+
+@if (showForm()) {
+  <div class="form-card">
+    <app-goal-form [editing]="editing()" (saved)="onSaved($event)" (cancelled)="onCancel()"></app-goal-form>
+  </div>
+}
+
+@if (!showForm()) {
+  <div class="add-button">
+    <button mat-fab-extended color="primary" class="fab" (click)="startAdd()">
+      <mat-icon>add</mat-icon>
+      New Goal
+    </button>
+  </div>
+}
+
+<app-goal-list [goals]="goals()" [pool]="pool()" [streaks]="streaks()" (edited)="startEdit($event)" (deleted)="onDelete($event)"></app-goal-list>

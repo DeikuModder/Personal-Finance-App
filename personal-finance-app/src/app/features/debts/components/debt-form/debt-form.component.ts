@@ -6,7 +6,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Debt, DebtStatus } from '../../../../core/models/debt.model';
+import { MatIconModule } from '@angular/material/icon';
+import { Debt, DebtStatus, DebtType } from '../../../../core/models/debt.model';
+import { Account } from '../../../../core/models/account.model';
+import { AccountService } from '../../../accounts/services/account.service';
 
 @Component({
   selector: 'app-debt-form',
@@ -19,16 +22,22 @@ import { Debt, DebtStatus } from '../../../../core/models/debt.model';
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatIconModule,
   ],
   templateUrl: './debt-form.html',
   styleUrl: './debt-form.scss',
 })
 export class DebtFormComponent {
+  private accountService = inject(AccountService);
+
   editing = input<Debt | null>(null);
   saved = output<Omit<Debt, 'id' | 'createdAt'>>();
   cancelled = output<void>();
 
+  accounts = signal<Account[]>([]);
   creditor = signal('');
+  type = signal<DebtType>('payable');
+  accountId = signal<string | null>(null);
   description = signal('');
   amountOwed = signal(0);
   interestRate = signal(0);
@@ -38,9 +47,17 @@ export class DebtFormComponent {
   remindOn = signal<Date | null>(null);
 
   constructor() {
+    this.accountService.getAccounts().subscribe((accounts) => {
+      this.accounts.set(accounts);
+      if (accounts.length > 0 && this.type() === 'receivable' && !this.accountId()) {
+        this.accountId.set(accounts[0].id);
+      }
+    });
     const d = this.editing();
     if (!d) return;
     this.creditor.set(d.creditor);
+    this.type.set(d.type ?? 'payable');
+    this.accountId.set(d.accountId ?? null);
     this.description.set(d.description ?? '');
     this.amountOwed.set(d.amountOwed);
     this.interestRate.set(d.interestRate || 0);
@@ -50,14 +67,38 @@ export class DebtFormComponent {
     this.remindOn.set(d.remindOn ? new Date(d.remindOn) : null);
   }
 
+  setType(next: DebtType): void {
+    this.type.set(next);
+    if (next === 'receivable' && !this.accountId()) {
+      const accounts = this.accounts();
+      if (accounts.length > 0) this.accountId.set(accounts[0].id);
+    }
+  }
+
+  getCreditorLabel(): string {
+    return this.type() === 'receivable' ? 'Debtor' : 'Creditor';
+  }
+
+  getCreditorHint(): string {
+    return this.type() === 'receivable'
+      ? 'e.g. Miguel, roommate, freelance client'
+      : 'e.g. Chase Bank, friend, car loan';
+  }
+
   get clean(): boolean {
-    return this.creditor().trim() !== '' && this.amountOwed() >= 0;
+    const hasCreditor = this.creditor().trim() !== '';
+    if (this.type() === 'receivable') {
+      return hasCreditor && this.amountOwed() >= 0 && this.accountId() !== null && this.accountId() !== '';
+    }
+    return hasCreditor && this.amountOwed() >= 0;
   }
 
   onSubmit(): void {
     if (!this.clean) return;
     this.saved.emit({
       creditor: this.creditor().trim(),
+      type: this.type(),
+      accountId: this.type() === 'receivable' ? this.accountId() : null,
       description: this.description().trim() || null,
       amountOwed: Number(this.amountOwed()),
       interestRate: Number(this.interestRate() || 0),

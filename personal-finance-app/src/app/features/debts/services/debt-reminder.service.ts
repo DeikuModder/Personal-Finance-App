@@ -102,11 +102,16 @@ export class DebtReminderService {
     for (const reminder of reminders) {
       if (notified[reminder.key]) continue;
       notified[reminder.key] = true;
+      const receivable = reminder.debt.type === 'receivable';
       const title = reminder.kind === 'overdue' ? 'Debt overdue' : 'Debt reminder';
       const body =
         reminder.kind === 'overdue'
-          ? `${reminder.debt.creditor}: payment was due on ${reminder.date}`
-          : `${reminder.debt.creditor}: payment due on ${reminder.date}`;
+          ? receivable
+            ? `${reminder.debt.creditor}: the payment you're owed was due on ${reminder.date}`
+            : `${reminder.debt.creditor}: your payment was due on ${reminder.date}`
+          : receivable
+            ? `${reminder.debt.creditor}: the payment you're owed comes due on ${reminder.date}`
+            : `${reminder.debt.creditor}: your payment is due on ${reminder.date}`;
       try {
         new Notification(title, { body });
       } catch {

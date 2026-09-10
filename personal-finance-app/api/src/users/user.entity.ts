@@ -13,6 +13,7 @@ import { ChallengeConfig } from '../challenge/challenge-config.entity';
 import { Category } from '../categories/category.entity';
 import { BudgetItem } from '../budgets/budget-item.entity';
 import { Debt } from '../debts/debt.entity';
+import { Goal } from '../goals/goal.entity';
 
 @Entity('users')
 export class User {
@@ -48,4 +49,7 @@ export class User {
 
   @OneToMany(() => Debt, (d) => d.user)
   debts: Debt[];
+
+  @OneToMany(() => Goal, (g) => g.user)
+  goals: Goal[];
 }

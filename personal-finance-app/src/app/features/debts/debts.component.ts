@@ -13,6 +13,10 @@ import {
   DebtPayDialogComponent,
   PayDebtResult,
 } from './components/debt-pay-dialog/debt-pay-dialog.component';
+import {
+  DebtCollectDialogComponent,
+  CollectDebtResult,
+} from './components/debt-collect-dialog/debt-collect-dialog.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 
 @Component({
@@ -57,12 +61,32 @@ export class DebtsComponent {
     return this.debtService.getTotalOwed(this.debts());
   }
 
+  getTotalOwedToYou(): number {
+    return this.debtService.getTotalOwedToYou(this.debts());
+  }
+
+  hasPayableDebts(): boolean {
+    return this.debts().some((d) => d.status === 'active' && d.type !== 'receivable');
+  }
+
   getMinPayments(): number {
     return this.debtService.getTotalMinimumPayments(this.debts());
   }
 
   getOverdueCount(): number {
     return this.reminderService.getOverdueCount();
+  }
+
+  getReminderText(r: DebtReminder): string {
+    const receivable = r.debt.type === 'receivable';
+    if (r.kind === 'overdue') {
+      return receivable
+        ? `${r.debt.creditor}: the payment you're owed was due on ${r.date}`
+        : `${r.debt.creditor}: your payment was due on ${r.date}`;
+    }
+    return receivable
+      ? `${r.debt.creditor}: the payment you're owed comes due on ${r.date}`
+      : `${r.debt.creditor}: your payment is due on ${r.date}`;
   }
 
   startAdd(): void {
@@ -80,7 +104,20 @@ export class DebtsComponent {
     if (editing) {
       this.debtService.updateDebt({ ...editing, ...data }).subscribe();
     } else {
-      this.debtService.addDebt(data).subscribe();
+      this.debtService.addDebt(data).subscribe((debt) => {
+        if (debt.type === 'receivable' && debt.accountId) {
+          this.transactionService
+            .addTransaction({
+              type: 'expense',
+              amount: debt.amountOwed,
+              description: `Lent to ${debt.creditor}`,
+              category: 'transfer',
+              date: new Date().toISOString().split('T')[0],
+              accountId: debt.accountId,
+            })
+            .subscribe();
+        }
+      });
     }
     this.showForm.set(false);
     this.editing.set(null);
@@ -108,6 +145,28 @@ export class DebtsComponent {
           amount: result.amount,
           description: result.description,
           category: result.category,
+          date: result.date,
+          accountId: result.accountId,
+        })
+        .subscribe(() => {
+          this.debtService.markPaid(debt).subscribe();
+        });
+    });
+  }
+
+  onCollected(debt: Debt): void {
+    const ref = this.dialog.open(DebtCollectDialogComponent, {
+      data: { debt },
+      width: '420px',
+    });
+    ref.afterClosed().subscribe((result: CollectDebtResult | undefined) => {
+      if (!result) return;
+      this.transactionService
+        .addTransaction({
+          type: 'income',
+          amount: result.amount,
+          description: result.description,
+          category: 'transfer',
           date: result.date,
           accountId: result.accountId,
         })

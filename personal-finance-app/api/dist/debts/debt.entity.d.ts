@@ -4,6 +4,8 @@ export declare class Debt {
     userId: string;
     user: User;
     creditor: string;
+    type: 'payable' | 'receivable';
+    accountId: string | null;
     description: string | null;
     amountOwed: number;
     interestRate: number;

@@ -17,6 +17,11 @@ export class DebtListComponent {
   deleted = output<string>();
   edited = output<Debt>();
   payed = output<Debt>();
+  collected = output<Debt>();
+
+  isReceivable(debt: Debt): boolean {
+    return debt.type === 'receivable';
+  }
 
   getStatusKind(debt: Debt): 'overdue' | 'due' | 'ok' | 'paid' {
     if (debt.status === 'paid') return 'paid';
@@ -34,13 +39,13 @@ export class DebtListComponent {
   getStatusLabel(debt: Debt): string {
     switch (this.getStatusKind(debt)) {
       case 'overdue':
-        return 'Overdue';
+        return debt.type === 'receivable' ? 'Overdue (they owe you)' : 'Overdue';
       case 'due':
         return 'Due soon';
       case 'paid':
-        return 'Paid';
+        return debt.type === 'receivable' ? 'Collected' : 'Paid';
       default:
-        return 'On track';
+        return debt.type === 'receivable' ? 'Expected' : 'On track';
     }
   }
 
@@ -61,6 +66,11 @@ export class DebtListComponent {
   onPay(debt: Debt, event: Event): void {
     event.stopPropagation();
     this.payed.emit(debt);
+  }
+
+  onCollected(debt: Debt, event: Event): void {
+    event.stopPropagation();
+    this.collected.emit(debt);
   }
 }
 

@@ -1,8 +1,11 @@
 export type DebtStatus = 'active' | 'paid';
+export type DebtType = 'payable' | 'receivable';
 
 export interface Debt {
   id: string;
   creditor: string;
+  type: DebtType;
+  accountId: string | null;
   description: string | null;
   amountOwed: number;
   interestRate: number;

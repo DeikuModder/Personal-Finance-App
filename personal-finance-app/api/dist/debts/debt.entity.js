@@ -33,6 +33,14 @@ __decorate([
     __metadata("design:type", String)
 ], Debt.prototype, "creditor", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', default: 'payable' }),
+    __metadata("design:type", String)
+], Debt.prototype, "type", void 0);
+__decorate([
+    (0, typeorm_1.Column)('uuid', { nullable: true }),
+    __metadata("design:type", String)
+], Debt.prototype, "accountId", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Debt.prototype, "description", void 0);

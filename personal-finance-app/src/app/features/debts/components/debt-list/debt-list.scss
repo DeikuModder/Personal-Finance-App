@@ -36,9 +36,17 @@
   padding: 1rem 1.25rem;
   border-left: 3px solid #ff6e6e;
 
+  &.receivable {
+    border-left-color: #4caf50;
+  }
+
   &.paid {
-    border-left-color: #03dac6;
     opacity: 0.75;
+    border-left-color: #03dac6;
+
+    &.receivable {
+      border-left-color: #81c784;
+    }
   }
 }
 
@@ -68,6 +76,21 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+.type-badge {
+  align-self: flex-start;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  color: #ff8a80;
+  background: rgba(255, 110, 110, 0.15);
+
+  &.receivable {
+    color: #81c784;
+    background: rgba(76, 175, 80, 0.15);
   }
 }
 
@@ -108,6 +131,12 @@
   .pay-btn {
     --mdc-protected-button-container-color: rgba(3, 218, 198, 0.15);
     color: #03dac6;
+    border-radius: 10px;
+  }
+
+  .collect-btn {
+    --mdc-protected-button-container-color: rgba(76, 175, 80, 0.15);
+    color: #81c784;
     border-radius: 10px;
   }
 

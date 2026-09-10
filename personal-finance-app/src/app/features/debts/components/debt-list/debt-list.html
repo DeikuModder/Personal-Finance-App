@@ -7,10 +7,13 @@
 } @else {
   <div class="list">
     @for (debt of debts(); track debt.id) {
-      <div class="debt-card" [class.paid]="debt.status === 'paid'">
+      <div class="debt-card" [class.receivable]="isReceivable(debt)" [class.paid]="debt.status === 'paid'">
         <div class="debt-header">
           <div class="debt-info">
             <span class="debt-creditor">{{ debt.creditor }}</span>
+            <span class="type-badge" [class.receivable]="isReceivable(debt)">
+              {{ isReceivable(debt) ? 'Owed to you' : 'You owe' }}
+            </span>
             <span class="status-badge" [class]="getStatusKind(debt)">
               {{ getStatusLabel(debt) }}
             </span>
@@ -19,8 +22,11 @@
             }
           </div>
           <div class="debt-actions">
-            @if (debt.status === 'active') {
+            @if (debt.status === 'active' && !isReceivable(debt)) {
               <button mat-flat-button class="pay-btn" (click)="onPay(debt, $event)">Pay off</button>
+            }
+            @if (debt.status === 'active' && isReceivable(debt)) {
+              <button mat-flat-button class="collect-btn" (click)="onCollected(debt, $event)">Collected</button>
             }
             <button mat-icon-button class="edit-btn" (click)="onEdit(debt, $event)">
               <mat-icon>edit_outline</mat-icon>
@@ -33,7 +39,7 @@
 
         <div class="debt-body">
           <div class="debt-field">
-            <span class="label">Amount owed</span>
+            <span class="label">{{ isReceivable(debt) ? 'Amount you're owed' : 'Amount owed' }}</span>
             <span class="value strong">{{ debt.amountOwed | currencyFormat }}</span>
           </div>
           @if (debt.interestRate > 0) {
@@ -53,12 +59,12 @@
 
         <div class="debt-footer">
           @if (debt.status === 'paid') {
-            <span class="paid-date">Paid on {{ debt.paidAt }}</span>
+            <span class="paid-date">{{ isReceivable(debt) ? 'Collected on' : 'Paid on' }} {{ debt.paidAt }}</span>
           } @else {
             @if (debt.dueDate) {
               <span class="due-date" [class.overdue]="getStatusKind(debt) === 'overdue'">
                 <mat-icon>event</mat-icon>
-                {{ getStatusKind(debt) === 'overdue' ? 'Was due' : 'Due' }} {{ debt.dueDate }}
+                {{ getStatusKind(debt) === 'overdue' ? (isReceivable(debt) ? 'Was expected' : 'Was due') : (isReceivable(debt) ? 'Expected' : 'Due') }} {{ debt.dueDate }}
               </span>
             }
             @if (debt.remindOn) {

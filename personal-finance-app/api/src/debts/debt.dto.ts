@@ -7,6 +7,15 @@ export class UpsertDebtDto {
   @IsString()
   creditor: string;
 
+  @IsString()
+  @IsOptional()
+  @IsIn(['payable', 'receivable'])
+  type?: 'payable' | 'receivable';
+
+  @IsOptional()
+  @IsString()
+  accountId?: string | null;
+
   @IsOptional()
   @IsString()
   description?: string;

@@ -1,13 +1,25 @@
 <div class="form-container">
+  <div class="type-toggle">
+    <button mat-button class="toggle-btn payable" [class.active]="type() === 'payable'" (click)="setType('payable')">
+      <mat-icon>credit_score</mat-icon>
+      I owe money
+    </button>
+    <button mat-button class="toggle-btn receivable" [class.active]="type() === 'receivable'" (click)="setType('receivable')">
+      <mat-icon>payments</mat-icon>
+      Someone owes me
+    </button>
+  </div>
+
   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Creditor</mat-label>
+    <mat-label>{{ getCreditorLabel() }}</mat-label>
     <input
       matInput
       [ngModel]="creditor()"
       (ngModelChange)="creditor.set($event)"
       [maxlength]="60"
-      placeholder="e.g. Chase Bank, friend, car loan"
+      [placeholder]="getCreditorHint()"
     />
+    <mat-hint>{{ type() === 'receivable' ? 'Who owes you money?' : 'Who do you owe money to?' }}</mat-hint>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
@@ -21,9 +33,21 @@
     />
   </mat-form-field>
 
+  @if (type() === 'receivable') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Account (money lent from)</mat-label>
+      <mat-select [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
+        @for (account of accounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-hint>Recording the loan deducts this amount from the account.</mat-hint>
+    </mat-form-field>
+  }
+
   <div class="row">
     <mat-form-field appearance="outline" class="amount-field">
-      <mat-label>Amount owed</mat-label>
+      <mat-label>{{ type() === 'receivable' ? 'Amount lent' : 'Amount owed' }}</mat-label>
       <span matPrefix>$&nbsp;</span>
       <input matInput type="number" [ngModel]="amountOwed()" (ngModelChange)="amountOwed.set($event)" min="0" step="0.01" />
     </mat-form-field>
@@ -35,11 +59,13 @@
     </mat-form-field>
   </div>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Minimum payment (optional)</mat-label>
-    <span matPrefix>$&nbsp;</span>
-    <input matInput type="number" [ngModel]="minimumPayment()" (ngModelChange)="minimumPayment.set($event)" min="0" step="0.01" />
-  </mat-form-field>
+  @if (type() !== 'receivable') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Minimum payment (optional)</mat-label>
+      <span matPrefix>$&nbsp;</span>
+      <input matInput type="number" [ngModel]="minimumPayment()" (ngModelChange)="minimumPayment.set($event)" min="0" step="0.01" />
+    </mat-form-field>
+  }
 
   <div class="row">
     <mat-form-field appearance="outline" class="half-field">
@@ -57,7 +83,7 @@
     </mat-form-field>
   </div>
 
-  @if (editing()) {
+  @if (editing() && type() !== 'receivable') {
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Status</mat-label>
       <mat-select [ngModel]="status()" (ngModelChange)="status.set($event)">

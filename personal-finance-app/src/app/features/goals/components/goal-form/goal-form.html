@@ -1,0 +1,106 @@
+<div class="type-toggle">
+  <button mat-button class="toggle-btn savings" [class.active]="type() === 'savings'" (click)="setType('savings')">
+    <mat-icon>savings</mat-icon>
+    Savings goal
+  </button>
+  <button mat-button class="toggle-btn streak" [class.active]="type() === 'streak'" (click)="setType('streak')">
+    <mat-icon>local_fire_department</mat-icon>
+    Habit streak
+  </button>
+</div>
+
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>Title</mat-label>
+  <input
+    matInput
+    [ngModel]="title()"
+    (ngModelChange)="title.set($event)"
+    [maxlength]="60"
+    placeholder="e.g. New car, 6-month emergency fund"
+  />
+</mat-form-field>
+
+@if (type() === 'savings') {
+  <span class="section-title">Pick an icon</span>
+  <div class="icon-grid">
+    @for (opt of customIcons; track opt) {
+      <button mat-icon-button class="icon-cell" [class.selected]="icon() === opt" (click)="icon.set(opt)">
+        <mat-icon>{{ opt }}</mat-icon>
+      </button>
+    }
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline" class="amount-field">
+      <mat-label>Target amount</mat-label>
+      <span matPrefix>$&nbsp;</span>
+      <input matInput type="number" [ngModel]="targetAmount()" (ngModelChange)="targetAmount.set($event)" min="0" step="0.01" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half-field">
+      <mat-label>Deadline (optional)</mat-label>
+      <input matInput [matDatepicker]="picker" [ngModel]="deadline()" (ngModelChange)="deadline.set($event)" />
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="picture-row">
+    @if (picture()) {
+      <img [src]="picture()" alt="Goal picture" class="picture-preview" />
+    }
+    <div class="picture-actions">
+      <input #pictureInput type="file" accept="image/*" hidden (change)="onPictureSelected($event)" />
+      <button mat-stroked-button (click)="pictureInput.click()" [disabled]="pictureProcessing()">
+        <mat-icon>add_a_photo</mat-icon>
+        {{ picture() ? 'Change picture' : 'Add a picture (optional)' }}
+      </button>
+      @if (picture()) {
+        <button mat-stroked-button (click)="removePicture()">
+          <mat-icon>delete_outline</mat-icon>
+          Remove
+        </button>
+      }
+    </div>
+  </div>
+}
+
+@if (type() === 'streak') {
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Category to protect</mat-label>
+    <mat-select [ngModel]="category()" (ngModelChange)="category.set($event)">
+      @for (cat of categories(); track cat.value) {
+        <mat-option [value]="cat.value">{{ cat.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Allowance</mat-label>
+    <span matPrefix>$&nbsp;</span>
+    <input matInput type="number" [ngModel]="allowance()" (ngModelChange)="allowance.set($event)" min="0" step="0.01" />
+  </mat-form-field>
+
+  <div class="row">
+    <mat-form-field appearance="outline" class="half-field">
+      <mat-label>Allowance period</mat-label>
+      <mat-select [ngModel]="allowancePeriod()" (ngModelChange)="allowancePeriod.set($event)">
+        <mat-option value="day">Per day</mat-option>
+        <mat-option value="week">Per week</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half-field">
+      <mat-label>Target streak (optional)</mat-label>
+      <input matInput type="number" [ngModel]="streakTarget() ?? null" (ngModelChange)="streakTarget.set($event)" min="1" step="1" />
+      <span matSuffix>{{ allowancePeriod() === 'day' ? 'days' : 'weeks' }}</span>
+    </mat-form-field>
+  </div>
+}
+
+<div class="form-actions">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!clean">
+    {{ editing() ? 'Save changes' : 'Create Goal' }}
+  </button>
+</div>

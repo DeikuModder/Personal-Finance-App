@@ -23,6 +23,12 @@ export class Debt {
   @Column()
   creditor: string;
 
+  @Column({ type: 'varchar', default: 'payable' })
+  type: 'payable' | 'receivable';
+
+  @Column('uuid', { nullable: true })
+  accountId: string | null;
+
   @Column({ nullable: true })
   description: string | null;
 
