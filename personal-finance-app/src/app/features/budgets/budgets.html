@@ -1,10 +1,5 @@
 <div class="budgets-page">
-  <div class="page-header">
-    <h1>Budgets</h1>
-    <button mat-fab class="fab" (click)="showForm.set(!showForm())">
-      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
-    </button>
-  </div>
+  <app-page-header title="Budgets" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="showForm.set(!showForm())" />
 
   <span class="month-label">{{ currentMonth }}</span>
 

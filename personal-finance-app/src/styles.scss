@@ -69,6 +69,15 @@ body {
 }
 
 /* ============================================================
+   Responsive shell tokens
+   ============================================================ */
+:root {
+  --content-max: 1200px;
+  --content-max-fixed: 1200px;
+  --rail-width: 84px;
+}
+
+/* ============================================================
    High-contrast form fields (dark theme)
    Forces readable input text, labels, placeholders and accents
    for every mat-form-field / select / datepicker in the app.

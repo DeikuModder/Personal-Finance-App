@@ -1,0 +1,30 @@
+<div class="more-page">
+  <h1>More</h1>
+
+  @for (group of groups; track group.label) {
+    <h2 class="group-title">{{ group.label }}</h2>
+    <div class="more-grid">
+      @for (item of group.items; track item.route) {
+        <a [routerLink]="item.route" class="more-card">
+          <div class="more-icon">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </div>
+          <span class="more-label">{{ item.label }}</span>
+          @if (isDebts(item) && reminderCount() > 0) {
+            <span class="more-badge">{{ reminderCount() }}</span>
+          }
+          <mat-icon class="more-chevron">chevron_right</mat-icon>
+        </a>
+      }
+    </div>
+  }
+
+  <h2 class="group-title">System</h2>
+  <a [routerLink]="settings.route" class="more-card settings">
+    <div class="more-icon">
+      <mat-icon>{{ settings.icon }}</mat-icon>
+    </div>
+    <span class="more-label">{{ settings.label }}</span>
+    <mat-icon class="more-chevron">chevron_right</mat-icon>
+  </a>
+</div>

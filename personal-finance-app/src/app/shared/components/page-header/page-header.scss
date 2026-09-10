@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+}
+
+.fab {
+  --mdc-fab-container-color: #d62020;
+  --mdc-fab-icon-color: #ffffff;
+  flex-shrink: 0;
+}

@@ -18,6 +18,7 @@ import {
   CollectDebtResult,
 } from './components/debt-collect-dialog/debt-collect-dialog.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-debts',
@@ -29,6 +30,7 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
     DebtFormComponent,
     DebtListComponent,
     SectionHelpComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './debts.html',
   styleUrl: './debts.scss',

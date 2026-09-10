@@ -1,6 +1,32 @@
 .dashboard {
   max-width: 600px;
   margin: 0 auto;
+
+  @media (min-width: 900px) {
+    max-width: var(--content-max, 1200px);
+  }
+}
+
+.summary-row {
+  display: block;
+
+  @media (min-width: 900px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+}
+
+.charts-row {
+  display: block;
+
+  @media (min-width: 900px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
 }
 
 .dashboard-header {
@@ -16,7 +42,7 @@
 
     h1 {
       margin: 0;
-      color: #ff6e6e;
+      color: #ffffff;
       font-size: 1.5rem;
       font-weight: 700;
     }

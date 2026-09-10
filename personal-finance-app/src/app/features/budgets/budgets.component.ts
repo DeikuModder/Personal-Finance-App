@@ -11,11 +11,12 @@ import { BudgetFormComponent } from './components/budget-form/budget-form.compon
 import { toLocalDate } from '../../core/utils/date.util';
 import { BudgetListComponent, BudgetWithSpend, NewBudgetItem } from './components/budget-list/budget-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-budgets',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, BudgetFormComponent, BudgetListComponent, SectionHelpComponent],
+  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, BudgetFormComponent, BudgetListComponent, SectionHelpComponent, PageHeaderComponent],
   templateUrl: './budgets.html',
   styleUrl: './budgets.scss',
 })

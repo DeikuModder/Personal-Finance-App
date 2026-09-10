@@ -29,20 +29,24 @@
     ]"
   />
 
-  <app-summary-cards
-    [balance]="balance()"
-    [income]="income()"
-    [expenses]="expenses()"
-  />
+  <div class="summary-row">
+    <app-summary-cards
+      [balance]="balance()"
+      [income]="income()"
+      [expenses]="expenses()"
+    />
 
-  <app-net-worth-card
-    [accountsTotal]="accountsTotal()"
-    [investmentsValue]="investmentsValue()"
-    [investmentsIncome]="investmentsIncome()"
-  />
+    <app-net-worth-card
+      [accountsTotal]="accountsTotal()"
+      [investmentsValue]="investmentsValue()"
+      [investmentsIncome]="investmentsIncome()"
+    />
+  </div>
 
-  <app-spending-by-category [transactions]="allTransactions()" />
-  <app-monthly-trend [transactions]="allTransactions()" />
+  <div class="charts-row">
+    <app-spending-by-category [transactions]="allTransactions()" />
+    <app-monthly-trend [transactions]="allTransactions()" />
+  </div>
 
   <app-recent-transactions [transactions]="recentTransactions()" />
 </div>

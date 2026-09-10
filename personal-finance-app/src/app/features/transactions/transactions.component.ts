@@ -12,6 +12,7 @@ import { TransactionService } from './services/transaction.service';
 import { toLocalDate } from '../../core/utils/date.util';
 import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-transactions',
@@ -24,6 +25,7 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
     MatButtonModule,
     TransactionListComponent,
     SectionHelpComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',

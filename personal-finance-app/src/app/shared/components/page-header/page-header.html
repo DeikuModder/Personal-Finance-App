@@ -1,0 +1,6 @@
+<div class="page-header">
+  <h1>{{ title() }}</h1>
+  <button mat-fab class="fab" type="button" [attr.aria-label]="fabLabel() || title()" (click)="fabClicked.emit()">
+    <mat-icon>{{ fabIcon() }}</mat-icon>
+  </button>
+</div>

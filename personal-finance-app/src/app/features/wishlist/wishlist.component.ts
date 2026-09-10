@@ -7,11 +7,12 @@ import { WishlistService } from './services/wishlist.service';
 import { WishlistFormComponent } from './components/wishlist-form/wishlist-form.component';
 import { WishlistListComponent } from './components/wishlist-list/wishlist-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, WishlistFormComponent, WishlistListComponent, SectionHelpComponent],
+  imports: [MatIconModule, MatButtonModule, WishlistFormComponent, WishlistListComponent, SectionHelpComponent, PageHeaderComponent],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.scss',
 })

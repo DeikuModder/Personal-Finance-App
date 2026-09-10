@@ -7,19 +7,29 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  @media (min-width: 900px) {
+    flex-direction: row;
+  }
 }
 
 .main-content {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 80px;
   padding: 1rem 1rem 96px 1rem;
 
   @media (min-width: 768px) {
     padding: 1.5rem 2rem 96px 2rem;
   }
+
+  @media (min-width: 900px) {
+    padding-bottom: 2rem;
+  }
 }
 
+/* ============================================================
+   Bottom navigation (mobile & tablet)
+   ============================================================ */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -39,6 +49,10 @@
     left: 50%;
     transform: translateX(-50%);
     border-radius: 16px 16px 0 0;
+  }
+
+  @media (min-width: 900px) {
+    display: none;
   }
 }
 
@@ -102,4 +116,80 @@
     width: 28px;
     height: 28px;
   }
+}
+
+/* ============================================================
+   Navigation rail (desktop / tablet-landscape+)
+   ============================================================ */
+.rail {
+  display: none;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: var(--rail-width, 84px);
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  background: #1a1a1a;
+  border-right: 1px solid #2a2a2a;
+  overflow-y: auto;
+  flex-shrink: 0;
+
+  @media (min-width: 900px) {
+    display: flex;
+  }
+}
+
+.rail-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+
+  + .rail-group {
+    border-top: 1px solid #2a2a2a;
+  }
+}
+
+.rail-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-decoration: none;
+  color: #9e9e9e;
+  font-size: 0.5625rem;
+  padding: 0.55rem 0.25rem;
+  border-radius: 10px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+
+  mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-badge {
+    top: 4px;
+    right: 10px;
+  }
+
+  &:hover {
+    color: #e0e0e0;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &.active {
+    color: #ff6e6e;
+    background: rgba(255, 110, 110, 0.1);
+  }
+}
+
+.rail-settings {
+  margin: 0 0.5rem 0.5rem 0.5rem;
+}
+
+.rail-spacer {
+  flex: 1;
 }

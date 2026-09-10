@@ -10,6 +10,7 @@ import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
 import { Account } from '../../core/models/account.model';
 import { AccountService } from './services/account.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-accounts',
@@ -24,6 +25,7 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
     MatIconModule,
     CurrencyFormatPipe,
     SectionHelpComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',

@@ -1,10 +1,5 @@
 <div class="wishlist-page">
-  <div class="page-header">
-    <h1>Wishlist</h1>
-    <button mat-fab class="fab" (click)="startAdd()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
+  <app-page-header title="Wishlist" (fabClicked)="startAdd()" />
 
   <app-section-help
     title="Wishlist — things you could buy today"

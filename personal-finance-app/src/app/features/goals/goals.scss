@@ -1,6 +1,11 @@
 :host {
   display: block;
-  padding: 1rem 1.25rem 6rem;
+  max-width: 600px;
+  margin: 0 auto;
+
+  @media (min-width: 900px) {
+    max-width: var(--content-max, 1200px);
+  }
 }
 
 .pool-card {

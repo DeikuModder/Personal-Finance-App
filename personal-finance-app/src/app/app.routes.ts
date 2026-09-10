@@ -93,6 +93,11 @@ export const routes: Routes = [
           import('./features/chat/chat.component').then((m) => m.ChatComponent),
       },
       {
+        path: 'more',
+        loadComponent: () =>
+          import('./features/more/more.component').then((m) => m.MoreComponent),
+      },
+      {
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then((m) => m.SettingsComponent),

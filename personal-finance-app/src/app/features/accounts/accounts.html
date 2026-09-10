@@ -1,10 +1,5 @@
 <div class="accounts-page">
-  <div class="page-header">
-    <h1>Accounts</h1>
-    <button mat-fab class="fab" (click)="toggleForm()">
-      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
-    </button>
-  </div>
+  <app-page-header title="Accounts" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="toggleForm()" />
 
   <div class="total-card">
     <span class="total-label">Total Balance</span>

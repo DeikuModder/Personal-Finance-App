@@ -1,10 +1,5 @@
 <div class="investments-page">
-  <div class="page-header">
-    <h1>Investments</h1>
-    <button mat-fab class="fab" (click)="showForm.set(!showForm())">
-      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
-    </button>
-  </div>
+  <app-page-header title="Investments" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="showForm.set(!showForm())" />
 
   <app-section-help
     title="Investments — track your portfolio"

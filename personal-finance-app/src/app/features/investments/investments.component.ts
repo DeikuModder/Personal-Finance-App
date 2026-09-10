@@ -8,6 +8,7 @@ import { InvestmentFormComponent } from './components/investment-form/investment
 import { InvestmentListComponent } from './components/investment-list/investment-list.component';
 import { PortfolioAllocationComponent } from './components/portfolio-allocation/portfolio-allocation.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-investments',
@@ -20,6 +21,7 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
     InvestmentListComponent,
     PortfolioAllocationComponent,
     SectionHelpComponent,
+    PageHeaderComponent,
   ],
   templateUrl: './investments.html',
   styleUrl: './investments.scss',

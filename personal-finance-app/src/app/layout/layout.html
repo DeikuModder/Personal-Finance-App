@@ -1,52 +1,64 @@
 <div class="app-shell">
+  <nav class="rail" aria-label="Main navigation">
+    @for (group of groups; track group.label) {
+      <div class="rail-group">
+        @for (item of group.items; track item.route) {
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            class="rail-item"
+            [attr.aria-label]="item.label"
+          >
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+            @if (isDebts(item) && reminderCount() > 0) {
+              <span class="nav-badge">{{ reminderCount() }}</span>
+            }
+          </a>
+        }
+      </div>
+    }
+    <div class="rail-spacer"></div>
+    <a
+      [routerLink]="settings.route"
+      routerLinkActive="active"
+      class="rail-item rail-settings"
+      [attr.aria-label]="settings.label"
+    >
+      <mat-icon>{{ settings.icon }}</mat-icon>
+      <span>{{ settings.label }}</span>
+    </a>
+  </nav>
+
   <main class="main-content">
     <router-outlet />
   </main>
 
-  <nav class="bottom-nav">
-    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-      <mat-icon>dashboard</mat-icon>
-      <span>Home</span>
-    </a>
-    <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
-      <mat-icon>receipt_long</mat-icon>
-      <span>Activity</span>
-    </a>
-    <a routerLink="/add" class="nav-item add-btn">
-      <div class="add-icon-wrapper">
-        <mat-icon>add</mat-icon>
-      </div>
-    </a>
-    <a routerLink="/budgets" routerLinkActive="active" class="nav-item">
-      <mat-icon>savings</mat-icon>
-      <span>Budgets</span>
-    </a>
-    <a routerLink="/debts" routerLinkActive="active" class="nav-item">
-      <mat-icon>credit_score</mat-icon>
-      <span>Debts</span>
+  <nav class="bottom-nav" aria-label="Main navigation">
+    @for (tab of tabs; track tab.item.route) {
+      <a
+        [routerLink]="tab.item.route"
+        [class.add-btn]="tab.raised"
+        routerLinkActive="active"
+        class="nav-item"
+        [attr.aria-label]="tab.item.label"
+      >
+        @if (tab.raised) {
+          <div class="add-icon-wrapper">
+            <mat-icon>{{ tab.item.icon }}</mat-icon>
+          </div>
+        } @else {
+          <mat-icon>{{ tab.item.icon }}</mat-icon>
+          <span>{{ tab.item.label }}</span>
+        }
+      </a>
+    }
+    <a routerLink="/more" routerLinkActive="active" class="nav-item" aria-label="More">
+      <mat-icon>apps</mat-icon>
+      <span>More</span>
       @if (reminderCount() > 0) {
         <span class="nav-badge">{{ reminderCount() }}</span>
       }
-    </a>
-    <a routerLink="/goals" routerLinkActive="active" class="nav-item">
-      <mat-icon>flag</mat-icon>
-      <span>Goals</span>
-    </a>
-    <a routerLink="/wishlist" routerLinkActive="active" class="nav-item">
-      <mat-icon>favorite</mat-icon>
-      <span>Wishlist</span>
-    </a>
-    <a routerLink="/accounts" routerLinkActive="active" class="nav-item">
-      <mat-icon>account_balance_wallet</mat-icon>
-      <span>Accounts</span>
-    </a>
-    <a routerLink="/challenge" routerLinkActive="active" class="nav-item">
-      <mat-icon>sports_esports</mat-icon>
-      <span>Challenge</span>
-    </a>
-    <a routerLink="/chat" routerLinkActive="active" class="nav-item">
-      <mat-icon>smart_toy</mat-icon>
-      <span>Chat</span>
     </a>
   </nav>
 </div>
