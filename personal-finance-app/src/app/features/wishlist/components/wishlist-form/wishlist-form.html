@@ -1,0 +1,44 @@
+<div class="form-container">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>What do you want?</mat-label>
+    <input
+      matInput
+      [ngModel]="name()"
+      (ngModelChange)="name.set($event)"
+      [maxlength]="60"
+      placeholder="e.g. Kindle Paperwhite, new running shoes"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Price (optional)</mat-label>
+    <span matPrefix>$&nbsp;</span>
+    <input matInput type="number" [ngModel]="price() ?? null" (ngModelChange)="price.set($event)" min="0" step="0.01" />
+  </mat-form-field>
+
+  <div class="picture-row">
+    @if (picture()) {
+      <img [src]="picture()" alt="Wishlist picture" class="picture-preview" />
+    }
+    <div class="picture-actions">
+      <input #pictureInput type="file" accept="image/*" hidden (change)="onPictureSelected($event)" />
+      <button mat-stroked-button (click)="pictureInput.click()" [disabled]="pictureProcessing()">
+        <mat-icon>add_a_photo</mat-icon>
+        {{ picture() ? 'Change picture' : 'Add a picture (optional)' }}
+      </button>
+      @if (picture()) {
+        <button mat-stroked-button (click)="removePicture()">
+          <mat-icon>delete_outline</mat-icon>
+          Remove
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!clean">
+      {{ editing() ? 'Save changes' : 'Add to Wishlist' }}
+    </button>
+  </div>
+</div>

@@ -9,3 +9,4 @@ export const CATEGORY_REPOSITORY = new InjectionToken<Repository<any>>('Category
 export const INVESTMENT_REPOSITORY = new InjectionToken<Repository<any>>('InvestmentRepository');
 export const DEBT_REPOSITORY = new InjectionToken<Repository<any>>('DebtRepository');
 export const GOAL_REPOSITORY = new InjectionToken<Repository<any>>('GoalRepository');
+export const WISHLIST_REPOSITORY = new InjectionToken<Repository<any>>('WishlistRepository');

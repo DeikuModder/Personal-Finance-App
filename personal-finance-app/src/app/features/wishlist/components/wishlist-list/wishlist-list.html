@@ -1,0 +1,45 @@
+@if (items().length === 0) {
+  <div class="empty-state">
+    <mat-icon>favorite</mat-icon>
+    <p>Your wishlist is empty</p>
+    <span>Add things you could buy today and remember them later</span>
+  </div>
+} @else {
+  <div class="list">
+    @for (item of items(); track item.id) {
+      <div class="wish-card" [class.achieved]="item.status === 'achieved'">
+        <div class="wish-main">
+          @if (item.picture) {
+            <img [src]="item.picture" alt="Wish" class="wish-picture" />
+          } @else {
+            <div class="wish-avatar">
+              <mat-icon>favorite</mat-icon>
+            </div>
+          }
+          <div class="wish-info">
+            <span class="wish-name">{{ item.name }}</span>
+            @if (showPrice(item)) {
+              <span class="wish-price">{{ item.price | currencyFormat }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="wish-actions">
+          @if (item.status === 'active') {
+            <button mat-flat-button class="achieve-btn" (click)="onAchieved(item, $event)">
+              Achieved
+            </button>
+          } @else if (item.achievedAt) {
+            <span class="achieved-chip">Got it {{ item.achievedAt }}</span>
+          }
+          <button mat-icon-button class="edit-btn" (click)="onEdit(item, $event)">
+            <mat-icon>edit_outline</mat-icon>
+          </button>
+          <button mat-icon-button class="delete-btn" (click)="onDelete(item.id, $event)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+}

@@ -11,7 +11,7 @@ import { Goal, GoalType } from '../../../../core/models/goal.model';
 import { CategoryOption } from '../../../../core/models/category.model';
 import { CUSTOM_CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
-import { fileToPicture } from '../../utils/image.util';
+import { fileToPicture } from '../../../../shared/utils/image.util';
 
 @Component({
   selector: 'app-goal-form',

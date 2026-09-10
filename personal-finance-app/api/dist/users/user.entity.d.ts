@@ -7,6 +7,7 @@ import { Category } from '../categories/category.entity';
 import { BudgetItem } from '../budgets/budget-item.entity';
 import { Debt } from '../debts/debt.entity';
 import { Goal } from '../goals/goal.entity';
+import { WishlistItem } from '../wishlist/wishlist-item.entity';
 export declare class User {
     id: string;
     email: string;
@@ -20,4 +21,5 @@ export declare class User {
     budgetItems: BudgetItem[];
     debts: Debt[];
     goals: Goal[];
+    wishlist: WishlistItem[];
 }

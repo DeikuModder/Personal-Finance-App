@@ -20,6 +20,7 @@ const category_entity_1 = require("../categories/category.entity");
 const budget_item_entity_1 = require("../budgets/budget-item.entity");
 const debt_entity_1 = require("../debts/debt.entity");
 const goal_entity_1 = require("../goals/goal.entity");
+const wishlist_item_entity_1 = require("../wishlist/wishlist-item.entity");
 let User = class User {
 };
 exports.User = User;
@@ -71,6 +72,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => goal_entity_1.Goal, (g) => g.user),
     __metadata("design:type", Array)
 ], User.prototype, "goals", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => wishlist_item_entity_1.WishlistItem, (w) => w.user),
+    __metadata("design:type", Array)
+], User.prototype, "wishlist", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);

@@ -12,6 +12,7 @@ import { ChallengeModule } from './challenge/challenge.module';
 import { CategoriesModule } from './categories/categories.module';
 import { DebtsModule } from './debts/debts.module';
 import { GoalsModule } from './goals/goals.module';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GoalsModule } from './goals/goals.module';
     CategoriesModule,
     DebtsModule,
     GoalsModule,
+    WishlistModule,
   ],
   providers: [
     {

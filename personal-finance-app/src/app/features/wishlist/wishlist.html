@@ -1,0 +1,35 @@
+<div class="wishlist-page">
+  <div class="page-header">
+    <h1>Wishlist</h1>
+    <button mat-fab class="fab" (click)="startAdd()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+  <app-section-help
+    title="Wishlist — things you could buy today"
+    description="A simple memory list of things you want. No budgets, no goals: just remember what those nice-to-haves are, with a picture and a price tag."
+    [howTo]="[
+      'Tap the + to add something: give it a name and, optionally, how much it costs and a picture.',
+      'When you actually get the item, tap “Achieved” to mark it as yours — it moves to the bottom with its date.',
+      'Edit or remove any item anytime with the pencil and trash icons.'
+    ]"
+  />
+
+  @if (showForm()) {
+    <div class="form-card">
+      <app-wishlist-form
+        [editing]="editing()"
+        (saved)="onSaved($event)"
+        (cancelled)="onCancel()"
+      />
+    </div>
+  }
+
+  <app-wishlist-list
+    [items]="items()"
+    (deleted)="onDelete($event)"
+    (edited)="startEdit($event)"
+    (achieved)="onAchieved($event)"
+  />
+</div>
