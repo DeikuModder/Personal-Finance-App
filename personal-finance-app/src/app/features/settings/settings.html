@@ -3,14 +3,13 @@
 
   <app-section-help
     title="Settings — manage your app"
-    [description]="'Settings lets you manage your account and sign-in, lock the app with a PIN, connect live market data, point the Chat page at your local AI assistant, and back up or restore all of your data.'"
+    [description]="'Settings lets you manage your account and sign-in, connect live market data, point the Chat page at your local AI assistant, and back up or restore all of your data.'"
     [howTo]="[
       'Account: shows the email you are signed in as and your role. Use Sign Out to end this session.',
       'Allowed Emails (superadmin only): controls which email addresses can sign in — everyone else is blocked.',
-      'Security: set a 6-digit PIN so the app asks for a passcode on open (this is a local convenience lock).',
       'Market Data: paste a free Alpha Vantage API key to auto-fill live stock prices and dividends in Investments.',
       'AI Assistant: set the address of your local EV service and test the connection before using the Chat page.',
-      'Data: Export Data downloads a full JSON backup; Import Data restores one. Clear All Data wipes everything on this device (transactions, accounts, budget, investments, PIN and API key).'
+      'Data: Export Data downloads a full JSON backup; Import Data restores one. Clear All Data wipes everything on this device.'
     ]"
   />
 
@@ -85,15 +84,6 @@
       </div>
     </div>
   }
-
-  <div class="settings-section">
-    <h3>Security</h3>
-    <button mat-button class="settings-item" (click)="resetPin()">
-      <mat-icon>lock</mat-icon>
-      <span>{{ pinSet() ? 'Change PIN' : 'Set PIN' }}</span>
-      <mat-icon class="chevron">chevron_right</mat-icon>
-    </button>
-  </div>
 
   <div class="settings-section">
     <h3>Market Data</h3>

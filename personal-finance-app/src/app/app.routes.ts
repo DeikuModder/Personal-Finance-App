@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { pinGuard } from './core/guards/pin.guard';
 import { sessionGuard } from './core/guards/session.guard';
 
 export const routes: Routes = [
@@ -9,21 +8,9 @@ export const routes: Routes = [
       import('./features/login/login.component').then((m) => m.LoginComponent),
   },
   {
-    path: 'auth/setup',
-    loadComponent: () =>
-      import('./features/auth/auth-page.component').then((m) => m.AuthPageComponent),
-    canActivate: [sessionGuard],
-  },
-  {
-    path: 'auth/unlock',
-    loadComponent: () =>
-      import('./features/auth/unlock/unlock.component').then((m) => m.UnlockComponent),
-    canActivate: [sessionGuard],
-  },
-  {
     path: '',
     loadComponent: () => import('./layout/layout.component').then((m) => m.LayoutComponent),
-    canActivate: [sessionGuard, pinGuard],
+    canActivate: [sessionGuard],
     children: [
       {
         path: '',

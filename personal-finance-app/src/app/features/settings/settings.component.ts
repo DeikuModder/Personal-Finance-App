@@ -1,5 +1,4 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +6,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { PinService } from '../../core/services/pin.service';
 import { ApiKeyService } from '../investments/services/api-key.service';
 import { AiAssistantService } from '../chat/services/ai-assistant.service';
 import { DebtReminderService } from '../debts/services/debt-reminder.service';
@@ -32,12 +30,10 @@ import { toErrorMessage } from '../../shared/utils/http-error.util';
   styleUrl: './settings.scss',
 })
 export class SettingsComponent {
-  private pinService = inject(PinService);
   private apiKeyService = inject(ApiKeyService);
   private aiAssistant = inject(AiAssistantService);
   private reminderService = inject(DebtReminderService);
   private auth = inject(AuthService);
-  private router = inject(Router);
 
   readonly user = this.auth.me;
   isSuperadmin = computed(() => this.user()?.role === 'superadmin');
@@ -58,7 +54,6 @@ export class SettingsComponent {
     });
   }
 
-  pinSet = signal(this.pinService.isPinSet());
   apiKey = signal(this.apiKeyService.getKey());
   apiKeySaved = signal(false);
   aiBaseUrl = signal(this.aiAssistant.getBaseUrl());
@@ -149,12 +144,6 @@ export class SettingsComponent {
       sessionStorage.clear();
       window.location.reload();
     }
-  }
-
-  resetPin(): void {
-    this.pinService.removePin();
-    this.pinSet.set(false);
-    this.router.navigate(['/auth/setup']);
   }
 
   exportData(): void {
