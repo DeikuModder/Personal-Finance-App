@@ -7,6 +7,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../shared/pipes/privacy-mask.pipe';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { Account } from '../../core/models/account.model';
 import { AccountService } from './services/account.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
@@ -24,6 +26,8 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
     MatButtonModule,
     MatIconModule,
     CurrencyFormatPipe,
+    PrivacyMaskPipe,
+    PrivacyToggleComponent,
     SectionHelpComponent,
     PageHeaderComponent,
   ],

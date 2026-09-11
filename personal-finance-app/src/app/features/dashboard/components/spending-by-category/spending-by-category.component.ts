@@ -7,8 +7,11 @@ import { TooltipComponent, LegendComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { CategoryService } from '../../../../core/services/category.service';
+import { PrivacyService } from '../../../../core/services/privacy.service';
 
 echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
+
+const MASK = '\u2022\u2022\u2022\u2022';
 
 @Component({
   selector: 'app-spending-by-category',
@@ -21,6 +24,7 @@ echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
 })
 export class SpendingByCategoryComponent {
   private categoryService = inject(CategoryService);
+  private privacy = inject(PrivacyService);
   transactions = input<Transaction[]>([]);
 
   private labels = signal<Record<string, string>>({});
@@ -33,6 +37,7 @@ export class SpendingByCategoryComponent {
   }
 
   chartOptions = computed<EChartsOption>(() => {
+    const hide = this.privacy.hiddenFor('transactions');
     const expenses = this.transactions().filter((t) => t.type === 'expense');
     const byCategory = new Map<string, number>();
 
@@ -62,7 +67,8 @@ export class SpendingByCategoryComponent {
     return {
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: ${c} ({d}%)',
+        formatter: (params: any) =>
+          hide ? `${params.name}: ${MASK} ({d}%)` : `${params.name}: $${Number(params.value).toFixed(2)} ({d}%)`,
       },
       legend: {
         show: data.length <= 5,
@@ -91,7 +97,8 @@ export class SpendingByCategoryComponent {
               show: true,
               fontSize: 14,
               fontWeight: 'bold',
-              formatter: '{b}\n${c}',
+              formatter: (params: any) =>
+                hide ? `${params.name}\n${MASK}` : `${params.name}\n$${Number(params.value).toFixed(2)}`,
               color: '#ffffff',
             },
           },

@@ -2,8 +2,11 @@
   <app-page-header title="Accounts" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="toggleForm()" />
 
   <div class="total-card">
-    <span class="total-label">Total Balance</span>
-    <span class="total-value">{{ getTotalBalance() | currencyFormat }}</span>
+    <div class="total-head">
+      <span class="total-label">Total Balance</span>
+      <app-privacy-toggle section="accounts" />
+    </div>
+    <span class="total-value">{{ getTotalBalance() | currencyFormat | privacyMask: 'accounts' }}</span>
   </div>
 
   <app-section-help
@@ -54,7 +57,7 @@
           </div>
         </div>
         <div class="account-right">
-          <span class="account-balance">{{ account.balance | currencyFormat }}</span>
+          <span class="account-balance">{{ account.balance | currencyFormat | privacyMask: 'accounts' }}</span>
           <button mat-icon-button class="edit-btn" (click)="editAccount(account)">
             <mat-icon>edit_outline</mat-icon>
           </button>

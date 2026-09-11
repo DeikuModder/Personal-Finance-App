@@ -9,7 +9,7 @@ import { jwtVerify, JWTPayload } from 'jose';
 import { Request } from 'express';
 import { UsersService } from '../users/users.service';
 import { IS_PUBLIC_KEY } from './auth.decorators';
-import { readCookie } from './cookie.util';
+import { ACCESS_COOKIE, readCookie } from './cookie.util';
 
 export interface AuthUser {
   email: string;
@@ -72,6 +72,6 @@ export class JwtAuthGuard implements CanActivate {
     if (auth && auth.startsWith('Bearer ')) {
       return auth.slice(7);
     }
-    return readCookie(request, 'ft_access');
+    return readCookie(request, ACCESS_COOKIE);
   }
 }

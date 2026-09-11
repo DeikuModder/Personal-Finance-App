@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Budget, BudgetItem } from '../../../../core/models/budget.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { CategoryService } from '../../../../core/services/category.service';
 
 export interface BudgetWithSpend {
@@ -33,6 +34,7 @@ export interface NewBudgetItem {
     MatFormFieldModule,
     MatInputModule,
     CurrencyFormatPipe,
+    PrivacyMaskPipe,
   ],
   templateUrl: './budget-list.html',
   styleUrl: './budget-list.scss',

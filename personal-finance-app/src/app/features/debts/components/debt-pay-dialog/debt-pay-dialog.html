@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Pay off {{ data.debt.creditor }}</h2>
 <mat-dialog-content>
   <p class="hint">
-    This will add an expense transaction for {{ data.debt.amountOwed | currencyFormat }} and
+    This will add an expense transaction for {{ data.debt.amountOwed | currencyFormat | privacyMask: 'debts' }} and
     mark the debt as paid. You can adjust the amount below.
   </p>
 

@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { toLocalDate } from '../../../../core/utils/date.util';
 import { CategoryService } from '../../../../core/services/category.service';
@@ -10,7 +11,7 @@ import { CategoryService } from '../../../../core/services/category.service';
 @Component({
   selector: 'app-recent-transactions',
   standalone: true,
-  imports: [RouterLink, TitleCasePipe, CurrencyFormatPipe, MatIconModule],
+  imports: [RouterLink, TitleCasePipe, CurrencyFormatPipe, PrivacyMaskPipe, MatIconModule],
   templateUrl: './recent-transactions.html',
   styleUrl: './recent-transactions.scss',
 })

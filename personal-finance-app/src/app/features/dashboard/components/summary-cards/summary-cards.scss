@@ -20,6 +20,13 @@
   letter-spacing: 0.5px;
 }
 
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 .card-value {
   font-size: 1.75rem;
   font-weight: 700;

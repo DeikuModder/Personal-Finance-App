@@ -25,7 +25,7 @@
           </div>
           <div class="transaction-right">
             <span class="transaction-amount" [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'" [class.transfer]="transaction.type === 'transfer'">
-              {{ transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : '' }}{{ transaction.amount | currencyFormat }}
+              {{ transaction.type === 'income' ? '+' : transaction.type === 'expense' ? '-' : '' }}{{ transaction.amount | currencyFormat | privacyMask: 'transactions' }}
             </span>
             <span class="transaction-date">{{ formatDate(transaction.date) }}</span>
           </div>

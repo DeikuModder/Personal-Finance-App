@@ -24,10 +24,9 @@ let AuthController = class AuthController {
     async requestOtp(dto, req) {
         return this.auth.requestOtp(dto.email, req.ip || '');
     }
-    async verifyOtp(dto, res) {
+    async verifyOtp(dto, req, res) {
         const user = await this.auth.verifyOtp(dto.email, dto.code);
-        await this.auth.issueSession(res, user);
-        return user;
+        return this.auth.issueSession(req, res, user);
     }
     async refresh(req, res) {
         return this.auth.refresh(req, res);
@@ -36,7 +35,7 @@ let AuthController = class AuthController {
         return this.auth.logout(req, res);
     }
     async me(req) {
-        return this.auth.me(req.user.userId);
+        return this.auth.me(req, req.user.userId);
     }
     async getAllowlist() {
         return this.auth.getAllowlist();
@@ -62,9 +61,10 @@ __decorate([
     (0, auth_decorators_1.Public)(),
     (0, common_1.Post)('verify-otp'),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_dto_1.VerifyOtpDto, Object]),
+    __metadata("design:paramtypes", [auth_dto_1.VerifyOtpDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "verifyOtp", null);
 __decorate([

@@ -24,6 +24,13 @@
     letter-spacing: 0.5px;
   }
 
+  .total-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
   .total-value {
     font-size: 2rem;
     font-weight: 700;

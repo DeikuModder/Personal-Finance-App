@@ -22,7 +22,7 @@
           <div class="wish-info">
             <span class="wish-name">{{ item.name }}</span>
             @if (showPrice(item)) {
-              <span class="wish-price">{{ item.price | currencyFormat }}</span>
+              <span class="wish-price">{{ item.price | currencyFormat | privacyMask: 'wishlist' }}</span>
             }
           </div>
         </div>

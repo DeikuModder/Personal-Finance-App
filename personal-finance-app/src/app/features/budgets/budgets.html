@@ -16,17 +16,21 @@
   />
 
   <div class="total-card">
+    <div class="total-head">
+      <span class="total-label">Totals</span>
+      <app-privacy-toggle section="budgets" />
+    </div>
     <div class="total-row">
       <span class="total-label">Total Budget</span>
-      <span class="total-value">{{ getTotalBudget() | currencyFormat }}</span>
+      <span class="total-value">{{ getTotalBudget() | currencyFormat | privacyMask: 'budgets' }}</span>
     </div>
     <div class="total-row">
       <span class="total-label">Spent</span>
-      <span class="total-value warn">{{ getTotalSpent() | currencyFormat }}</span>
+      <span class="total-value warn">{{ getTotalSpent() | currencyFormat | privacyMask: 'budgets' }}</span>
     </div>
     <div class="total-row">
       <span class="total-label">Remaining</span>
-      <span class="total-value">{{ getTotalRemaining() | currencyFormat }}</span>
+      <span class="total-value">{{ getTotalRemaining() | currencyFormat | privacyMask: 'budgets' }}</span>
     </div>
     @if (getTotalBudget() > 0) {
       <mat-progress-bar

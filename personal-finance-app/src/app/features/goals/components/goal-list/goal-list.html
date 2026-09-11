@@ -20,7 +20,7 @@
             <div class="goal-info">
               <span class="goal-title">{{ goal.title }}</span>
               @if (goal.type === 'savings') {
-                <span class="goal-sub">{{ goal.targetAmount | currencyFormat }} target</span>
+                <span class="goal-sub">{{ goal.targetAmount | currencyFormat | privacyMask: 'goals' }} target</span>
               } @else {
                 <span class="goal-sub">{{ getCategoryLabel(goal) }} · {{ getAllowanceLabel(goal) }}</span>
               }
@@ -50,7 +50,7 @@
 
         <div class="goal-body">
           @if (goal.type === 'savings') {
-            <span class="goal-amount">{{ getSaved(goal) | currencyFormat }} saved</span>
+            <span class="goal-amount">{{ getSaved(goal) | currencyFormat | privacyMask: 'goals' }} saved</span>
             @if (getDaysLeft(goal) !== null) {
               <span class="goal-deadline" [class.warn]="getDaysLeft(goal)! < 7">
                 @if (getDaysLeft(goal)! < 0) {

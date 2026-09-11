@@ -1,6 +1,7 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { toLocalDate } from '../../../../core/utils/date.util';
@@ -10,7 +11,7 @@ import { CategoryService } from '../../../../core/services/category.service';
 @Component({
   selector: 'app-transaction-list',
   standalone: true,
-  imports: [CurrencyFormatPipe, MatIconModule, MatButtonModule],
+  imports: [CurrencyFormatPipe, PrivacyMaskPipe, MatIconModule, MatButtonModule],
   templateUrl: './transaction-list.html',
   styleUrl: './transaction-list.scss',
 })

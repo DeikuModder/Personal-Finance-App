@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuthService, SessionUser } from './auth.service';
+import { AuthService, AuthSession } from './auth.service';
 import { AddAllowedEmailDto, RequestOtpDto, VerifyOtpDto } from './auth.dto';
 import { AuthenticatedRequest } from './jwt-auth.guard';
 import { AllowedEmail } from './allowed-email.entity';
@@ -10,14 +10,15 @@ export declare class AuthController {
         success: boolean;
         reason?: string;
     }>;
-    verifyOtp(dto: VerifyOtpDto, res: Response): Promise<SessionUser>;
+    verifyOtp(dto: VerifyOtpDto, req: AuthenticatedRequest, res: Response): Promise<AuthSession>;
     refresh(req: AuthenticatedRequest, res: Response): Promise<{
         ok: boolean;
+        expiresIn: number;
     }>;
     logout(req: AuthenticatedRequest, res: Response): Promise<{
         success: boolean;
     }>;
-    me(req: AuthenticatedRequest): Promise<SessionUser>;
+    me(req: AuthenticatedRequest): Promise<AuthSession>;
     getAllowlist(): Promise<AllowedEmail[]>;
     addToAllowlist(dto: AddAllowedEmailDto): Promise<AllowedEmail>;
     removeFromAllowlist(email: string): Promise<{

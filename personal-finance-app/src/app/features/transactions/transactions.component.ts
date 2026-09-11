@@ -13,6 +13,7 @@ import { toLocalDate } from '../../core/utils/date.util';
 import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 
 @Component({
   selector: 'app-transactions',
@@ -26,6 +27,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
     TransactionListComponent,
     SectionHelpComponent,
     PageHeaderComponent,
+    PrivacyToggleComponent,
   ],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',

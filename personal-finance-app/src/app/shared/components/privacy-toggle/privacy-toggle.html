@@ -1,0 +1,11 @@
+<button
+  mat-icon-button
+  type="button"
+  class="privacy-toggle"
+  [class.active]="active()"
+  [attr.aria-label]="tooltip()"
+  [attr.title]="tooltip()"
+  (click)="onClick()"
+>
+  <mat-icon>{{ active() ? 'visibility_off' : 'visibility' }}</mat-icon>
+</button>

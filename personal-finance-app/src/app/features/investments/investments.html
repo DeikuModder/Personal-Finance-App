@@ -16,17 +16,21 @@
 
   @if (investments().length > 0) {
     <div class="total-card">
+      <div class="total-head">
+        <span class="total-label">Totals</span>
+        <app-privacy-toggle section="investments" />
+      </div>
       <div class="total-row">
         <span class="total-label">Portfolio Value</span>
-        <span class="total-value">{{ getTotalValue() | currencyFormat }}</span>
+        <span class="total-value">{{ getTotalValue() | currencyFormat | privacyMask: 'investments' }}</span>
       </div>
       <div class="total-row">
         <span class="total-label">Est. Income / Year</span>
-        <span class="total-value positive">{{ getTotalAnnualIncome() | currencyFormat }}</span>
+        <span class="total-value positive">{{ getTotalAnnualIncome() | currencyFormat | privacyMask: 'investments' }}</span>
       </div>
       <div class="total-row">
         <span class="total-label">Est. Income / Month</span>
-        <span class="total-value positive">{{ getMonthlyIncome() | currencyFormat }}</span>
+        <span class="total-value positive">{{ getMonthlyIncome() | currencyFormat | privacyMask: 'investments' }}</span>
       </div>
     </div>
 

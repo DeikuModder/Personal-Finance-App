@@ -11,6 +11,7 @@ import { Debt } from '../../../../core/models/debt.model';
 import { Account } from '../../../../core/models/account.model';
 import { AccountService } from '../../../accounts/services/account.service';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 
 export interface CollectDebtResult {
   accountId: string;
@@ -32,6 +33,7 @@ export interface CollectDebtResult {
     MatDatepickerModule,
     MatNativeDateModule,
     CurrencyFormatPipe,
+    PrivacyMaskPipe,
   ],
   templateUrl: './debt-collect-dialog.html',
   styleUrl: './debt-collect-dialog.scss',

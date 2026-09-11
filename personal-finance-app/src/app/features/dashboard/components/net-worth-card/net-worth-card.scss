@@ -81,3 +81,11 @@
   bottom: 1rem;
   color: #666;
 }
+
+.nw-eye {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  display: flex;
+}

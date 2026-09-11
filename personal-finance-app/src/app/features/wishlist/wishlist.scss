@@ -7,6 +7,12 @@
   }
 }
 
+.privacy-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
 .form-card {
   background: #1e1e1e;
   border: 1px solid #333;

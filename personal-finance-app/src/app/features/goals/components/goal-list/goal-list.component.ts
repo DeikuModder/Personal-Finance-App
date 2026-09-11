@@ -4,18 +4,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Goal } from '../../../../core/models/goal.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
+import { PrivacyService } from '../../../../core/services/privacy.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { toLocalDate } from '../../../../core/utils/date.util';
+
+const MASK = '\u2022\u2022\u2022\u2022';
 
 @Component({
   selector: 'app-goal-list',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe],
+  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, PrivacyMaskPipe],
   templateUrl: './goal-list.html',
   styleUrl: './goal-list.scss',
 })
 export class GoalListComponent {
   private categoryService = inject(CategoryService);
+  private privacy = inject(PrivacyService);
 
   goals = input<Goal[]>([]);
   pool = input(0);
@@ -63,6 +68,9 @@ export class GoalListComponent {
   }
 
   getAllowanceLabel(goal: Goal): string {
+    if (this.privacy.hiddenFor('goals')) {
+      return `under ${MASK} / ${goal.allowancePeriod}`;
+    }
     return `under $${goal.allowance} / ${goal.allowancePeriod}`;
   }
 

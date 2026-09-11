@@ -1,5 +1,9 @@
 import { AuthenticatedRequest } from './jwt-auth.guard';
 
+export const ACCESS_COOKIE = '__Host-fintrack_access';
+export const REFRESH_COOKIE = '__Host-fintrack_refresh';
+export const DEVICE_COOKIE = '__Host-fintrack_device';
+
 export function readCookie(req: AuthenticatedRequest, name: string): string | undefined {
   const header = req.headers.cookie;
   if (!header) return undefined;

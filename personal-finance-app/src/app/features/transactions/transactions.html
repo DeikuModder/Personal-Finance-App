@@ -1,6 +1,10 @@
 <div class="transactions-page">
   <app-page-header title="Transactions" (fabClicked)="goToAdd()" />
 
+  <div class="privacy-row">
+    <app-privacy-toggle section="transactions" />
+  </div>
+
   <app-section-help
     title="Transactions — what this is"
     [description]="'This is your full activity ledger. Every income payment, expense and transfer between your accounts is recorded here, dated and tagged with an account. It is the single source of truth that powers the Home dashboard, Budgets, Money Quest, and your net worth calculation.'"

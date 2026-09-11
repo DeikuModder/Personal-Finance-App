@@ -3,6 +3,8 @@ import { combineLatest } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../shared/pipes/privacy-mask.pipe';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { Goal } from '../../core/models/goal.model';
 import { Account } from '../../core/models/account.model';
 import { Transaction } from '../../core/models/transaction.model';
@@ -19,7 +21,7 @@ import { toErrorMessage } from '../../shared/utils/http-error.util';
 @Component({
   selector: 'app-goals',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, GoalFormComponent, GoalListComponent, SectionHelpComponent, ErrorBannerComponent],
+  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, PrivacyMaskPipe, PrivacyToggleComponent, GoalFormComponent, GoalListComponent, SectionHelpComponent, ErrorBannerComponent],
   templateUrl: './goals.html',
   styleUrl: './goals.scss',
 })

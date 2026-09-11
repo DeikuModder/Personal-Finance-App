@@ -27,11 +27,11 @@
           </div>
           <div class="inv-field">
             <span class="label">Price</span>
-            <span class="value">{{ item.currentPrice | currencyFormat }}</span>
+            <span class="value">{{ item.currentPrice | currencyFormat | privacyMask: 'investments' }}</span>
           </div>
           <div class="inv-field">
             <span class="label">Value</span>
-            <span class="value strong">{{ getValue(item) | currencyFormat }}</span>
+            <span class="value strong">{{ getValue(item) | currencyFormat | privacyMask: 'investments' }}</span>
           </div>
         </div>
 
@@ -39,7 +39,7 @@
           <div class="income-row">
             <span class="income-label">Est. income</span>
             <span class="income value strong positive">
-              {{ getAnnualIncome(item) | currencyFormat }}/yr
+              {{ getAnnualIncome(item) | currencyFormat | privacyMask: 'investments' }}/yr
             </span>
             <span class="income-yield">{{ getYield(item) }}% yield</span>
           </div>

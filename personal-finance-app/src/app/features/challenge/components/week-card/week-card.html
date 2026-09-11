@@ -13,13 +13,13 @@
       <div class="week-remaining" [class.over]="w.remaining < 0">
         @if (w.remaining < 0) {
           <mat-icon>south_west</mat-icon>
-          <span>{{ abs(w.remaining) | currencyFormat }} over</span>
+          <span>{{ abs(w.remaining) | currencyFormat | privacyMask: 'challenge' }} over</span>
         } @else if (w.status === 'good') {
           <mat-icon>trending_up</mat-icon>
-          <span>{{ w.remaining | currencyFormat }} saved</span>
+          <span>{{ w.remaining | currencyFormat | privacyMask: 'challenge' }} saved</span>
         } @else {
           <mat-icon>hourglass_bottom</mat-icon>
-          <span>{{ w.remaining | currencyFormat }} left</span>
+          <span>{{ w.remaining | currencyFormat | privacyMask: 'challenge' }} left</span>
         }
       </div>
     </div>
@@ -29,20 +29,20 @@
       <div class="week-figures">
         <div class="fig">
           <span class="fig-label">Cap</span>
-          <span class="fig-value">{{ w.cap | currencyFormat }}</span>
+          <span class="fig-value">{{ w.cap | currencyFormat | privacyMask: 'challenge' }}</span>
         </div>
         <div class="fig">
           <span class="fig-label">Spent</span>
-          <span class="fig-value" [class.over]="w.remaining < 0">{{ w.spent | currencyFormat }}</span>
+          <span class="fig-value" [class.over]="w.remaining < 0">{{ w.spent | currencyFormat | privacyMask: 'challenge' }}</span>
         </div>
       </div>
     </div>
 
     <div class="carry-row">
       @if (w.remaining >= 0) {
-        <span class="carry-pos">+{{ w.remaining | currencyFormat }} carries to next week</span>
+        <span class="carry-pos">+{{ w.remaining | currencyFormat | privacyMask: 'challenge' }} carries to next week</span>
       } @else {
-        <span class="carry-neg">Next week's cap shrinks by {{ abs(w.remaining) | currencyFormat }}</span>
+        <span class="carry-neg">Next week's cap shrinks by {{ abs(w.remaining) | currencyFormat | privacyMask: 'challenge' }}</span>
       }
     </div>
 

@@ -1,24 +1,28 @@
 <a routerLink="/investments" class="net-worth-card">
+  <span class="nw-eye" (click)="$event.preventDefault(); $event.stopPropagation()">
+    <app-privacy-toggle section="netWorth" />
+  </span>
+
   <div class="nw-main">
     <span class="nw-label">Net Worth</span>
-    <span class="nw-value">{{ getNetWorth() | currencyFormat }}</span>
+    <span class="nw-value">{{ getNetWorth() | currencyFormat | privacyMask: 'netWorth' }}</span>
   </div>
 
   <div class="nw-row">
     <div class="nw-cell">
       <span class="cell-label">Accounts</span>
-      <span class="cell-value">{{ accountsTotal() | currencyFormat }}</span>
+      <span class="cell-value">{{ accountsTotal() | currencyFormat | privacyMask: 'netWorth' }}</span>
     </div>
     <div class="nw-cell">
       <span class="cell-label">Investments</span>
-      <span class="cell-value">{{ investmentsValue() | currencyFormat }}</span>
+      <span class="cell-value">{{ investmentsValue() | currencyFormat | privacyMask: 'netWorth' }}</span>
     </div>
   </div>
 
   <div class="nw-income">
     <mat-icon>payments</mat-icon>
     <span>Est. investment income</span>
-    <span class="income-value">{{ investmentsIncome() | currencyFormat }}/yr</span>
+    <span class="income-value">{{ investmentsIncome() | currencyFormat | privacyMask: 'netWorth' }}/yr</span>
   </div>
 
   <mat-icon class="nw-arrow">chevron_right</mat-icon>

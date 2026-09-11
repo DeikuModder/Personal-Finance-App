@@ -1,4 +1,4 @@
-import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts/core';
@@ -6,8 +6,11 @@ import { PieChart } from 'echarts/charts';
 import { TooltipComponent, LegendComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { Investment } from '../../../../core/models/investment.model';
+import { PrivacyService } from '../../../../core/services/privacy.service';
 
 echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
+
+const MASK = '\u2022\u2022\u2022\u2022';
 
 @Component({
   selector: 'app-portfolio-allocation',
@@ -21,12 +24,15 @@ echarts.use([PieChart, TooltipComponent, LegendComponent, CanvasRenderer]);
 export class PortfolioAllocationComponent {
   investments = input<Investment[]>([]);
 
+  private privacy = inject(PrivacyService);
+
   private getValue(investment: Investment): number {
     const shares = investment.shares ?? 1;
     return investment.currentPrice * shares;
   }
 
   chartOptions = computed<EChartsOption>(() => {
+    const hide = this.privacy.hiddenFor('investments');
     const data = this.investments()
       .map((i) => ({
         name: i.symbol || i.name,
@@ -50,7 +56,8 @@ export class PortfolioAllocationComponent {
     return {
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: ${c} ({d}%)',
+        formatter: (params: any) =>
+          hide ? `${params.name}: ${MASK} ({d}%)` : `${params.name}: $${Number(params.value).toFixed(2)} ({d}%)`,
       },
       legend: {
         show: data.length <= 6,
@@ -79,7 +86,8 @@ export class PortfolioAllocationComponent {
               show: true,
               fontSize: 14,
               fontWeight: 'bold',
-              formatter: '{b}\n${c}',
+              formatter: (params: any) =>
+                hide ? `${params.name}\n${MASK}` : `${params.name}\n$${Number(params.value).toFixed(2)}`,
               color: '#ffffff',
             },
           },

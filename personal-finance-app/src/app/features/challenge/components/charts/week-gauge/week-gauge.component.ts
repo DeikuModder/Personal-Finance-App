@@ -1,12 +1,15 @@
-import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts/core';
 import { GaugeChart } from 'echarts/charts';
 import { TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
+import { PrivacyService } from '../../../../../core/services/privacy.service';
 
 echarts.use([GaugeChart, TooltipComponent, CanvasRenderer]);
+
+const MASK = '\u2022\u2022\u2022\u2022';
 
 @Component({
   selector: 'app-week-gauge',
@@ -21,7 +24,10 @@ export class WeekGaugeComponent {
   cap = input(0);
   spent = input(0);
 
+  private privacy = inject(PrivacyService);
+
   chartOptions = computed<EChartsOption>(() => {
+    const hide = this.privacy.hiddenFor('challenge');
     const cap = this.cap();
     const spent = this.spent();
     const over = spent > cap;
@@ -53,7 +59,7 @@ export class WeekGaugeComponent {
           anchor: { show: false },
           detail: {
             valueAnimation: true,
-            formatter: (value: number) => `${Math.round(value)}`,
+            formatter: (value: number) => (hide ? MASK : `${Math.round(value)}`),
             color: '#ffffff',
             fontSize: 20,
             fontWeight: 700,

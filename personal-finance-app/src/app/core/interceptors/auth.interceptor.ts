@@ -15,7 +15,8 @@ export class AuthInterceptor implements HttpInterceptor {
     if (
       url.includes('/api/auth/refresh') ||
       url.includes('/api/auth/request-otp') ||
-      url.includes('/api/auth/verify-otp')
+      url.includes('/api/auth/verify-otp') ||
+      url.includes('/api/auth/logout')
     ) {
       return next.handle(req);
     }
@@ -28,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
               if (refreshed) {
                 return next.handle(req);
               }
-              this.auth.clearSession();
+              this.auth.clearLocalState();
               if (this.router.url !== '/login') {
                 this.router.navigate(['/login'], { queryParams: { return: this.router.url } });
               }

@@ -3,11 +3,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Investment } from '../../../../core/models/investment.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 
 @Component({
   selector: 'app-investment-list',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, CurrencyFormatPipe],
+  imports: [MatButtonModule, MatIconModule, CurrencyFormatPipe, PrivacyMaskPipe],
   templateUrl: './investment-list.html',
   styleUrl: './investment-list.scss',
 })

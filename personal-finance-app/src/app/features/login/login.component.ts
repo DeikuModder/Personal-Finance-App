@@ -33,12 +33,6 @@ export class LoginComponent {
     return this.code().length === 6;
   }
 
-  constructor() {
-    if (this.auth.hasSession()) {
-      this.router.navigate(['/']);
-    }
-  }
-
   requestCode(): void {
     const email = this.email().trim();
     if (!email || this.busy()) return;
@@ -81,8 +75,7 @@ export class LoginComponent {
     this.busy.set(true);
     this.error.set(null);
     this.auth.verifyOtp(this.email().trim(), this.code()).subscribe({
-      next: (user) => {
-        this.auth.setSession(user);
+      next: () => {
         if (this.resendTimer) {
           clearInterval(this.resendTimer);
           this.resendTimer = null;

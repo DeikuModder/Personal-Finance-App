@@ -18,18 +18,22 @@
   />
 
   <div class="total-card">
+    <div class="total-head">
+      <span class="total-label">Totals</span>
+      <app-privacy-toggle section="debts" />
+    </div>
     <div class="total-row">
       <span class="total-label">You owe</span>
-      <span class="total-value">{{ getTotalOwed() | currencyFormat }}</span>
+      <span class="total-value">{{ getTotalOwed() | currencyFormat | privacyMask: 'debts' }}</span>
     </div>
     <div class="total-row">
       <span class="total-label">Owed to you</span>
-      <span class="total-value receivable">{{ getTotalOwedToYou() | currencyFormat }}</span>
+      <span class="total-value receivable">{{ getTotalOwedToYou() | currencyFormat | privacyMask: 'debts' }}</span>
     </div>
     @if (hasPayableDebts()) {
       <div class="total-row">
         <span class="total-label">Min. payments / month</span>
-        <span class="total-value">{{ getMinPayments() | currencyFormat }}</span>
+        <span class="total-value">{{ getMinPayments() | currencyFormat | privacyMask: 'debts' }}</span>
       </div>
     }
     <div class="total-row">

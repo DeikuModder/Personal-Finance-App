@@ -1,0 +1,26 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.privacy-toggle {
+  --mdc-icon-button-state-layer-size: 36px;
+  width: 36px;
+  height: 36px;
+  color: rgba(255, 255, 255, 0.55);
+
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &.active {
+    color: #ff6e6e;
+  }
+
+  &:hover {
+    color: #ffffff;
+  }
+}

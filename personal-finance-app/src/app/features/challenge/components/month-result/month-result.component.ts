@@ -3,11 +3,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { EffectsService } from '../../services/effects.service';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 
 @Component({
   selector: 'app-month-result',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe],
+  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, PrivacyMaskPipe],
   templateUrl: './month-result.html',
   styleUrl: './month-result.scss',
 })

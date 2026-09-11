@@ -1,6 +1,10 @@
 <div class="wishlist-page">
   <app-page-header title="Wishlist" (fabClicked)="startAdd()" />
 
+  <div class="privacy-row">
+    <app-privacy-toggle section="wishlist" />
+  </div>
+
   @if (saveError()) {
     <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
   }

@@ -25,6 +25,14 @@
   margin-bottom: 1.5rem;
 }
 
+.total-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.total-head,
 .total-row {
   display: flex;
   justify-content: space-between;

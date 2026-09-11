@@ -3,12 +3,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { WishlistItem } from '../../../../core/models/wishlist.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { ImagePreviewComponent } from '../../../../shared/components/image-preview/image-preview.component';
 
 @Component({
   selector: 'app-wishlist-list',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, ImagePreviewComponent],
+  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, PrivacyMaskPipe, ImagePreviewComponent],
   templateUrl: './wishlist-list.html',
   styleUrl: './wishlist-list.scss',
 })

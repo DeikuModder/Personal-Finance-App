@@ -62,7 +62,7 @@ let JwtAuthGuard = class JwtAuthGuard {
         if (auth && auth.startsWith('Bearer ')) {
             return auth.slice(7);
         }
-        return (0, cookie_util_1.readCookie)(request, 'ft_access');
+        return (0, cookie_util_1.readCookie)(request, cookie_util_1.ACCESS_COOKIE);
     }
 };
 exports.JwtAuthGuard = JwtAuthGuard;

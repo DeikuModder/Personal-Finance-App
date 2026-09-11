@@ -1,4 +1,4 @@
-import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts/core';
@@ -11,8 +11,11 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { toLocalDate } from '../../../../core/utils/date.util';
+import { PrivacyService } from '../../../../core/services/privacy.service';
 
 echarts.use([LineChart, TooltipComponent, LegendComponent, GridComponent, CanvasRenderer]);
+
+const MASK = '\u2022\u2022\u2022\u2022';
 
 @Component({
   selector: 'app-monthly-trend',
@@ -26,7 +29,10 @@ echarts.use([LineChart, TooltipComponent, LegendComponent, GridComponent, Canvas
 export class MonthlyTrendComponent {
   transactions = input<Transaction[]>([]);
 
+  private privacy = inject(PrivacyService);
+
   chartOptions = computed<EChartsOption>(() => {
+    const hide = this.privacy.hiddenFor('transactions');
     const income = this.transactions().filter((t) => t.type === 'income');
     const expenses = this.transactions().filter((t) => t.type === 'expense');
 
@@ -63,6 +69,7 @@ export class MonthlyTrendComponent {
       tooltip: {
         trigger: 'axis',
         formatter: (params: any) => {
+          if (hide) return `$${MASK}`;
           let html = params[0]?.axisValue || '';
           for (const p of params) {
             html += `<br/>${p.marker}${p.seriesName}: $${Number(p.value).toFixed(2)}`;
@@ -95,7 +102,7 @@ export class MonthlyTrendComponent {
         axisLabel: {
           color: '#9e9e9e',
           fontSize: 10,
-          formatter: (v: number) => `$${v}`,
+          formatter: (v: number) => (hide ? MASK : `$${v}`),
         },
         splitLine: { lineStyle: { color: '#2c2c2c' } },
       },

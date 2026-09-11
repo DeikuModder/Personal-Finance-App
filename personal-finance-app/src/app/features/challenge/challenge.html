@@ -30,10 +30,13 @@
     <div class="game-header" [class.low-hearts]="hearts <= 1">
       <div class="header-top">
         <h1>{{ currentLabel }}</h1>
-        <div class="hearts">
-          @for (h of [1,2,3,4,5]; track h) {
-            <mat-icon [class.lost-heart]="h > hearts">favorite</mat-icon>
-          }
+        <div class="header-top-right">
+          <app-privacy-toggle section="challenge" />
+          <div class="hearts">
+            @for (h of [1,2,3,4,5]; track h) {
+              <mat-icon [class.lost-heart]="h > hearts">favorite</mat-icon>
+            }
+          </div>
         </div>
       </div>
 

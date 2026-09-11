@@ -14,6 +14,10 @@ export class RefreshToken {
   @Column('uuid')
   familyId: string;
 
+  /** sha256 of the device fingerprint cookie the token was issued to. */
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  deviceHash: string | null;
+
   @Column({ type: 'timestamptz' })
   expiresAt: Date;
 

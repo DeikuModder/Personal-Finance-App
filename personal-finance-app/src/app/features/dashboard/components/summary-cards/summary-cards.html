@@ -1,18 +1,27 @@
 <div class="cards-grid">
   <div class="card balance-card">
-    <span class="card-label">Total Balance</span>
-    <span class="card-value">{{ balance() | currencyFormat }}</span>
+    <div class="card-head">
+      <span class="card-label">Total Balance</span>
+      <app-privacy-toggle section="balance" />
+    </div>
+    <span class="card-value">{{ balance() | currencyFormat | privacyMask: 'balance' }}</span>
   </div>
 
   <div class="card-row">
     <div class="card income-card">
-      <span class="card-label">Income</span>
-      <span class="card-value positive">{{ income() | currencyFormat }}</span>
+      <div class="card-head">
+        <span class="card-label">Income</span>
+        <app-privacy-toggle section="income" />
+      </div>
+      <span class="card-value positive">{{ income() | currencyFormat | privacyMask: 'income' }}</span>
     </div>
 
     <div class="card expense-card">
-      <span class="card-label">Expenses</span>
-      <span class="card-value negative">{{ expenses() | currencyFormat }}</span>
+      <div class="card-head">
+        <span class="card-label">Expenses</span>
+        <app-privacy-toggle section="expenses" />
+      </div>
+      <span class="card-value negative">{{ expenses() | currencyFormat | privacyMask: 'expenses' }}</span>
     </div>
   </div>
 </div>

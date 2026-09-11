@@ -31,6 +31,10 @@ __decorate([
     __metadata("design:type", String)
 ], RefreshToken.prototype, "familyId", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 64, nullable: true }),
+    __metadata("design:type", String)
+], RefreshToken.prototype, "deviceHash", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'timestamptz' }),
     __metadata("design:type", Date)
 ], RefreshToken.prototype, "expiresAt", void 0);

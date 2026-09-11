@@ -8,11 +8,14 @@
 }
 
 <div class="pool-card">
-  <div class="pool-label">
-    <mat-icon>savings</mat-icon>
-    Savings pool
+  <div class="pool-head">
+    <div class="pool-label">
+      <mat-icon>savings</mat-icon>
+      Savings pool
+    </div>
+    <app-privacy-toggle section="goals" />
   </div>
-  <div class="pool-amount">{{ pool() | currencyFormat }}</div>
+  <div class="pool-amount">{{ pool() | currencyFormat | privacyMask: 'goals' }}</div>
   @if (getMoneyGoalCount() > 0) {
   <div class="pool-sub">
     {{ getFundedMoneyGoals() }} of {{ getMoneyGoalCount() }}

@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../shared/pipes/privacy-mask.pipe';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { Investment } from '../../core/models/investment.model';
 import { InvestmentService } from './services/investment.service';
 import { InvestmentFormComponent } from './components/investment-form/investment-form.component';
@@ -17,6 +19,8 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
     MatIconModule,
     MatButtonModule,
     CurrencyFormatPipe,
+    PrivacyMaskPipe,
+    PrivacyToggleComponent,
     InvestmentFormComponent,
     InvestmentListComponent,
     PortfolioAllocationComponent,

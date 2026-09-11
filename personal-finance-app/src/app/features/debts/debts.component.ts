@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../shared/pipes/privacy-mask.pipe';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { Debt } from '../../core/models/debt.model';
 import { TransactionService } from '../transactions/services/transaction.service';
 import { DebtService } from './services/debt.service';
@@ -29,6 +31,8 @@ import { toErrorMessage } from '../../shared/utils/http-error.util';
     MatIconModule,
     MatButtonModule,
     CurrencyFormatPipe,
+    PrivacyMaskPipe,
+    PrivacyToggleComponent,
     DebtFormComponent,
     DebtListComponent,
     SectionHelpComponent,

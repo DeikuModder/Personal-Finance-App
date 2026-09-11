@@ -52,6 +52,12 @@
         color: #9e9e9e;
       }
     }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
   }
 }
 

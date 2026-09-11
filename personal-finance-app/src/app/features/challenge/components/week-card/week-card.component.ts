@@ -3,13 +3,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { Transaction } from '../../../../core/models/transaction.model';
 import { WeekStatus } from '../../services/challenge.service';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { WeekGaugeComponent } from '../charts/week-gauge/week-gauge.component';
 import { DayStripeComponent } from '../day-stripe/day-stripe.component';
 
 @Component({
   selector: 'app-week-card',
   standalone: true,
-  imports: [MatIconModule, CurrencyFormatPipe, WeekGaugeComponent, DayStripeComponent],
+  imports: [MatIconModule, CurrencyFormatPipe, PrivacyMaskPipe, WeekGaugeComponent, DayStripeComponent],
   templateUrl: './week-card.html',
   styleUrl: './week-card.scss',
 })

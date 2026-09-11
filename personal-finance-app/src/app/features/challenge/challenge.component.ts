@@ -12,6 +12,7 @@ import { MonthResultComponent } from './components/month-result/month-result.com
 import { MonthBarsComponent } from './components/charts/month-bars/month-bars.component';
 import { CumulativeLineComponent } from './components/charts/cumulative-line/cumulative-line.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { toLocalDate, dateKey } from '../../core/utils/date.util';
 
 interface Level {
@@ -39,6 +40,7 @@ const LEVELS: Level[] = [
     MonthBarsComponent,
     CumulativeLineComponent,
     SectionHelpComponent,
+    PrivacyToggleComponent,
   ],
   templateUrl: './challenge.html',
   styleUrl: './challenge.scss',

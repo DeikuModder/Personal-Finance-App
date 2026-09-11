@@ -3,12 +3,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Debt } from '../../../../core/models/debt.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { toLocalDate } from '../../../../core/utils/date.util';
 
 @Component({
   selector: 'app-debt-list',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe],
+  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, PrivacyMaskPipe],
   templateUrl: './debt-list.html',
   styleUrl: './debt-list.scss',
 })

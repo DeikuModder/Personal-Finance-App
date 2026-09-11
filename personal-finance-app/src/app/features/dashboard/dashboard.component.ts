@@ -12,6 +12,7 @@ import { SpendingByCategoryComponent } from './components/spending-by-category/s
 import { MonthlyTrendComponent } from './components/monthly-trend/monthly-trend.component';
 import { NetWorthCardComponent } from './components/net-worth-card/net-worth-card.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { toLocalDate } from '../../core/utils/date.util';
 
 @Component({
@@ -27,6 +28,7 @@ import { toLocalDate } from '../../core/utils/date.util';
     MonthlyTrendComponent,
     NetWorthCardComponent,
     SectionHelpComponent,
+    PrivacyToggleComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',

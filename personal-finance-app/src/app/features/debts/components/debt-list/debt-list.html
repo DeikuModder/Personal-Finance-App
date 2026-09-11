@@ -40,19 +40,19 @@
         <div class="debt-body">
           <div class="debt-field">
             <span class="label">{{ isReceivable(debt) ? 'Amount you're owed' : 'Amount owed' }}</span>
-            <span class="value strong">{{ debt.amountOwed | currencyFormat }}</span>
+            <span class="value strong">{{ debt.amountOwed | currencyFormat | privacyMask: 'debts' }}</span>
           </div>
           @if (debt.interestRate > 0) {
             <div class="debt-field">
               <span class="label">Interest</span>
               <span class="value">{{ debt.interestRate }}%</span>
-              <span class="sub value">{{ getAnnualInterest(debt) | currencyFormat }}/yr</span>
+              <span class="sub value">{{ getAnnualInterest(debt) | currencyFormat | privacyMask: 'debts' }}/yr</span>
             </div>
           }
           @if (debt.minimumPayment > 0) {
             <div class="debt-field">
               <span class="label">Min. payment</span>
-              <span class="value">{{ debt.minimumPayment | currencyFormat }}</span>
+              <span class="value">{{ debt.minimumPayment | currencyFormat | privacyMask: 'debts' }}</span>
             </div>
           }
         </div>

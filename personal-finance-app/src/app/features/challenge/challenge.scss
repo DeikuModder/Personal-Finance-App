@@ -80,6 +80,12 @@
     }
   }
 
+  .header-top-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .level-bar {
     display: flex;
     flex-direction: column;

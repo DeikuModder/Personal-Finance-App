@@ -1,12 +1,15 @@
-import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import * as echarts from 'echarts/core';
 import { BarChart } from 'echarts/charts';
 import { TooltipComponent, GridComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
+import { PrivacyService } from '../../../../../core/services/privacy.service';
 
 echarts.use([BarChart, TooltipComponent, GridComponent, CanvasRenderer]);
+
+const MASK = '\u2022\u2022\u2022\u2022';
 
 interface BarDatum {
   label: string;
@@ -26,7 +29,10 @@ interface BarDatum {
 export class MonthBarsComponent {
   weeks = input<BarDatum[]>([]);
 
+  private privacy = inject(PrivacyService);
+
   chartOptions = computed<EChartsOption>(() => {
+    const hide = this.privacy.hiddenFor('challenge');
     const weeks = this.weeks();
     const labels = weeks.map((w) => w.label);
     const spent = weeks.map((w) => w.spent);
@@ -36,6 +42,7 @@ export class MonthBarsComponent {
       tooltip: {
         trigger: 'axis',
         formatter: (params: any) => {
+          if (hide) return `$${MASK}`;
           let html = params[0]?.axisValue || '';
           for (const p of params) {
             html += `<br/>${p.marker}${p.seriesName}: $${Number(p.value).toFixed(2)}`;
@@ -62,7 +69,7 @@ export class MonthBarsComponent {
         axisLabel: {
           color: '#9e9e9e',
           fontSize: 10,
-          formatter: (v: number) => `$${v}`,
+          formatter: (v: number) => (hide ? MASK : `$${v}`),
         },
         splitLine: { lineStyle: { color: '#2c2c2c' } },
       },

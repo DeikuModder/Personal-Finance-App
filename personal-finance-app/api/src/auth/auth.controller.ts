@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { AuthService, SessionUser } from './auth.service';
+import { AuthService, AuthSession, SessionUser } from './auth.service';
 import { AddAllowedEmailDto, RequestOtpDto, VerifyOtpDto } from './auth.dto';
 import { AuthenticatedRequest } from './jwt-auth.guard';
 import { Public, Roles, SUPERADMIN } from './auth.decorators';
@@ -23,11 +23,11 @@ export class AuthController {
   @Post('verify-otp')
   async verifyOtp(
     @Body() dto: VerifyOtpDto,
+    @Req() req: AuthenticatedRequest,
     @Res({ passthrough: true }) res: Response
-  ): Promise<SessionUser> {
+  ): Promise<AuthSession> {
     const user = await this.auth.verifyOtp(dto.email, dto.code);
-    await this.auth.issueSession(res, user);
-    return user;
+    return this.auth.issueSession(req, res, user);
   }
 
   @Public()
@@ -35,7 +35,7 @@ export class AuthController {
   async refresh(
     @Req() req: AuthenticatedRequest,
     @Res({ passthrough: true }) res: Response
-  ): Promise<{ ok: boolean }> {
+  ): Promise<{ ok: boolean; expiresIn: number }> {
     return this.auth.refresh(req, res);
   }
 
@@ -49,8 +49,8 @@ export class AuthController {
   }
 
   @Get('me')
-  async me(@Req() req: AuthenticatedRequest): Promise<SessionUser> {
-    return this.auth.me(req.user!.userId);
+  async me(@Req() req: AuthenticatedRequest): Promise<AuthSession> {
+    return this.auth.me(req, req.user!.userId);
   }
 
   @Get('allowlist')

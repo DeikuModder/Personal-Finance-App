@@ -4,6 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../shared/pipes/privacy-mask.pipe';
+import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
 import { Budget } from '../../core/models/budget.model';
 import { BudgetService } from './services/budget.service';
 import { TransactionService } from '../transactions/services/transaction.service';
@@ -16,7 +18,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 @Component({
   selector: 'app-budgets',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, BudgetFormComponent, BudgetListComponent, SectionHelpComponent, PageHeaderComponent],
+  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, PrivacyMaskPipe, PrivacyToggleComponent, BudgetFormComponent, BudgetListComponent, SectionHelpComponent, PageHeaderComponent],
   templateUrl: './budgets.html',
   styleUrl: './budgets.scss',
 })

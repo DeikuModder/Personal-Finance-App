@@ -3,37 +3,37 @@
     @if (hasSaved()) {
       <mat-icon class="big-icon">emoji_events</mat-icon>
       <h2 class="title win">You Saved Money!</h2>
-      <div class="big-amount">{{ savedLost() | currencyFormat }}</div>
+      <div class="big-amount">{{ savedLost() | currencyFormat | privacyMask: 'challenge' }}</div>
       <div class="stats">
         <div class="stat">
           <span>Income</span>
-          <strong>{{ monthlyIncome() | currencyFormat }}</strong>
+          <strong>{{ monthlyIncome() | currencyFormat | privacyMask: 'challenge' }}</strong>
         </div>
         <div class="stat">
           <span>Spent</span>
-          <strong>{{ totalSpent() | currencyFormat }}</strong>
+          <strong>{{ totalSpent() | currencyFormat | privacyMask: 'challenge' }}</strong>
         </div>
         <div class="stat">
           <span>Saved</span>
-          <strong class="positive">{{ savedLost() | currencyFormat }}</strong>
+          <strong class="positive">{{ savedLost() | currencyFormat | privacyMask: 'challenge' }}</strong>
         </div>
       </div>
     } @else {
       <mat-icon class="big-icon lost">close</mat-icon>
       <h2 class="title lost">Money Lost</h2>
-      <div class="big-amount lost">{{ abs(savedLost()) | currencyFormat }}</div>
+      <div class="big-amount lost">{{ abs(savedLost()) | currencyFormat | privacyMask: 'challenge' }}</div>
       <div class="stats">
         <div class="stat">
           <span>Income</span>
-          <strong>{{ monthlyIncome() | currencyFormat }}</strong>
+          <strong>{{ monthlyIncome() | currencyFormat | privacyMask: 'challenge' }}</strong>
         </div>
         <div class="stat">
           <span>Spent</span>
-          <strong>{{ totalSpent() | currencyFormat }}</strong>
+          <strong>{{ totalSpent() | currencyFormat | privacyMask: 'challenge' }}</strong>
         </div>
         <div class="stat">
           <span>Overspent</span>
-          <strong class="negative">{{ abs(savedLost()) | currencyFormat }}</strong>
+          <strong class="negative">{{ abs(savedLost()) | currencyFormat | privacyMask: 'challenge' }}</strong>
         </div>
       </div>
     }

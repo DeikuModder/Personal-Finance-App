@@ -13,6 +13,7 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { AccountService } from '../../../accounts/services/account.service';
 import { Account } from '../../../../core/models/account.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
+import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 
 export interface PayDebtResult {
   accountId: string;
@@ -35,6 +36,7 @@ export interface PayDebtResult {
     MatDatepickerModule,
     MatNativeDateModule,
     CurrencyFormatPipe,
+    PrivacyMaskPipe,
   ],
   templateUrl: './debt-pay-dialog.html',
   styleUrl: './debt-pay-dialog.scss',
