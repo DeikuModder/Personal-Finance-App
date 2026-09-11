@@ -1,0 +1,9 @@
+@if (image()) {
+  <div class="backdrop" (click)="close()">
+    <button class="close-btn" type="button" (click)="close(); $event.stopPropagation()" aria-label="Close preview">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img [src]="image()" alt="Preview" class="preview-img" (click)="$event.stopPropagation()" />
+    <span class="hint">Tap outside to close</span>
+  </div>
+}

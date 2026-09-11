@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { DebtsService } from './debts.service';
 import { UpsertDebtDto } from './debt.dto';
 export declare class DebtsController {

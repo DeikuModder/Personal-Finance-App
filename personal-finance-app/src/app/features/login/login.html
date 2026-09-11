@@ -1,0 +1,61 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <mat-icon class="logo">favorite</mat-icon>
+      <h1>FinTrack</h1>
+      <p>Sign in with your email</p>
+    </div>
+
+    @if (error()) {
+      <app-error-banner [message]="error()" (dismissed)="error.set(null)" />
+    }
+
+    @if (step() === 'email') {
+      <div class="login-step">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            (keyup.enter)="requestCode()"
+            placeholder="you@example.com"
+            autocomplete="email"
+            autofocus
+          />
+        </mat-form-field>
+        <button mat-flat-button color="primary" class="full-width" (click)="requestCode()" [disabled]="!email().trim() || busy()">
+          {{ busy() ? 'Sending…' : 'Send code' }}
+        </button>
+      </div>
+    } @else {
+      <div class="login-step">
+        <p class="otp-hint">
+          We emailed a 6-digit code to <strong>{{ email() }}</strong>
+        </p>
+        <mat-form-field appearance="outline" class="full-width code-field">
+          <mat-label>Code</mat-label>
+          <input
+            matInput
+            inputmode="numeric"
+            [ngModel]="code()"
+            (ngModelChange)="onCodeChange($event)"
+            (keyup.enter)="verify()"
+            placeholder="123456"
+            autocomplete="one-time-code"
+          />
+        </mat-form-field>
+        <button mat-flat-button color="primary" class="full-width" (click)="verify()" [disabled]="!codeComplete || busy()">
+          {{ busy() ? 'Verifying…' : 'Sign in' }}
+        </button>
+        <div class="otp-actions">
+          <button mat-button (click)="goBack()">Change email</button>
+          <button mat-button (click)="resend()" [disabled]="resendIn() > 0 || busy()">
+            {{ resendIn() > 0 ? 'Resend in ' + resendIn() + 's' : 'Resend code' }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

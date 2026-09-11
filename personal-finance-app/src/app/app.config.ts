@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 import { TRANSACTION_REPOSITORY, ACCOUNT_REPOSITORY, BUDGET_REPOSITORY, BUDGET_ITEM_REPOSITORY, CATEGORY_REPOSITORY, INVESTMENT_REPOSITORY, DEBT_REPOSITORY, GOAL_REPOSITORY, WISHLIST_REPOSITORY } from './core/tokens/tokens';
 import { HttpRepository } from './core/repositories/http.repository';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { Transaction } from './core/models/transaction.model';
 import { Account } from './core/models/account.model';
 import { Budget } from './core/models/budget.model';
@@ -32,6 +33,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true,
     },
     {

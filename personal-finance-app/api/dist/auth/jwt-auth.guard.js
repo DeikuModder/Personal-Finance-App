@@ -9,77 +9,66 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CfAccessGuard = void 0;
+exports.JwtAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const jose_1 = require("jose");
 const users_service_1 = require("../users/users.service");
 const auth_decorators_1 = require("./auth.decorators");
-let CfAccessGuard = class CfAccessGuard {
+const cookie_util_1 = require("./cookie.util");
+let JwtAuthGuard = class JwtAuthGuard {
     constructor(usersService, reflector) {
         this.usersService = usersService;
         this.reflector = reflector;
     }
-    get teamDomain() {
-        return (process.env.CF_TEAM_DOMAIN || '').replace(/\/+$/, '');
-    }
-    get aud() {
-        return process.env.CF_AUD || '';
-    }
-    getJwks() {
-        if (!this.jwks) {
-            this.jwks = (0, jose_1.createRemoteJWKSet)(new URL(`${this.teamDomain}/cdn-cgi/access/certs`));
-        }
-        return this.jwks;
-    }
     async canActivate(context) {
-        const skip = this.reflector.getAllAndOverride(auth_decorators_1.SKIP_CF_AUTH, [
+        const isPublic = this.reflector.getAllAndOverride(auth_decorators_1.IS_PUBLIC_KEY, [
             context.getHandler(),
             context.getClass(),
         ]);
-        if (skip) {
+        if (isPublic)
             return true;
-        }
-        if (!this.teamDomain || !this.aud) {
-            throw new common_1.UnauthorizedException('CF_TEAM_DOMAIN and CF_AUD are required');
-        }
         const request = context.switchToHttp().getRequest();
-        const token = request.headers['cf-access-jwt-assertion'];
+        const token = this.extractToken(request);
         if (!token) {
-            throw new common_1.UnauthorizedException('Missing Cloudflare Access token');
+            throw new common_1.UnauthorizedException('Missing access token');
         }
         try {
-            const { payload } = await (0, jose_1.jwtVerify)(token, this.getJwks(), {
-                issuer: this.teamDomain,
-                audience: this.aud,
-            });
-            const email = payload.email ||
-                payload.identity ||
-                payload.sub;
-            if (!email) {
-                throw new common_1.UnauthorizedException('No identity in token');
+            const { payload } = await (0, jose_1.jwtVerify)(token, this.secret(), { algorithms: ['HS256'] });
+            const user = await this.usersService.findById(payload.sub);
+            if (!user) {
+                throw new common_1.UnauthorizedException('Unknown user');
             }
-            const user = await this.usersService.resolveByEmail(email);
-            const authUser = {
-                email,
+            request.user = {
+                email: user.email,
                 userId: user.id,
+                role: user.role,
                 payload,
             };
-            request.user = authUser;
             return true;
         }
         catch (err) {
             if (err instanceof common_1.UnauthorizedException) {
                 throw err;
             }
-            throw new common_1.UnauthorizedException('Invalid Cloudflare Access token');
+            throw new common_1.UnauthorizedException('Invalid or expired session');
         }
     }
+    secret() {
+        return new TextEncoder().encode(process.env.AUTH_JWT_SECRET || '');
+    }
+    extractToken(request) {
+        const auth = request.headers['authorization'];
+        if (auth && auth.startsWith('Bearer ')) {
+            return auth.slice(7);
+        }
+        return (0, cookie_util_1.readCookie)(request, 'ft_access');
+    }
 };
-exports.CfAccessGuard = CfAccessGuard;
-exports.CfAccessGuard = CfAccessGuard = __decorate([
+exports.JwtAuthGuard = JwtAuthGuard;
+exports.JwtAuthGuard = JwtAuthGuard = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [users_service_1.UsersService,
         core_1.Reflector])
-], CfAccessGuard);
-//# sourceMappingURL=cf-access.guard.js.map
+], JwtAuthGuard);
+//# sourceMappingURL=jwt-auth.guard.js.map

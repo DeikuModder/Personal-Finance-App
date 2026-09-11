@@ -1,0 +1,10 @@
+SELECT 'accounts' AS table_name, count(*) AS rows FROM accounts WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'transactions', count(*) FROM transactions WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'budgets', count(*) FROM budgets WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'budget_items', count(*) FROM budget_items WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'categories', count(*) FROM categories WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'debts', count(*) FROM debts WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'goals', count(*) FROM goals WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'investments', count(*) FROM investments WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'wishlist_items', count(*) FROM wishlist_items WHERE "userId" = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com')
+UNION ALL SELECT 'challenge_configs', count(*) FROM challenge_configs WHERE user_id = (SELECT id FROM users WHERE email='gabrieltc555@gmail.com');

@@ -1,6 +1,10 @@
 <div class="wishlist-page">
   <app-page-header title="Wishlist" (fabClicked)="startAdd()" />
 
+  @if (saveError()) {
+    <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
+  }
+
   <app-section-help
     title="Wishlist — things you could buy today"
     description="A simple memory list of things you want. No budgets, no goals: just remember what those nice-to-haves are, with a picture and a price tag."
@@ -15,6 +19,8 @@
     <div class="form-card">
       <app-wishlist-form
         [editing]="editing()"
+        [uploading]="uploading()"
+        [uploadProgress]="uploadProgress()"
         (saved)="onSaved($event)"
         (cancelled)="onCancel()"
       />

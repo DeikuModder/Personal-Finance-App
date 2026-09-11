@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Put, Req } from '@nestjs/common';
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { ChallengeService } from './challenge.service';
 import { PutChallengeConfigDto } from './challenge-config.dto';
 

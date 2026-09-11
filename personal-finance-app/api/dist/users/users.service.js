@@ -17,19 +17,30 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const user_entity_1 = require("./user.entity");
+const auth_decorators_1 = require("../auth/auth.decorators");
 let UsersService = class UsersService {
     constructor(usersRepo) {
         this.usersRepo = usersRepo;
     }
-    async resolveByEmail(email) {
-        const existing = await this.usersRepo.findOne({ where: { email } });
-        if (existing)
-            return existing;
-        const created = this.usersRepo.create({ email });
-        return this.usersRepo.save(created);
+    async ensureUserByEmail(email) {
+        const normalized = email.toLowerCase().trim();
+        let user = await this.usersRepo.findOne({ where: { email: normalized } });
+        const isSuper = normalized === this.superadminEmail();
+        if (!user) {
+            user = this.usersRepo.create({ email: normalized, role: isSuper ? auth_decorators_1.SUPERADMIN : 'user' });
+            return this.usersRepo.save(user);
+        }
+        if (isSuper && user.role !== auth_decorators_1.SUPERADMIN) {
+            user.role = auth_decorators_1.SUPERADMIN;
+            return this.usersRepo.save(user);
+        }
+        return user;
     }
     async findById(id) {
         return this.usersRepo.findOne({ where: { id } });
+    }
+    superadminEmail() {
+        return (process.env.SUPERADMIN_EMAIL || '').toLowerCase().trim();
     }
 };
 exports.UsersService = UsersService;

@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
-import { SkipCfAuth } from '../auth/auth.decorators';
+import { Public } from '../auth/auth.decorators';
 
-@SkipCfAuth()
+@Public()
 @Controller('health')
 export class HealthController {
   @Get()

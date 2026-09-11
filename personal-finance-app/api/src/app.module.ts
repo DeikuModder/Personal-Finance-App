@@ -3,7 +3,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './health/health.module';
 import { UsersModule } from './users/users.module';
-import { CfAccessGuard } from './auth/cf-access.guard';
+import { AuthModule } from './auth/auth.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RolesGuard } from './auth/roles.guard';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { BudgetsModule } from './budgets/budgets.module';
@@ -24,6 +26,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
     }),
     HealthModule,
     UsersModule,
+    AuthModule,
     TransactionsModule,
     AccountsModule,
     BudgetsModule,
@@ -37,7 +40,11 @@ import { WishlistModule } from './wishlist/wishlist.module';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: CfAccessGuard,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

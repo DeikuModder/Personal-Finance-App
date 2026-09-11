@@ -3,14 +3,88 @@
 
   <app-section-help
     title="Settings — manage your app"
-    [description]="'Settings lets you lock the app with a PIN, connect live market data, point the Chat page at your local AI assistant, and back up or restore all of your data.'"
+    [description]="'Settings lets you manage your account and sign-in, lock the app with a PIN, connect live market data, point the Chat page at your local AI assistant, and back up or restore all of your data.'"
     [howTo]="[
+      'Account: shows the email you are signed in as and your role. Use Sign Out to end this session.',
+      'Allowed Emails (superadmin only): controls which email addresses can sign in — everyone else is blocked.',
       'Security: set a 6-digit PIN so the app asks for a passcode on open (this is a local convenience lock).',
       'Market Data: paste a free Alpha Vantage API key to auto-fill live stock prices and dividends in Investments.',
       'AI Assistant: set the address of your local EV service and test the connection before using the Chat page.',
       'Data: Export Data downloads a full JSON backup; Import Data restores one. Clear All Data wipes everything on this device (transactions, accounts, budget, investments, PIN and API key).'
     ]"
   />
+
+  <div class="settings-section">
+    <h3>Account</h3>
+    @if (user(); as u) {
+      <div class="settings-item static account-item">
+        <mat-icon>account_circle</mat-icon>
+        <div class="account-body">
+          <span>{{ u.email }}</span>
+          <small [class.superadmin-role]="isSuperadmin()">{{ roleLabel() }}</small>
+        </div>
+      </div>
+      <button mat-button class="settings-item" (click)="signOut()">
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+        <mat-icon class="chevron">chevron_right</mat-icon>
+      </button>
+    }
+  </div>
+
+  @if (isSuperadmin()) {
+    <div class="settings-section">
+      <h3>Allowed Emails</h3>
+      <div class="settings-item static allowlist-item">
+        <mat-icon>alternate_email</mat-icon>
+        <div class="allowlist-body">
+          <span>Only these emails can sign in</span>
+          <small>Everyone else gets a “Sign-in not allowed” error. Added emails get the “user” role.</small>
+          <mat-form-field appearance="outline" class="key-field">
+            <input
+              matInput
+              type="email"
+              [ngModel]="newEmail()"
+              (ngModelChange)="newEmail.set($event); allowlistError.set(null)"
+              (keyup.enter)="addEmail()"
+              placeholder="person@example.com"
+            />
+          </mat-form-field>
+          <div class="ai-actions">
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="addEmail()"
+              [disabled]="!newEmail().trim() || allowlistBusy()"
+            >
+              Add Email
+            </button>
+          </div>
+          @if (allowlistError()) {
+            <span class="ai-status bad">{{ allowlistError() }}</span>
+          }
+          @for (entry of allowlist(); track entry.email) {
+            <div class="allowlist-row">
+              <mat-icon>mail</mat-icon>
+              <span class="allowlist-email">{{ entry.email }}</span>
+              @if (entry.email === user()?.email) {
+                <small class="allowlist-you">you</small>
+              }
+              <button
+                mat-icon-button
+                class="allowlist-remove"
+                (click)="removeEmail(entry.email)"
+                [disabled]="allowlistBusy()"
+                [attr.aria-label]="'Remove ' + entry.email"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
 
   <div class="settings-section">
     <h3>Security</h3>

@@ -13,11 +13,13 @@ import { GoalService } from './services/goal.service';
 import { GoalFormComponent } from './components/goal-form/goal-form.component';
 import { GoalListComponent } from './components/goal-list/goal-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-goals',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, GoalFormComponent, GoalListComponent, SectionHelpComponent],
+  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, GoalFormComponent, GoalListComponent, SectionHelpComponent, ErrorBannerComponent],
   templateUrl: './goals.html',
   styleUrl: './goals.scss',
 })
@@ -32,6 +34,7 @@ export class GoalsComponent {
   streaks = signal<Map<string, number>>(new Map());
   showForm = signal(false);
   editing = signal<Goal | null>(null);
+  saveError = signal<string | null>(null);
 
   private achieving = new Set<string>();
 
@@ -98,13 +101,17 @@ export class GoalsComponent {
 
   onSaved(data: Omit<Goal, 'id' | 'createdAt' | 'updatedAt'>): void {
     const editing = this.editing();
+    const done = () => {
+      this.showForm.set(false);
+      this.editing.set(null);
+      this.saveError.set(null);
+    };
+    const fail = (err: unknown) => this.saveError.set(toErrorMessage(err));
     if (editing) {
-      this.goalService.updateGoal({ ...editing, ...data }).subscribe();
+      this.goalService.updateGoal({ ...editing, ...data }).subscribe({ next: done, error: fail });
     } else {
-      this.goalService.addGoal(data).subscribe();
+      this.goalService.addGoal(data).subscribe({ next: done, error: fail });
     }
-    this.showForm.set(false);
-    this.editing.set(null);
   }
 
   onCancel(): void {
@@ -113,6 +120,8 @@ export class GoalsComponent {
   }
 
   onDelete(id: string): void {
-    this.goalService.deleteGoal(id).subscribe();
+    this.goalService.deleteGoal(id).subscribe({
+      error: (err) => this.saveError.set(toErrorMessage(err)),
+    });
   }
 }

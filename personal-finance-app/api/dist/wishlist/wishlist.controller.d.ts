@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { WishlistService } from './wishlist.service';
 import { UpsertWishlistItemDto } from './wishlist-item.dto';
 export declare class WishlistController {

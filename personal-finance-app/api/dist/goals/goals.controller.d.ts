@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { GoalsService } from './goals.service';
 import { UpsertGoalDto } from './goal.dto';
 export declare class GoalsController {

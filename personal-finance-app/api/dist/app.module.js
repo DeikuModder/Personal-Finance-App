@@ -12,7 +12,9 @@ const core_1 = require("@nestjs/core");
 const typeorm_1 = require("@nestjs/typeorm");
 const health_module_1 = require("./health/health.module");
 const users_module_1 = require("./users/users.module");
-const cf_access_guard_1 = require("./auth/cf-access.guard");
+const auth_module_1 = require("./auth/auth.module");
+const jwt_auth_guard_1 = require("./auth/jwt-auth.guard");
+const roles_guard_1 = require("./auth/roles.guard");
 const transactions_module_1 = require("./transactions/transactions.module");
 const accounts_module_1 = require("./accounts/accounts.module");
 const budgets_module_1 = require("./budgets/budgets.module");
@@ -36,6 +38,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             health_module_1.HealthModule,
             users_module_1.UsersModule,
+            auth_module_1.AuthModule,
             transactions_module_1.TransactionsModule,
             accounts_module_1.AccountsModule,
             budgets_module_1.BudgetsModule,
@@ -49,7 +52,11 @@ exports.AppModule = AppModule = __decorate([
         providers: [
             {
                 provide: core_1.APP_GUARD,
-                useClass: cf_access_guard_1.CfAccessGuard,
+                useClass: jwt_auth_guard_1.JwtAuthGuard,
+            },
+            {
+                provide: core_1.APP_GUARD,
+                useClass: roles_guard_1.RolesGuard,
             },
         ],
     })

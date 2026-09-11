@@ -1,0 +1,9 @@
+@if (message()) {
+  <div class="error-banner" role="alert">
+    <mat-icon>error_outline</mat-icon>
+    <span class="error-text">{{ message() }}</span>
+    <button mat-icon-button class="error-dismiss" (click)="onDismiss()" aria-label="Dismiss">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+}

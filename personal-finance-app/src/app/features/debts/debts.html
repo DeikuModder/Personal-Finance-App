@@ -1,6 +1,10 @@
 <div class="debts-page">
   <app-page-header title="Debts" (fabClicked)="startAdd()" />
 
+  @if (saveError()) {
+    <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
+  }
+
   <app-section-help
     title="Debts — what you owe and what you're owed"
     [description]="'Track money you owe (loans, credit cards, friends) and money owed to you (borrowed by friends, unpaid invoices). Record the amount, interest and due date, and set a reminder so you never miss a payment or a follow-up.'"

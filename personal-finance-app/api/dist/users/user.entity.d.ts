@@ -11,6 +11,8 @@ import { WishlistItem } from '../wishlist/wishlist-item.entity';
 export declare class User {
     id: string;
     email: string;
+    role: string;
+    lastLoginAt: Date | null;
     createdAt: Date;
     transactions: Transaction[];
     accounts: Account[];

@@ -1,0 +1,36 @@
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(207, 102, 121, 0.1);
+  border: 1px solid rgba(207, 102, 121, 0.45);
+  border-radius: 12px;
+  padding: 0.7rem 0.75rem 0.7rem 1rem;
+  margin-bottom: 1rem;
+
+  mat-icon:first-child {
+    color: #cf6679;
+    flex-shrink: 0;
+  }
+
+  .error-text {
+    flex: 1;
+    color: #e9b7bf;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .error-dismiss {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    flex-shrink: 0;
+
+    mat-icon {
+      color: #cf6679;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

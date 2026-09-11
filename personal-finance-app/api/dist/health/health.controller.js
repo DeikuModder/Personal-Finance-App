@@ -25,7 +25,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], HealthController.prototype, "health", null);
 exports.HealthController = HealthController = __decorate([
-    (0, auth_decorators_1.SkipCfAuth)(),
+    (0, auth_decorators_1.Public)(),
     (0, common_1.Controller)('health')
 ], HealthController);
 //# sourceMappingURL=health.controller.js.map

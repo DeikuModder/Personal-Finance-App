@@ -8,11 +8,13 @@ import { WishlistFormComponent } from './components/wishlist-form/wishlist-form.
 import { WishlistListComponent } from './components/wishlist-list/wishlist-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, WishlistFormComponent, WishlistListComponent, SectionHelpComponent, PageHeaderComponent],
+  imports: [MatIconModule, MatButtonModule, WishlistFormComponent, WishlistListComponent, SectionHelpComponent, PageHeaderComponent, ErrorBannerComponent],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.scss',
 })
@@ -23,6 +25,9 @@ export class WishlistComponent {
   items = signal<WishlistItem[]>([]);
   showForm = signal(false);
   editing = signal<WishlistItem | null>(null);
+  saveError = signal<string | null>(null);
+  uploading = signal(false);
+  uploadProgress = signal(0);
 
   constructor() {
     this.wishlistService.getItems().subscribe((items) => {
@@ -46,13 +51,29 @@ export class WishlistComponent {
 
   onSaved(data: Omit<WishlistItem, 'id' | 'createdAt' | 'updatedAt'>): void {
     const editing = this.editing();
+    const onProgress = (pct: number) => {
+      this.uploading.set(true);
+      this.uploadProgress.set(pct);
+    };
+    const done = () => {
+      this.uploading.set(false);
+      this.uploadProgress.set(0);
+      this.showForm.set(false);
+      this.editing.set(null);
+      this.saveError.set(null);
+    };
+    const fail = (err: unknown) => {
+      this.uploading.set(false);
+      this.uploadProgress.set(0);
+      this.saveError.set(toErrorMessage(err));
+    };
+    this.uploading.set(true);
+    this.uploadProgress.set(0);
     if (editing) {
-      this.wishlistService.updateItem({ ...editing, ...data }).subscribe();
+      this.wishlistService.updateItemWithProgress({ ...editing, ...data }, onProgress).subscribe({ next: done, error: fail });
     } else {
-      this.wishlistService.addItem(data).subscribe();
+      this.wishlistService.addItemWithProgress(data, onProgress).subscribe({ next: done, error: fail });
     }
-    this.showForm.set(false);
-    this.editing.set(null);
   }
 
   onCancel(): void {
@@ -61,13 +82,18 @@ export class WishlistComponent {
   }
 
   onDelete(id: string): void {
-    this.wishlistService.deleteItem(id).subscribe();
+    this.wishlistService.deleteItem(id).subscribe({
+      error: (err) => this.saveError.set(toErrorMessage(err)),
+    });
   }
 
   onAchieved(item: WishlistItem): void {
-    this.wishlistService.markAchieved(item).subscribe(() => {
-      this.effects.goldBurst();
-      setTimeout(() => this.effects.celebrate(), 600);
+    this.wishlistService.markAchieved(item).subscribe({
+      next: () => {
+        this.effects.goldBurst();
+        setTimeout(() => this.effects.celebrate(), 600);
+      },
+      error: (err) => this.saveError.set(toErrorMessage(err)),
     });
   }
 }

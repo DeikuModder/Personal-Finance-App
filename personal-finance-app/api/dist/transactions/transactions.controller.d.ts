@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { TransactionsService } from './transactions.service';
 import { UpsertTransactionDto } from './transaction.dto';
 export declare class TransactionsController {

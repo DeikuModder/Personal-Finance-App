@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { InvestmentsService } from './investments.service';
 import { UpsertInvestmentDto } from './investment.dto';
 export declare class InvestmentsController {

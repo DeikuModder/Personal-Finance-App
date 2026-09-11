@@ -3,6 +3,10 @@
   description="Set a savings goal measured against your total savings pool, or a habit streak that counts how many days (or weeks) you keep a category under an allowance."
 ></app-section-help>
 
+@if (saveError()) {
+  <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
+}
+
 <div class="pool-card">
   <div class="pool-label">
     <mat-icon>savings</mat-icon>

@@ -10,7 +10,10 @@
       <div class="wish-card" [class.achieved]="item.status === 'achieved'">
         <div class="wish-main">
           @if (item.picture) {
-            <img [src]="item.picture" alt="Wish" class="wish-picture" />
+            <button class="wish-picture-btn" type="button" (click)="openImage(item.picture)" aria-label="View picture">
+              <img [src]="item.picture" alt="Wish" class="wish-picture" />
+              <span class="picture-badge"><mat-icon>fullscreen</mat-icon></span>
+            </button>
           } @else {
             <div class="wish-avatar">
               <mat-icon>favorite</mat-icon>
@@ -43,3 +46,5 @@
     }
   </div>
 }
+
+<app-image-preview [image]="previewImage()" (closed)="previewImage.set(null)" />

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Req } from '@nestjs/common';
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { BudgetItemsService } from './budget-items.service';
 import { UpsertBudgetItemDto } from './budget-item.dto';
 

@@ -65,6 +65,86 @@
   }
 }
 
+.account-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+
+  span {
+    color: #e0e0e0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  small {
+    color: #666;
+    font-size: 0.7rem;
+    background: #2c2c2c;
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+    white-space: nowrap;
+
+    &.superadmin-role {
+      color: #ffd54f;
+    }
+  }
+}
+
+.allowlist-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+
+  span {
+    color: #e0e0e0;
+  }
+
+  small {
+    color: #666;
+    font-size: 0.7rem;
+  }
+
+  .key-field {
+    width: 100%;
+  }
+}
+
+.allowlist-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4rem 0.25rem;
+  border-top: 1px solid #2c2c2c;
+
+  mat-icon {
+    color: #666;
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .allowlist-email {
+    flex: 1;
+    color: #e0e0e0;
+    font-size: 0.875rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .allowlist-you {
+    color: #ffd54f;
+  }
+
+  .allowlist-remove {
+    color: #cf6679;
+  }
+}
+
 .api-key-body {
   flex: 1;
   display: flex;

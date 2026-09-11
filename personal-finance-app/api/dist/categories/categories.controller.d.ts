@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { CategoriesService } from './categories.service';
 import { UpsertCategoryDto } from './category.dto';
 export declare class CategoriesController {

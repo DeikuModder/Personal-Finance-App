@@ -21,10 +21,16 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://fintrack:${POSTGRES_PASSWORD}@db:5432/fintrack
-      CF_TEAM_DOMAIN: ${CF_TEAM_DOMAIN}
-      CF_AUD: ${CF_AUD}
       CORS_ORIGIN: ${CORS_ORIGIN}
       PORT: 3000
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL:-gabrieltc555@gmail.com}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_FROM:-FinTrack <no-reply@fintrack.app>}
     depends_on:
       db:
         condition: service_healthy

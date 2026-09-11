@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.readCookie = readCookie;
+function readCookie(req, name) {
+    const header = req.headers.cookie;
+    if (!header)
+        return undefined;
+    for (const part of header.split(';')) {
+        const idx = part.indexOf('=');
+        if (idx === -1)
+            continue;
+        const key = part.slice(0, idx).trim();
+        const val = part.slice(idx + 1).trim();
+        if (key === name)
+            return decodeURIComponent(val);
+    }
+    return undefined;
+}
+//# sourceMappingURL=cookie.util.js.map

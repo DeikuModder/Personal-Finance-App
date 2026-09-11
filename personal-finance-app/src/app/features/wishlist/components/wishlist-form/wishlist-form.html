@@ -24,7 +24,11 @@
       <input #pictureInput type="file" accept="image/*" hidden (change)="onPictureSelected($event)" />
       <button mat-stroked-button (click)="pictureInput.click()" [disabled]="pictureProcessing()">
         <mat-icon>add_a_photo</mat-icon>
-        {{ picture() ? 'Change picture' : 'Add a picture (optional)' }}
+        @if (pictureProcessing()) {
+          Reading…
+        } @else {
+          {{ picture() ? 'Change picture' : 'Add a picture (optional)' }}
+        }
       </button>
       @if (picture()) {
         <button mat-stroked-button (click)="removePicture()">
@@ -35,10 +39,25 @@
     </div>
   </div>
 
+  @if (pictureError()) {
+    <app-error-banner [message]="pictureError()" (dismissed)="pictureError.set(null)" />
+  }
+
+  @if (uploading()) {
+    <div class="upload-status">
+      <mat-progress-bar mode="determinate" [value]="uploadProgress()" />
+      <span>Uploading… {{ uploadProgress() }}%</span>
+    </div>
+  }
+
   <div class="form-actions">
-    <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!clean">
-      {{ editing() ? 'Save changes' : 'Add to Wishlist' }}
+    <button mat-button (click)="onCancel()" [disabled]="uploading()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!clean || uploading()">
+      @if (uploading()) {
+        Uploading…
+      } @else {
+        {{ editing() ? 'Save changes' : 'Add to Wishlist' }}
+      }
     </button>
   </div>
 </div>

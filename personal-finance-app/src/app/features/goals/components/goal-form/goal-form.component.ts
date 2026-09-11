@@ -11,7 +11,8 @@ import { Goal, GoalType } from '../../../../core/models/goal.model';
 import { CategoryOption } from '../../../../core/models/category.model';
 import { CUSTOM_CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
-import { fileToPicture } from '../../../../shared/utils/image.util';
+import { fileToPicture, PictureError } from '../../../../shared/utils/image.util';
+import { ErrorBannerComponent } from '../../../../shared/components/error-banner/error-banner.component';
 
 @Component({
   selector: 'app-goal-form',
@@ -25,6 +26,7 @@ import { fileToPicture } from '../../../../shared/utils/image.util';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ErrorBannerComponent,
   ],
   templateUrl: './goal-form.html',
   styleUrl: './goal-form.scss',
@@ -43,6 +45,7 @@ export class GoalFormComponent {
   deadline = signal<Date | null>(null);
   picture = signal<string | null>(null);
   pictureProcessing = signal(false);
+  pictureError = signal<string | null>(null);
   category = signal('');
   allowance = signal(0);
   allowancePeriod = signal<'day' | 'week'>('day');
@@ -87,11 +90,13 @@ export class GoalFormComponent {
     input.value = '';
     if (!file) return;
     this.pictureProcessing.set(true);
+    this.pictureError.set(null);
     fileToPicture(file).subscribe({
       next: (result) => {
-        if (result) {
-          this.picture.set(result.dataUrl);
-        }
+        this.picture.set(result.dataUrl);
+      },
+      error: (err) => {
+        this.pictureError.set(err instanceof PictureError ? err.message : 'Could not read that photo. Please try another one.');
       },
       complete: () => this.pictureProcessing.set(false),
     });
@@ -99,6 +104,7 @@ export class GoalFormComponent {
 
   removePicture(): void {
     this.picture.set(null);
+    this.pictureError.set(null);
   }
 
   onSubmit(): void {

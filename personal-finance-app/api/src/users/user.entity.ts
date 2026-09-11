@@ -24,6 +24,12 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ length: 32, default: 'user' })
+  role: string;
+
+  @Column({ type: 'timestamptz', nullable: true, name: 'last_login_at' })
+  lastLoginAt: Date | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

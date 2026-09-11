@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from '../auth/cf-access.guard';
+import { AuthenticatedRequest } from '../auth/jwt-auth.guard';
 import { BudgetsService } from './budgets.service';
 import { UpsertBudgetDto } from './budget.dto';
 export declare class BudgetsController {

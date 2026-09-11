@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,8 @@ import { ApiKeyService } from '../investments/services/api-key.service';
 import { AiAssistantService } from '../chat/services/ai-assistant.service';
 import { DebtReminderService } from '../debts/services/debt-reminder.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { AllowedEmailItem, AuthService } from '../../core/auth/auth.service';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-settings',
@@ -34,7 +36,27 @@ export class SettingsComponent {
   private apiKeyService = inject(ApiKeyService);
   private aiAssistant = inject(AiAssistantService);
   private reminderService = inject(DebtReminderService);
+  private auth = inject(AuthService);
   private router = inject(Router);
+
+  readonly user = this.auth.me;
+  isSuperadmin = computed(() => this.user()?.role === 'superadmin');
+  roleLabel = computed(() => (this.user()?.role === 'superadmin' ? 'Superadmin' : 'User'));
+
+  allowlist = signal<AllowedEmailItem[]>([]);
+  newEmail = signal('');
+  allowlistError = signal<string | null>(null);
+  allowlistBusy = signal(false);
+  private allowlistLoaded = false;
+
+  constructor() {
+    effect(() => {
+      if (this.isSuperadmin() && !this.allowlistLoaded) {
+        this.allowlistLoaded = true;
+        this.loadAllowlist();
+      }
+    });
+  }
 
   pinSet = signal(this.pinService.isPinSet());
   apiKey = signal(this.apiKeyService.getKey());
@@ -43,6 +65,51 @@ export class SettingsComponent {
   aiStatus = signal<{ ok: boolean; text: string } | null>(null);
   aiTesting = signal(false);
   remindersEnabled = signal(this.reminderService.isEnabled());
+
+  loadAllowlist(): void {
+    this.auth.getAllowlist().subscribe({
+      next: (items) => this.allowlist.set(items),
+      error: () => {},
+    });
+  }
+
+  addEmail(): void {
+    const email = this.newEmail().trim();
+    if (!email || this.allowlistBusy()) return;
+    this.allowlistBusy.set(true);
+    this.allowlistError.set(null);
+    this.auth.addAllowlist(email).subscribe({
+      next: (item) => {
+        this.allowlist.update((list) => [...list, item]);
+        this.newEmail.set('');
+        this.allowlistBusy.set(false);
+      },
+      error: (err) => {
+        this.allowlistBusy.set(false);
+        this.allowlistError.set(toErrorMessage(err));
+      },
+    });
+  }
+
+  removeEmail(email: string): void {
+    if (this.allowlistBusy()) return;
+    this.allowlistBusy.set(true);
+    this.allowlistError.set(null);
+    this.auth.removeAllowlist(email).subscribe({
+      next: () => {
+        this.allowlist.update((list) => list.filter((e) => e.email !== email));
+        this.allowlistBusy.set(false);
+      },
+      error: (err) => {
+        this.allowlistBusy.set(false);
+        this.allowlistError.set(toErrorMessage(err));
+      },
+    });
+  }
+
+  signOut(): void {
+    this.auth.logout().subscribe();
+  }
 
   toggleReminders(enable: boolean): void {
     this.remindersEnabled.set(enable);

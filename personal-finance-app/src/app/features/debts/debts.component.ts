@@ -19,6 +19,8 @@ import {
 } from './components/debt-collect-dialog/debt-collect-dialog.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-debts',
@@ -31,6 +33,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
     DebtListComponent,
     SectionHelpComponent,
     PageHeaderComponent,
+    ErrorBannerComponent,
   ],
   templateUrl: './debts.html',
   styleUrl: './debts.scss',
@@ -45,6 +48,7 @@ export class DebtsComponent {
   banner = signal<DebtReminder[]>([]);
   showForm = signal(false);
   editing = signal<Debt | null>(null);
+  saveError = signal<string | null>(null);
 
   constructor() {
     this.debtService.getDebts().subscribe((debts) => {
@@ -103,26 +107,43 @@ export class DebtsComponent {
 
   onSaved(data: Omit<Debt, 'id' | 'createdAt'>): void {
     const editing = this.editing();
+    const fail = (err: unknown) => this.saveError.set(toErrorMessage(err));
     if (editing) {
-      this.debtService.updateDebt({ ...editing, ...data }).subscribe();
+      this.debtService.updateDebt({ ...editing, ...data }).subscribe({
+        next: () => {
+          this.showForm.set(false);
+          this.editing.set(null);
+          this.saveError.set(null);
+        },
+        error: fail,
+      });
     } else {
-      this.debtService.addDebt(data).subscribe((debt) => {
-        if (debt.type === 'receivable' && debt.accountId) {
-          this.transactionService
-            .addTransaction({
-              type: 'expense',
-              amount: debt.amountOwed,
-              description: `Lent to ${debt.creditor}`,
-              category: 'transfer',
-              date: new Date().toISOString().split('T')[0],
-              accountId: debt.accountId,
-            })
-            .subscribe();
-        }
+      this.debtService.addDebt(data).subscribe({
+        next: (debt) => {
+          this.showForm.set(false);
+          this.editing.set(null);
+          this.saveError.set(null);
+          if (debt.type === 'receivable' && debt.accountId) {
+            this.transactionService
+              .addTransaction({
+                type: 'expense',
+                amount: debt.amountOwed,
+                description: `Lent to ${debt.creditor}`,
+                category: 'transfer',
+                date: new Date().toISOString().split('T')[0],
+                accountId: debt.accountId,
+              })
+              .subscribe({
+                error: (err) =>
+                  this.saveError.set(
+                    `The debt was saved, but ${toErrorMessage(err)} The lending transaction couldn't be recorded.`
+                  ),
+              });
+          }
+        },
+        error: fail,
       });
     }
-    this.showForm.set(false);
-    this.editing.set(null);
   }
 
   onCancel(): void {
@@ -131,7 +152,9 @@ export class DebtsComponent {
   }
 
   onDelete(id: string): void {
-    this.debtService.deleteDebt(id).subscribe();
+    this.debtService.deleteDebt(id).subscribe({
+      error: (err) => this.saveError.set(toErrorMessage(err)),
+    });
   }
 
   onPayOff(debt: Debt): void {
@@ -150,8 +173,13 @@ export class DebtsComponent {
           date: result.date,
           accountId: result.accountId,
         })
-        .subscribe(() => {
-          this.debtService.markPaid(debt).subscribe();
+        .subscribe({
+          next: () => {
+            this.debtService.markPaid(debt).subscribe({
+              error: (err) => this.saveError.set(toErrorMessage(err)),
+            });
+          },
+          error: (err) => this.saveError.set(`Couldn't record the payment: ${toErrorMessage(err)}`),
         });
     });
   }
@@ -172,8 +200,13 @@ export class DebtsComponent {
           date: result.date,
           accountId: result.accountId,
         })
-        .subscribe(() => {
-          this.debtService.markPaid(debt).subscribe();
+        .subscribe({
+          next: () => {
+            this.debtService.markPaid(debt).subscribe({
+              error: (err) => this.saveError.set(toErrorMessage(err)),
+            });
+          },
+          error: (err) => this.saveError.set(`Couldn't record the collection: ${toErrorMessage(err)}`),
         });
     });
   }
