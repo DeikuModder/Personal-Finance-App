@@ -17,7 +17,7 @@
   }
 
   &.active {
-    color: #ff6e6e;
+    color: var(--accent);
   }
 
   &:hover {

@@ -14,11 +14,73 @@
   margin-bottom: 2rem;
 
   h3 {
-    color: #ff6e6e;
+    color: var(--accent);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin: 0 0 0.75rem 0;
+  }
+}
+
+.theme-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+
+  span {
+    color: #e0e0e0;
+  }
+
+  small {
+    color: #666;
+    font-size: 0.7rem;
+  }
+}
+
+.theme-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.theme-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #e0e0e0;
+  line-height: 1;
+
+  .theme-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .theme-name {
+    flex: none;
+  }
+
+  mat-icon {
+    color: var(--accent);
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  &:hover:not(.active) {
+    background: var(--accent-soft);
   }
 }
 
@@ -28,14 +90,14 @@
   gap: 0.75rem;
   width: 100%;
   padding: 0.875rem 1rem;
-  background: #1e1e1e;
+  background: var(--surface);
   border-radius: 12px;
   margin-bottom: 0.5rem;
   text-align: left;
   color: #e0e0e0;
 
   mat-icon:first-child {
-    color: #9e9e9e;
+    color: var(--text-muted);
   }
 
   span {
@@ -48,11 +110,11 @@
 
   &.danger {
     mat-icon:first-child {
-      color: #cf6679;
+      color: var(--danger);
     }
 
     span {
-      color: #cf6679;
+      color: var(--danger);
     }
   }
 
@@ -60,7 +122,7 @@
     cursor: default;
 
     &:hover {
-      background: #1e1e1e;
+      background: var(--surface);
     }
   }
 }
@@ -81,7 +143,7 @@
   small {
     color: #666;
     font-size: 0.7rem;
-    background: #2c2c2c;
+    background: var(--surface-2);
     border-radius: 999px;
     padding: 0.1rem 0.5rem;
     white-space: nowrap;
@@ -119,7 +181,7 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.4rem 0.25rem;
-  border-top: 1px solid #2c2c2c;
+  border-top: 1px solid var(--surface-2);
 
   mat-icon {
     color: #666;
@@ -141,7 +203,7 @@
   }
 
   .allowlist-remove {
-    color: #cf6679;
+    color: var(--danger);
   }
 }
 
@@ -166,7 +228,7 @@
   }
 
   .key-saved {
-    color: #03dac6;
+    color: var(--secondary);
     font-size: 0.75rem;
   }
 }
@@ -181,11 +243,11 @@
   font-size: 0.75rem;
 
   &.ok {
-    color: #03dac6;
+    color: var(--secondary);
   }
 
   &.bad {
-    color: #cf6679;
+    color: var(--danger);
   }
 }
 

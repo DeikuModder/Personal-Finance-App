@@ -12,7 +12,7 @@
 }
 
 .login-card {
-  background: #1e1e1e;
+  background: var(--surface);
   border: 1px solid #333;
   border-radius: 20px;
   padding: 2.25rem 1.75rem;
@@ -28,7 +28,7 @@
     font-size: 44px;
     width: 44px;
     height: 44px;
-    color: #ff6e6e;
+    color: var(--accent);
   }
 
   h1 {
@@ -39,7 +39,7 @@
 
   p {
     margin: 0;
-    color: #9e9e9e;
+    color: var(--text-muted);
     font-size: 0.875rem;
   }
 }
@@ -63,7 +63,7 @@
 
 .otp-hint {
   margin: 0;
-  color: #9e9e9e;
+  color: var(--text-muted);
   font-size: 0.875rem;
   text-align: center;
 

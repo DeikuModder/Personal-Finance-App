@@ -9,7 +9,7 @@
   background: radial-gradient(circle at 50% 40%, rgba(187, 134, 252, 0.2), rgba(18, 18, 18, 0.96));
 
   &.lost {
-    background: radial-gradient(circle at 50% 40%, rgba(207, 102, 121, 0.28), rgba(18, 18, 18, 0.97));
+    background: radial-gradient(circle at 50% 40%, var(--danger-soft), rgba(18, 18, 18, 0.97));
   }
 }
 
@@ -30,8 +30,8 @@
     filter: drop-shadow(0 0 16px rgba(255, 213, 79, 0.6));
 
     &.lost {
-      color: #cf6679;
-      filter: drop-shadow(0 0 16px rgba(207, 102, 121, 0.6));
+      color: var(--danger);
+      filter: drop-shadow(0 0 16px var(--danger-border));
     }
   }
 
@@ -45,17 +45,17 @@
     }
 
     &.lost {
-      color: #cf6679;
+      color: var(--danger);
     }
   }
 
   .big-amount {
     font-size: 2.4rem;
     font-weight: 800;
-    color: #03dac6;
+    color: var(--positive);
 
     &.lost {
-      color: #cf6679;
+      color: var(--danger);
     }
   }
 
@@ -71,11 +71,11 @@
       flex-direction: column;
       gap: 0.2rem;
       padding: 0.6rem 0.9rem;
-      background: #1e1e1e;
+      background: var(--surface);
       border-radius: 12px;
 
       span {
-        color: #9e9e9e;
+        color: var(--text-muted);
         font-size: 0.65rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -86,11 +86,11 @@
         font-size: 0.9rem;
 
         &.positive {
-          color: #03dac6;
+          color: var(--positive);
         }
 
         &.negative {
-          color: #cf6679;
+          color: var(--danger);
         }
       }
     }

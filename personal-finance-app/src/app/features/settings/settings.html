@@ -5,13 +5,45 @@
     title="Settings — manage your app"
     [description]="'Settings lets you manage your account and sign-in, connect live market data, point the Chat page at your local AI assistant, and back up or restore all of your data.'"
     [howTo]="[
+      'Theme: pick the color theme you want — changes the look of the whole app.',
       'Account: shows the email you are signed in as and your role. Use Sign Out to end this session.',
       'Allowed Emails (superadmin only): controls which email addresses can sign in — everyone else is blocked.',
       'Market Data: paste a free Alpha Vantage API key to auto-fill live stock prices and dividends in Investments.',
-      'AI Assistant: set the address of your local EV service and test the connection before using the Chat page.',
+      'AI Assistant (superadmin only): set the address of your local EV service and test the connection before using the Chat page.',
       'Data: Export Data downloads a full JSON backup; Import Data restores one. Clear All Data wipes everything on this device.'
     ]"
   />
+
+  <div class="settings-section">
+    <h3>Theme</h3>
+    <div class="settings-item static theme-item">
+      <mat-icon>palette</mat-icon>
+      <div class="theme-body">
+        <span>Color theme</span>
+        <small>Changes the colors of the whole app</small>
+        <div class="theme-options">
+          @for (theme of themeService.themes; track theme.id) {
+            <button
+              mat-button
+              class="theme-option"
+              [class.active]="themeService.current().id === theme.id"
+              (click)="themeService.select(theme.id)"
+              [attr.aria-label]="'Use ' + theme.label + ' theme'"
+            >
+              <span
+                class="theme-swatch"
+                [style.background]="'linear-gradient(135deg,' + theme.accent + ',' + theme.deep + ')'"
+              ></span>
+              <span class="theme-name">{{ theme.label }}</span>
+              @if (themeService.current().id === theme.id) {
+                <mat-icon>check</mat-icon>
+              }
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="settings-section">
     <h3>Account</h3>
@@ -131,42 +163,44 @@
     </div>
   </div>
 
-  <div class="settings-section">
-    <h3>AI Assistant</h3>
-    <div class="settings-item static ai-item">
-      <mat-icon>smart_toy</mat-icon>
-      <div class="api-key-body">
-        <span>Assistant address</span>
-        <small>Base URL of your local EV assistant (Chat page)</small>
-        <mat-form-field appearance="outline" class="key-field">
-          <input
-            matInput
-            type="url"
-            [ngModel]="aiBaseUrl()"
-            (ngModelChange)="aiBaseUrl.set($event); aiStatus.set(null)"
-            placeholder="http://localhost:8200"
-          />
-        </mat-form-field>
-        <div class="ai-actions">
-          <button mat-stroked-button color="primary" (click)="saveAiBaseUrl()">
-            Save Address
-          </button>
-          <button
-            mat-stroked-button
-            (click)="testAiConnection()"
-            [disabled]="aiTesting()"
-          >
-            Test Connection
-          </button>
+  @if (isSuperadmin()) {
+    <div class="settings-section">
+      <h3>AI Assistant</h3>
+      <div class="settings-item static ai-item">
+        <mat-icon>smart_toy</mat-icon>
+        <div class="api-key-body">
+          <span>Assistant address</span>
+          <small>Base URL of your local EV assistant (Chat page)</small>
+          <mat-form-field appearance="outline" class="key-field">
+            <input
+              matInput
+              type="url"
+              [ngModel]="aiBaseUrl()"
+              (ngModelChange)="aiBaseUrl.set($event); aiStatus.set(null)"
+              placeholder="http://localhost:8200"
+            />
+          </mat-form-field>
+          <div class="ai-actions">
+            <button mat-stroked-button color="primary" (click)="saveAiBaseUrl()">
+              Save Address
+            </button>
+            <button
+              mat-stroked-button
+              (click)="testAiConnection()"
+              [disabled]="aiTesting()"
+            >
+              Test Connection
+            </button>
+          </div>
+          @if (aiStatus()) {
+            <span class="ai-status {{ aiStatus()!.ok ? 'ok' : 'bad' }}">
+              {{ aiStatus()!.text }}
+            </span>
+          }
         </div>
-        @if (aiStatus()) {
-          <span class="ai-status {{ aiStatus()!.ok ? 'ok' : 'bad' }}">
-            {{ aiStatus()!.text }}
-          </span>
-        }
       </div>
     </div>
-  </div>
+  }
 
   <div class="settings-section">
     <h3>Data</h3>

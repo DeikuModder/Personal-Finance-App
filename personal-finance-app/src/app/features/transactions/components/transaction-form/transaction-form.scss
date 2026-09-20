@@ -16,29 +16,29 @@
   padding: 0.5rem !important;
 
   &.expense {
-    color: #cf6679;
+    color: var(--danger);
 
     &.active {
-      background: rgba(207, 102, 121, 0.15) !important;
-      border: 1px solid #cf6679;
+      background: var(--danger-soft) !important;
+      border: 1px solid var(--danger);
     }
   }
 
   &.income {
-    color: #03dac6;
+    color: var(--positive);
 
     &.active {
-      background: rgba(3, 218, 198, 0.15) !important;
-      border: 1px solid #03dac6;
+      background: var(--positive-soft) !important;
+      border: 1px solid var(--positive);
     }
   }
 
   &.transfer {
-    color: #ff6e6e;
+    color: var(--accent);
 
     &.active {
-      background: rgba(255, 110, 110, 0.15) !important;
-      border: 1px solid #ff6e6e;
+      background: var(--accent-soft) !important;
+      border: 1px solid var(--accent);
     }
   }
 }
@@ -63,7 +63,7 @@
 }
 
 .new-category-box {
-  background: #1e1e1e;
+  background: var(--surface);
   border: 1px solid #333;
   border-radius: 12px;
   padding: 0.75rem;
@@ -71,7 +71,7 @@
   margin-bottom: 0.5rem;
 
   .new-category-title {
-    color: #9e9e9e;
+    color: var(--text-muted);
     font-size: 0.75rem;
     display: block;
     margin-bottom: 0.4rem;
@@ -87,11 +87,11 @@
   margin-bottom: 0.75rem;
 
   .icon-cell {
-    color: #9e9e9e;
+    color: var(--text-muted);
 
     &.selected {
-      color: #ff6e6e;
-      background: rgba(255, 110, 110, 0.12);
+      color: var(--accent);
+      background: var(--accent-soft);
       border-radius: 8px;
     }
   }

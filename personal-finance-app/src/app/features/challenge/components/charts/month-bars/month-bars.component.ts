@@ -6,6 +6,8 @@ import { BarChart } from 'echarts/charts';
 import { TooltipComponent, GridComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { PrivacyService } from '../../../../../core/services/privacy.service';
+import { ThemeService } from '../../../../../core/services/theme.service';
+import { cssVar } from '../../../../../shared/utils/css-var.util';
 
 echarts.use([BarChart, TooltipComponent, GridComponent, CanvasRenderer]);
 
@@ -30,9 +32,13 @@ export class MonthBarsComponent {
   weeks = input<BarDatum[]>([]);
 
   private privacy = inject(PrivacyService);
+  private theme = inject(ThemeService);
 
   chartOptions = computed<EChartsOption>(() => {
+    this.theme.current();
     const hide = this.privacy.hiddenFor('challenge');
+    const accent = cssVar('--accent');
+    const danger = cssVar('--danger');
     const weeks = this.weeks();
     const labels = weeks.map((w) => w.label);
     const spent = weeks.map((w) => w.spent);
@@ -81,7 +87,7 @@ export class MonthBarsComponent {
           itemStyle: {
             borderRadius: [4, 4, 0, 0],
             color: (params: any) =>
-              params.value > caps[params.dataIndex] ? '#cf6679' : '#ff6e6e',
+              params.value > caps[params.dataIndex] ? danger : accent,
           },
         },
         {

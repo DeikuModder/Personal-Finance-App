@@ -9,6 +9,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ApiKeyService } from '../investments/services/api-key.service';
 import { AiAssistantService } from '../chat/services/ai-assistant.service';
 import { DebtReminderService } from '../debts/services/debt-reminder.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { AllowedEmailItem, AuthService } from '../../core/auth/auth.service';
 import { toErrorMessage } from '../../shared/utils/http-error.util';
@@ -34,6 +35,7 @@ export class SettingsComponent {
   private aiAssistant = inject(AiAssistantService);
   private reminderService = inject(DebtReminderService);
   private auth = inject(AuthService);
+  readonly themeService = inject(ThemeService);
 
   readonly user = this.auth.me;
   isSuperadmin = computed(() => this.user()?.role === 'superadmin');

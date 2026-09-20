@@ -19,7 +19,7 @@
 
   .total-label {
     font-size: 0.75rem;
-    color: #9e9e9e;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -34,12 +34,12 @@
   .total-value {
     font-size: 2rem;
     font-weight: 700;
-    color: #ff6e6e;
+    color: var(--accent);
   }
 }
 
 .form-card {
-  background: #1e1e1e;
+  background: var(--surface);
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -80,7 +80,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
-  background: #1e1e1e;
+  background: var(--surface);
   border-radius: 12px;
 }
 
@@ -90,7 +90,7 @@
   gap: 0.75rem;
 
   .account-icon {
-    color: #ff6e6e;
+    color: var(--accent);
   }
 
   .account-details {
@@ -104,7 +104,7 @@
     }
 
     .account-type {
-      color: #9e9e9e;
+      color: var(--text-muted);
       font-size: 0.75rem;
     }
   }
@@ -124,7 +124,7 @@
     opacity: 0.5;
 
     mat-icon {
-      color: #ff6e6e;
+      color: var(--accent);
       font-size: 18px;
       width: 18px;
       height: 18px;
@@ -139,7 +139,7 @@
     opacity: 0.5;
 
     mat-icon {
-      color: #cf6679;
+      color: var(--danger);
       font-size: 18px;
       width: 18px;
       height: 18px;
@@ -171,7 +171,7 @@
   }
 
   p {
-    color: #9e9e9e;
+    color: var(--text-muted);
     margin: 0;
   }
 

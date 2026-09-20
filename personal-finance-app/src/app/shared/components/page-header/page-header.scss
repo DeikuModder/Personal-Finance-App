@@ -19,7 +19,7 @@
 }
 
 .fab {
-  --mdc-fab-container-color: #d62020;
+  --mdc-fab-container-color: var(--accent-deep);
   --mdc-fab-icon-color: #ffffff;
   flex-shrink: 0;
 }

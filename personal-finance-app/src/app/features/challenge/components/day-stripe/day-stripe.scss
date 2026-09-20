@@ -15,7 +15,7 @@
   background: #121212;
 
   .day-num {
-    color: #9e9e9e;
+    color: var(--text-muted);
     font-size: 0.65rem;
   }
 
@@ -23,8 +23,8 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #03dac6;
-    box-shadow: 0 0 6px rgba(3, 218, 198, 0.6);
+    background: var(--positive);
+    box-shadow: 0 0 6px var(--positive-border);
   }
 
   &.dimmed {
@@ -42,11 +42,11 @@
   }
 
   &.over {
-    background: rgba(207, 102, 121, 0.15);
+    background: var(--danger-soft);
 
     .day-dot {
-      background: #cf6679;
-      box-shadow: 0 0 6px rgba(207, 102, 121, 0.6);
+      background: var(--danger);
+      box-shadow: 0 0 6px var(--danger-border);
     }
   }
 }

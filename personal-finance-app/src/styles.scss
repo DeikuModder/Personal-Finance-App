@@ -1,3 +1,4 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
 
 $fin-red: (
@@ -32,6 +33,138 @@ html {
   ));
 }
 
+/* ============================================================
+   Theme registry
+   The app ships several built-in color themes. The red theme is
+   the default (applied to plain `html`), the rest are applied by
+   adding `theme-<id>` to the <html> element (see ThemeService).
+   Each theme provides Material tokens plus custom CSS variables
+   that the app's own components consume (--accent, --surface…).
+   ============================================================ */
+
+$themes: (
+  'red': (
+    color: (
+      theme-type: dark,
+      primary: $fin-red,
+      tertiary: mat.$green-palette,
+    ),
+    vars: (
+      --accent: #ff6e6e,
+      --accent-deep: #d62020,
+      --accent-soft: rgba(255, 110, 110, 0.15),
+      --secondary: #03dac6,
+      --bg: #121212,
+      --surface: #1e1e1e,
+      --surface-2: #2c2c2c,
+      --text-muted: #9e9e9e,
+    ),
+  ),
+  'blue': (
+    color: (
+      theme-type: dark,
+      primary: mat.$blue-palette,
+      tertiary: mat.$spring-green-palette,
+    ),
+    vars: (
+      --accent: #64b5f6,
+      --accent-deep: #1e6fd9,
+      --accent-soft: rgba(100, 181, 246, 0.18),
+      --secondary: #ffb74d,
+      --bg: #14161c,
+      --surface: #1d2128,
+      --surface-2: #2b313c,
+      --text-muted: #9aa2ae,
+    ),
+  ),
+  'cyan': (
+    color: (
+      theme-type: dark,
+      primary: mat.$cyan-palette,
+      tertiary: mat.$rose-palette,
+    ),
+    vars: (
+      --accent: #4dd0e1,
+      --accent-deep: #00838f,
+      --accent-soft: rgba(77, 208, 225, 0.18),
+      --secondary: #f48fb1,
+      --bg: #121a1c,
+      --surface: #1b2527,
+      --surface-2: #293539,
+      --text-muted: #9aabaf,
+    ),
+  ),
+  'violet': (
+    color: (
+      theme-type: dark,
+      primary: mat.$violet-palette,
+      tertiary: mat.$cyan-palette,
+    ),
+    vars: (
+      --accent: #b39ddb,
+      --accent-deep: #6a1b9a,
+      --accent-soft: rgba(179, 157, 219, 0.2),
+      --secondary: #80cbc4,
+      --bg: #15121d,
+      --surface: #1e1a2b,
+      --surface-2: #2c2740,
+      --text-muted: #a29cb4,
+    ),
+  ),
+  'rose': (
+    color: (
+      theme-type: dark,
+      primary: mat.$rose-palette,
+      tertiary: mat.$cyan-palette,
+    ),
+    vars: (
+      --accent: #f48fb1,
+      --accent-deep: #ad1457,
+      --accent-soft: rgba(244, 143, 177, 0.2),
+      --secondary: #80cbc4,
+      --bg: #1a1316,
+      --surface: #231c21,
+      --surface-2: #332a33,
+      --text-muted: #a89aa0,
+    ),
+  ),
+);
+
+/* Default appearance: red theme, no extra class. */
+html {
+  color-scheme: dark;
+  @include mat.theme((
+    color: map.get(map.get($themes, 'red'), color),
+    typography: Roboto,
+    density: 0,
+  ));
+  @each $prop, $val in map.get(map.get($themes, 'red'), vars) {
+    #{$prop}: #{$val};
+  }
+  /* Semantic colors shared by every theme: money in / money out / destructive. */
+  --positive: #03dac6;
+  --positive-soft: rgba(3, 218, 198, 0.15);
+  --positive-border: rgba(3, 218, 198, 0.5);
+  --danger: #cf6679;
+  --danger-soft: rgba(207, 102, 121, 0.2);
+  --danger-border: rgba(207, 102, 121, 0.6);
+}
+
+/* Switched themes: apply by adding `theme-<id>` to <html>. */
+@each $name, $theme in $themes {
+  html.theme-#{$name} {
+    color-scheme: dark;
+    @include mat.theme((
+      color: map.get($theme, color),
+      typography: Roboto,
+      density: 0,
+    ));
+    @each $prop, $val in map.get($theme, vars) {
+      #{$prop}: #{$val};
+    }
+  }
+}
+
 html,
 body {
   height: 100%;
@@ -41,7 +174,7 @@ body {
 
 body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
-  background-color: #121212;
+  background-color: var(--bg);
   color: #e0e0e0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -83,7 +216,7 @@ body {
    for every mat-form-field / select / datepicker in the app.
    ============================================================ */
 
-$input-accent: #ff6e6e; /* bright red, readable on #121212 */
+$input-accent: var(--accent); /* bright brand color, readable on the app background */
 
 /* Typed text inside inputs and selects */
 .mat-mdc-form-field {
@@ -158,7 +291,7 @@ input[type='number']::-webkit-inner-spin-button {
 
 /* Select dropdown panel (dark) */
 .mat-mdc-select-panel {
-  background: #1e1e1e !important;
+  background: var(--surface) !important;
   color: #ffffff;
   --mat-option-label-text-color: #ffffff;
   --mat-option-active-state-label-text-color: #ffffff;
@@ -172,7 +305,7 @@ input[type='number']::-webkit-inner-spin-button {
 }
 .mat-mdc-option-active,
 .mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
-  background: rgba(255, 110, 110, 0.15) !important;
+  background: var(--accent-soft) !important;
 }
 .mat-mdc-option.mdc-list-item--selected {
   color: $input-accent !important;
@@ -184,7 +317,7 @@ input[type='number']::-webkit-inner-spin-button {
 /* Datepicker panel (dark) */
 .mat-datepicker-content,
 .mat-datepicker-content .mat-calendar {
-  background: #1e1e1e !important;
+  background: var(--surface) !important;
   color: #e0e0e0;
 }
 .mat-calendar-body-cell-content {

@@ -7,21 +7,21 @@
 .toggle-btn {
   flex: 1;
   border-radius: 12px !important;
-  color: #9e9e9e;
+  color: var(--text-muted);
 
   &.savings {
     &.active {
-      color: #03dac6;
-      background: rgba(3, 218, 198, 0.12) !important;
-      border: 1px solid #03dac6;
+      color: var(--positive);
+      background: var(--positive-soft) !important;
+      border: 1px solid var(--positive);
     }
   }
 
   &.streak {
     &.active {
-      color: #ff6e6e;
-      background: rgba(255, 110, 110, 0.12) !important;
-      border: 1px solid #ff6e6e;
+      color: var(--accent);
+      background: var(--accent-soft) !important;
+      border: 1px solid var(--accent);
     }
   }
 
@@ -35,7 +35,7 @@
 }
 
 .section-title {
-  color: #9e9e9e;
+  color: var(--text-muted);
   font-size: 0.75rem;
   display: block;
   margin-bottom: 0.4rem;
@@ -50,11 +50,11 @@
   margin-bottom: 0.75rem;
 
   .icon-cell {
-    color: #9e9e9e;
+    color: var(--text-muted);
 
     &.selected {
-      color: #ff6e6e;
-      background: rgba(255, 110, 110, 0.12);
+      color: var(--accent);
+      background: var(--accent-soft);
       border-radius: 8px;
     }
   }
