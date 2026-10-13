@@ -36,6 +36,11 @@ __decorate([
 ], UpsertBudgetDto.prototype, "year", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(['recurring', 'one-time']),
+    __metadata("design:type", String)
+], UpsertBudgetDto.prototype, "type", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], UpsertBudgetDto.prototype, "createdAt", void 0);

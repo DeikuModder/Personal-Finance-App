@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { MORE_GROUPS, SETTINGS, NavItem } from '../../layout/nav-items';
+import { AuthService } from '../../core/auth/auth.service';
+import { MORE_GROUPS, SETTINGS, visibleGroups, NavItem } from '../../layout/nav-items';
 import { DebtReminderService } from '../debts/services/debt-reminder.service';
 
 @Component({
@@ -12,9 +13,12 @@ import { DebtReminderService } from '../debts/services/debt-reminder.service';
   styleUrl: './more.scss',
 })
 export class MoreComponent {
+  private auth = inject(AuthService);
   private reminderService = inject(DebtReminderService);
 
-  readonly groups = MORE_GROUPS;
+  readonly groups = computed(() =>
+    visibleGroups(MORE_GROUPS, this.auth.me()?.role === 'superadmin')
+  );
   readonly settings = SETTINGS;
   reminderCount = signal(0);
 

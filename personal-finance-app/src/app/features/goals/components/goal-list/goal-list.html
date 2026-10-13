@@ -32,10 +32,10 @@
             } @else if (isFunded(goal)) {
               <span class="funded-chip">Funded</span>
             }
-            <button mat-icon-button class="edit-btn" (click)="onEdit(goal, $event)">
+            <button mat-icon-button class="edit-btn" (click)="onEdit(goal, $event)" aria-label="Edit goal">
               <mat-icon>edit_outline</mat-icon>
             </button>
-            <button mat-icon-button class="delete-btn" (click)="onDelete(goal.id, $event)">
+            <button mat-icon-button class="delete-btn" (click)="onDelete(goal.id, $event)" aria-label="Delete goal">
               <mat-icon>delete_outline</mat-icon>
             </button>
           </div>

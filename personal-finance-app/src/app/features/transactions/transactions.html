@@ -1,6 +1,10 @@
 <div class="transactions-page">
   <app-page-header title="Transactions" (fabClicked)="goToAdd()" />
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
+
   <div class="privacy-row">
     <app-privacy-toggle section="transactions" />
   </div>
@@ -54,5 +58,9 @@
     </button>
   }
 
-  <app-transaction-list [transactions]="filteredTransactions()" (deleted)="onDelete($event)" (edited)="onEdit($event)" />
+  @if (loading()) {
+    <app-list-skeleton />
+  } @else {
+    <app-transaction-list [transactions]="filteredTransactions()" (deleted)="onDelete($event)" (edited)="onEdit($event)" />
+  }
 </div>

@@ -1,3 +1,5 @@
+@use '../../shared/styles/gradients' as g;
+
 .budgets-page {
   max-width: 600px;
   margin: 0 auto;
@@ -15,8 +17,8 @@
 }
 
 .total-card {
-  background: linear-gradient(135deg, #5a0d0d, #1a1a2e);
-  border: 1px solid rgba(187, 134, 252, 0.2);
+  @include g.accent-gradient-dark;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
   padding: 1.25rem;
   display: flex;
@@ -40,7 +42,7 @@
 
   .total-label {
     font-size: 0.75rem;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }

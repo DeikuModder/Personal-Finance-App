@@ -37,3 +37,17 @@ export const guestGuard: CanActivateFn = async (route): Promise<boolean | UrlTre
   }
   return true;
 };
+
+/** Restricts superadmin-only routes (e.g. /dev) to admins. */
+export const superadminGuard: CanActivateFn = async (): Promise<boolean | UrlTree> => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  if (!auth.me()) {
+    await auth.restoreSession();
+  }
+  if (auth.me()?.role === 'superadmin') {
+    return true;
+  }
+  return router.createUrlTree(['/dashboard']);
+};

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/auto",
+  "permission": {
+    "*": "ask",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "webfetch": "allow",
+    "websearch": "allow",
+    "edit": {
+      "*": "ask"
+    },
+    "bash": {
+      "*": "ask",
+      "git *": "allow",
+      "npm *": "allow",
+      "npx *": "allow",
+      "node *": "allow",
+      "docker compose *": "allow",
+      "docker build *": "allow",
+      "docker images": "allow",
+      "docker ps": "allow",
+      "ls *": "allow",
+      "cat *": "allow",
+      "pwd": "allow",
+      "echo *": "allow"
+    },
+    "external_directory": "ask"
+  }
+}

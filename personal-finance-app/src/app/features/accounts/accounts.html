@@ -1,6 +1,10 @@
 <div class="accounts-page">
   <app-page-header title="Accounts" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="toggleForm()" />
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
+
   <div class="total-card">
     <div class="total-head">
       <span class="total-label">Total Balance</span>
@@ -46,34 +50,38 @@
     </div>
   }
 
-  <div class="accounts-list">
-    @for (account of accounts(); track account.id) {
-      <div class="account-card">
-        <div class="account-info">
-          <mat-icon class="account-icon">account_balance_wallet</mat-icon>
-          <div class="account-details">
-            <span class="account-name">{{ account.name }}</span>
-            <span class="account-type">{{ account.type | titlecase }}</span>
+  @if (loading()) {
+    <app-list-skeleton />
+  } @else {
+    <div class="accounts-list">
+      @for (account of accounts(); track account.id) {
+        <div class="account-card">
+          <div class="account-info">
+            <mat-icon class="account-icon">account_balance_wallet</mat-icon>
+            <div class="account-details">
+              <span class="account-name">{{ account.name }}</span>
+              <span class="account-type">{{ account.type | titlecase }}</span>
+            </div>
+          </div>
+          <div class="account-right">
+            <span class="account-balance">{{ account.balance | currencyFormat | privacyMask: 'accounts' }}</span>
+            <button mat-icon-button class="edit-btn" (click)="editAccount(account)" aria-label="Edit account">
+              <mat-icon>edit_outline</mat-icon>
+            </button>
+            <button mat-icon-button class="delete-btn" (click)="deleteAccount(account.id)" aria-label="Delete account">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
           </div>
         </div>
-        <div class="account-right">
-          <span class="account-balance">{{ account.balance | currencyFormat | privacyMask: 'accounts' }}</span>
-          <button mat-icon-button class="edit-btn" (click)="editAccount(account)">
-            <mat-icon>edit_outline</mat-icon>
-          </button>
-          <button mat-icon-button class="delete-btn" (click)="deleteAccount(account.id)">
-            <mat-icon>delete_outline</mat-icon>
-          </button>
-        </div>
-      </div>
-    }
+      }
 
-    @if (accounts().length === 0) {
-      <div class="empty-state">
-        <mat-icon>account_balance_wallet</mat-icon>
-        <p>No accounts yet</p>
-        <span>Add your first account to get started</span>
-      </div>
-    }
-  </div>
+      @if (accounts().length === 0) {
+        <div class="empty-state">
+          <mat-icon>account_balance_wallet</mat-icon>
+          <p>No accounts yet</p>
+          <span>Add your first account to get started</span>
+        </div>
+      }
+    </div>
+  }
 </div>

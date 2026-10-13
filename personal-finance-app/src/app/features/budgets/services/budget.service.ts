@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, map, BehaviorSubject } from 'rxjs';
-import { Budget, BudgetItem } from '../../../core/models/budget.model';
+import { Budget, BudgetItem, BudgetType, RECURRING_BUDGET } from '../../../core/models/budget.model';
 import { BUDGET_REPOSITORY, BUDGET_ITEM_REPOSITORY } from '../../../core/tokens/tokens';
 import { Repository } from '../../../core/repositories/repository.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,12 +12,34 @@ export class BudgetService {
   private budgets$ = new BehaviorSubject<Budget[]>([]);
   private items$ = new BehaviorSubject<BudgetItem[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((b) => this.budgets$.next(b));
-    this.itemRepo.getAll().subscribe((items) => this.items$.next(items));
+    this.repo.getAll().subscribe({
+      next: (b) => {
+        this.budgets$.next(b);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
+    });
+    this.itemRepo.getAll().subscribe({
+      next: (items) => {
+        this.items$.next(items);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
+    });
   }
 
   getBudgets(): Observable<Budget[]> {
@@ -38,13 +60,21 @@ export class BudgetService {
 
   getBudgetsForMonth(year: number, month: number): Observable<Budget[]> {
     return this.getBudgets().pipe(
-      map((budgets) => budgets.filter((b) => b.year === year && b.month === month))
+      map((budgets) =>
+        budgets.filter((b) => {
+          if (b.type !== undefined && b.type !== RECURRING_BUDGET) {
+            return b.year === year && b.month === month;
+          }
+          return b.year < year || (b.year === year && b.month <= month);
+        })
+      )
     );
   }
 
   addBudget(data: Omit<Budget, 'id' | 'createdAt'>): Observable<Budget> {
     const budget: Budget = {
       ...data,
+      type: (data as Partial<Budget>).type ?? RECURRING_BUDGET,
       id: uuidv4(),
       createdAt: new Date().toISOString(),
     };

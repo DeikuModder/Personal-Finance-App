@@ -1,10 +1,11 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, isDevMode } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, isDevMode, inject, provideAppInitializer } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { routes } from './app.routes';
+import { ThemeService } from './core/services/theme.service';
 import { TRANSACTION_REPOSITORY, ACCOUNT_REPOSITORY, BUDGET_REPOSITORY, BUDGET_ITEM_REPOSITORY, CATEGORY_REPOSITORY, INVESTMENT_REPOSITORY, DEBT_REPOSITORY, GOAL_REPOSITORY, WISHLIST_REPOSITORY } from './core/tokens/tokens';
 import { HttpRepository } from './core/repositories/http.repository';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
@@ -29,6 +30,9 @@ export const appConfig: ApplicationConfig = {
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
+    }),
+    provideAppInitializer(() => {
+      inject(ThemeService);
     }),
     {
       provide: HTTP_INTERCEPTORS,

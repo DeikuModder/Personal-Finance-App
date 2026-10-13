@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +13,10 @@ import { Account } from '../../core/models/account.model';
 import { AccountService } from './services/account.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-accounts',
@@ -30,16 +34,25 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
     PrivacyToggleComponent,
     SectionHelpComponent,
     PageHeaderComponent,
+    ErrorBannerComponent,
+    ListSkeletonComponent,
   ],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',
 })
 export class AccountsComponent {
   private accountService = inject(AccountService);
+  private confirm = inject(ConfirmService);
 
   accounts = signal<Account[]>([]);
   showForm = signal(false);
   editingId = signal<string | null>(null);
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(() => !this.accountService.ready());
+  readonly loadError = computed(() => {
+    const err = this.accountService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
 
   name = signal('');
   type = signal<Account['type']>('checking');
@@ -108,7 +121,22 @@ export class AccountsComponent {
   }
 
   deleteAccount(id: string): void {
-    this.accountService.deleteAccount(id).subscribe();
+    const account = this.accounts().find((a) => a.id === id);
+    this.confirm
+      .confirm({
+        title: 'Delete account',
+        message: `Delete "${account?.name ?? 'this account'}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.accountService.deleteAccount(id).subscribe();
+      });
+  }
+
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
   }
 
   getTotalBalance(): number {

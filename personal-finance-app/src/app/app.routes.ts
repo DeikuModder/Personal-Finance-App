@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/guards/session.guard';
+import { authGuard, guestGuard, superadminGuard } from './core/guards/session.guard';
 
 export const routes: Routes = [
   {
@@ -87,6 +87,17 @@ export const routes: Routes = [
         path: 'chat',
         loadComponent: () =>
           import('./features/chat/chat.component').then((m) => m.ChatComponent),
+      },
+      {
+        path: 'simulator',
+        loadComponent: () =>
+          import('./features/simulator/simulator.component').then((m) => m.SimulatorComponent),
+      },
+      {
+        path: 'dev',
+        loadComponent: () =>
+          import('./features/dev/dev.component').then((m) => m.DevComponent),
+        canActivate: [superadminGuard],
       },
       {
         path: 'more',

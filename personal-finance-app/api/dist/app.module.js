@@ -24,6 +24,8 @@ const categories_module_1 = require("./categories/categories.module");
 const debts_module_1 = require("./debts/debts.module");
 const goals_module_1 = require("./goals/goals.module");
 const wishlist_module_1 = require("./wishlist/wishlist.module");
+const coder_module_1 = require("./coder/coder.module");
+const simulator_module_1 = require("./simulator/simulator.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -48,6 +50,8 @@ exports.AppModule = AppModule = __decorate([
             debts_module_1.DebtsModule,
             goals_module_1.GoalsModule,
             wishlist_module_1.WishlistModule,
+            coder_module_1.CoderModule,
+            simulator_module_1.SimulatorModule,
         ],
         providers: [
             {

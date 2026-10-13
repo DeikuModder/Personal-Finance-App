@@ -84,6 +84,7 @@
               class="icon-cell"
               [class.selected]="newCategoryIcon() === icon"
               (click)="newCategoryIcon.set(icon)"
+              [attr.aria-label]="'Select icon ' + icon"
             >
               <mat-icon>{{ icon }}</mat-icon>
             </button>

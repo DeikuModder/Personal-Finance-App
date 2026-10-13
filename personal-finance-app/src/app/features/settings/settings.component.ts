@@ -11,6 +11,7 @@ import { AiAssistantService } from '../chat/services/ai-assistant.service';
 import { DebtReminderService } from '../debts/services/debt-reminder.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import { AllowedEmailItem, AuthService } from '../../core/auth/auth.service';
 import { toErrorMessage } from '../../shared/utils/http-error.util';
 
@@ -35,6 +36,7 @@ export class SettingsComponent {
   private aiAssistant = inject(AiAssistantService);
   private reminderService = inject(DebtReminderService);
   private auth = inject(AuthService);
+  private confirm = inject(ConfirmService);
   readonly themeService = inject(ThemeService);
 
   readonly user = this.auth.me;
@@ -62,6 +64,7 @@ export class SettingsComponent {
   aiStatus = signal<{ ok: boolean; text: string } | null>(null);
   aiTesting = signal(false);
   remindersEnabled = signal(this.reminderService.isEnabled());
+  dataStatus = signal<{ ok: boolean; text: string } | null>(null);
 
   loadAllowlist(): void {
     this.auth.getAllowlist().subscribe({
@@ -141,11 +144,19 @@ export class SettingsComponent {
   }
 
   clearData(): void {
-    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.reload();
-    }
+    this.confirm
+      .confirm({
+        title: 'Clear all data',
+        message: 'This will delete all of your data on this device. This cannot be undone.',
+        confirmText: 'Clear everything',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+      });
   }
 
   exportData(): void {
@@ -177,10 +188,10 @@ export class SettingsComponent {
         for (const [key, value] of Object.entries(data)) {
           localStorage.setItem(key, JSON.stringify(value));
         }
-        alert('Import complete. Reloading…');
-        window.location.reload();
+        this.dataStatus.set({ ok: true, text: 'Import complete. Reloading…' });
+        setTimeout(() => window.location.reload(), 900);
       } catch {
-        alert('Invalid backup file.');
+        this.dataStatus.set({ ok: false, text: 'Invalid backup file.' });
       }
     };
     reader.readAsText(file);

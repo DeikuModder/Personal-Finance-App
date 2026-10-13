@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,20 +14,32 @@ import { toLocalDate } from '../../core/utils/date.util';
 import { BudgetListComponent, BudgetWithSpend, NewBudgetItem } from './components/budget-list/budget-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-budgets',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, PrivacyMaskPipe, PrivacyToggleComponent, BudgetFormComponent, BudgetListComponent, SectionHelpComponent, PageHeaderComponent],
+  imports: [MatIconModule, MatButtonModule, MatProgressBarModule, CurrencyFormatPipe, PrivacyMaskPipe, PrivacyToggleComponent, BudgetFormComponent, BudgetListComponent, SectionHelpComponent, PageHeaderComponent, ErrorBannerComponent, ListSkeletonComponent],
   templateUrl: './budgets.html',
   styleUrl: './budgets.scss',
 })
 export class BudgetsComponent {
   private budgetService = inject(BudgetService);
   private transactionService = inject(TransactionService);
+  private confirm = inject(ConfirmService);
 
   budgets = signal<BudgetWithSpend[]>([]);
   showForm = signal(false);
+  saveError = signal<string | null>(null);
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(() => !this.budgetService.ready() || !this.transactionService.ready());
+  readonly loadError = computed(() => {
+    const err = this.budgetService.loadError() ?? this.transactionService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
   currentMonth = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   constructor() {
@@ -82,7 +94,20 @@ export class BudgetsComponent {
   }
 
   onDelete(id: string): void {
-    this.budgetService.deleteBudget(id).subscribe();
+    const budget = this.budgets().find((b) => b.budget.id === id);
+    this.confirm
+      .confirm({
+        title: 'Delete budget',
+        message: `Delete the "${budget?.budget.category ?? 'this'}" budget? This cannot be undone.`,
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.budgetService.deleteBudget(id).subscribe({
+          error: (err) => this.saveError.set(toErrorMessage(err)),
+        });
+      });
   }
 
   onItemAdded(item: NewBudgetItem): void {
@@ -96,10 +121,26 @@ export class BudgetsComponent {
   }
 
   onItemDeleted(id: string): void {
-    this.budgetService.deleteItem(id).subscribe();
+    this.confirm
+      .confirm({
+        title: 'Delete item',
+        message: 'Delete this budget item? This cannot be undone.',
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.budgetService.deleteItem(id).subscribe({
+          error: (err) => this.saveError.set(toErrorMessage(err)),
+        });
+      });
   }
 
   onCancel(): void {
     this.showForm.set(false);
+  }
+
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
   }
 }

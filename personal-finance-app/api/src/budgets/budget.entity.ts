@@ -34,6 +34,9 @@ export class Budget {
   @Column()
   year: number;
 
+  @Column({ type: 'varchar', length: 20, default: 'recurring' })
+  type: 'recurring' | 'one-time';
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
 

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, map, BehaviorSubject } from 'rxjs';
 import { WishlistItem } from '../../../core/models/wishlist.model';
@@ -13,11 +13,24 @@ export class WishlistService {
   private repo = inject(WISHLIST_REPOSITORY) as Repository<WishlistItem>;
   private items$ = new BehaviorSubject<WishlistItem[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((server) => this.items$.next(server));
+    this.repo.getAll().subscribe({
+      next: (server) => {
+        this.items$.next(server);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
+    });
   }
 
   getItems(): Observable<WishlistItem[]> {

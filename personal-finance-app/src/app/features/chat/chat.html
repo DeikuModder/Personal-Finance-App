@@ -8,6 +8,7 @@
       mat-mini-fab
       class="new-chat"
       title="New chat"
+      aria-label="New chat"
       (click)="newChat()"
       [disabled]="sending()"
     >
@@ -89,6 +90,7 @@
       <button
         mat-mini-fab
         class="send-btn"
+        aria-label="Send message"
         (click)="send()"
         [disabled]="!canSend"
       >

@@ -1,9 +1,11 @@
+@use '../../../../shared/styles/gradients' as g;
+
 .net-worth-card {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  background: linear-gradient(135deg, #5a0d0d, #1a1a2e);
-  border: 1px solid rgba(187, 134, 252, 0.2);
+  @include g.accent-gradient-dark;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
   padding: 1.25rem;
   margin-top: 1rem;
@@ -14,7 +16,7 @@
 
 .nw-label {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -22,7 +24,7 @@
 .nw-value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--accent);
+  color: #ffffff;
 }
 
 .nw-row {
@@ -55,7 +57,7 @@
   align-items: center;
   gap: 0.5rem;
   padding-top: 0.6rem;
-  border-top: 1px solid rgba(187, 134, 252, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 
   mat-icon {
     color: var(--positive);

@@ -1,6 +1,9 @@
 <div class="debts-page">
   <app-page-header title="Debts" (fabClicked)="startAdd()" />
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
   @if (saveError()) {
     <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
   }
@@ -55,7 +58,7 @@
             <span class="reminder-text">
               {{ getReminderText(r) }}
             </span>
-            <button mat-icon-button class="reminder-dismiss" (click)="dismissReminder(r.debt.id)">
+            <button mat-icon-button class="reminder-dismiss" (click)="dismissReminder(r.debt.id)" aria-label="Dismiss reminder">
               <mat-icon>close</mat-icon>
             </button>
           </div>
@@ -74,11 +77,15 @@
     </div>
   }
 
-  <app-debt-list
-    [debts]="debts()"
-    (deleted)="onDelete($event)"
-    (edited)="startEdit($event)"
-    (payed)="onPayOff($event)"
-    (collected)="onCollected($event)"
-  />
+  @if (loading()) {
+    <app-list-skeleton />
+  } @else {
+    <app-debt-list
+      [debts]="debts()"
+      (deleted)="onDelete($event)"
+      (edited)="startEdit($event)"
+      (payed)="onPayOff($event)"
+      (collected)="onCollected($event)"
+    />
+  }
 </div>

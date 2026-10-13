@@ -65,12 +65,22 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "8kB",
+                  "maximumError": "12kB"
                 }
               ],
               "outputHashing": "all",
-              "serviceWorker": "ngsw-config.json"
+              "serviceWorker": "ngsw-config.json",
+              "optimization": {
+                "scripts": true,
+                "fonts": {
+                  "inline": false
+                },
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                }
+              }
             },
             "development": {
               "optimization": false,

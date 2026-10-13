@@ -46,6 +46,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Budget.prototype, "year", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, default: 'recurring' }),
+    __metadata("design:type", String)
+], Budget.prototype, "type", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
     __metadata("design:type", String)
 ], Budget.prototype, "createdAt", void 0);

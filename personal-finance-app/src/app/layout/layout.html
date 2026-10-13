@@ -1,6 +1,6 @@
 <div class="app-shell">
   <nav class="rail" aria-label="Main navigation">
-    @for (group of groups; track group.label) {
+    @for (group of groups(); track group.label) {
       <div class="rail-group">
         @for (item of group.items; track item.route) {
           <a

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, map, BehaviorSubject } from 'rxjs';
 import { Account } from '../../../core/models/account.model';
 import { ACCOUNT_REPOSITORY } from '../../../core/tokens/tokens';
@@ -10,11 +10,24 @@ export class AccountService {
   private repo = inject(ACCOUNT_REPOSITORY) as Repository<Account>;
   private accounts$ = new BehaviorSubject<Account[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((a) => this.accounts$.next(a));
+    this.repo.getAll().subscribe({
+      next: (a) => {
+        this.accounts$.next(a);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
+    });
   }
 
   getAccounts(): Observable<Account[]> {

@@ -54,10 +54,38 @@
   flex-direction: column;
   gap: 0.25rem;
 
+  .budget-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
   .budget-category {
     color: #ffffff;
     font-size: 0.9375rem;
     font-weight: 500;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .type-badge {
+    flex: none;
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    &.recurring {
+      background: var(--positive-soft);
+      color: var(--positive);
+    }
   }
 
   .budget-progress-text {

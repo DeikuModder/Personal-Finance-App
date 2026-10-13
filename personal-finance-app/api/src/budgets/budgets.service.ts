@@ -19,6 +19,7 @@ export class BudgetsService {
     const existing = await this.repo.findOne({ where: { id: dto.id, userId } });
     const entity = this.repo.create({
       ...dto,
+      type: dto.type ?? 'recurring',
       userId,
       createdAt: existing?.createdAt ?? dto.createdAt ?? new Date().toISOString(),
     });

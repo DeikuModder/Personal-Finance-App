@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import {
   Category,
@@ -17,6 +17,10 @@ export class CategoryService {
   private repo = inject(CATEGORY_REPOSITORY) as Repository<Category>;
   private categories$ = new BehaviorSubject<Category[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   private builtInLabels: Record<string, string> = {};
   labels: Record<string, string> = {};
@@ -34,8 +38,15 @@ export class CategoryService {
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((server) => {
-      this.setCustom(server);
+    this.repo.getAll().subscribe({
+      next: (server) => {
+        this.setCustom(server);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
     });
   }
 

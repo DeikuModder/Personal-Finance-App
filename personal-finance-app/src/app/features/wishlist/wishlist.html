@@ -5,6 +5,9 @@
     <app-privacy-toggle section="wishlist" />
   </div>
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
   @if (saveError()) {
     <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
   }
@@ -31,10 +34,14 @@
     </div>
   }
 
-  <app-wishlist-list
-    [items]="items()"
-    (deleted)="onDelete($event)"
-    (edited)="startEdit($event)"
-    (achieved)="onAchieved($event)"
-  />
+  @if (loading()) {
+    <app-list-skeleton />
+  } @else {
+    <app-wishlist-list
+      [items]="items()"
+      (deleted)="onDelete($event)"
+      (edited)="startEdit($event)"
+      (achieved)="onAchieved($event)"
+    />
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,12 +16,14 @@ import { GoalFormComponent } from './components/goal-form/goal-form.component';
 import { GoalListComponent } from './components/goal-list/goal-list.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-goals',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, PrivacyMaskPipe, PrivacyToggleComponent, GoalFormComponent, GoalListComponent, SectionHelpComponent, ErrorBannerComponent],
+  imports: [MatIconModule, MatButtonModule, CurrencyFormatPipe, PrivacyMaskPipe, PrivacyToggleComponent, GoalFormComponent, GoalListComponent, SectionHelpComponent, ErrorBannerComponent, ListSkeletonComponent],
   templateUrl: './goals.html',
   styleUrl: './goals.scss',
 })
@@ -30,6 +32,7 @@ export class GoalsComponent {
   private accountService = inject(AccountService);
   private transactionService = inject(TransactionService);
   private effects = inject(EffectsService);
+  private confirm = inject(ConfirmService);
 
   goals = signal<Goal[]>([]);
   pool = signal(0);
@@ -37,6 +40,12 @@ export class GoalsComponent {
   showForm = signal(false);
   editing = signal<Goal | null>(null);
   saveError = signal<string | null>(null);
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(() => !this.goalService.ready());
+  readonly loadError = computed(() => {
+    const err = this.goalService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
 
   private achieving = new Set<string>();
 
@@ -121,9 +130,24 @@ export class GoalsComponent {
     this.editing.set(null);
   }
 
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
+  }
+
   onDelete(id: string): void {
-    this.goalService.deleteGoal(id).subscribe({
-      error: (err) => this.saveError.set(toErrorMessage(err)),
-    });
+    const goal = this.goals().find((g) => g.id === id);
+    this.confirm
+      .confirm({
+        title: 'Delete goal',
+        message: `Delete "${goal?.title ?? 'this goal'}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.goalService.deleteGoal(id).subscribe({
+          error: (err) => this.saveError.set(toErrorMessage(err)),
+        });
+      });
   }
 }

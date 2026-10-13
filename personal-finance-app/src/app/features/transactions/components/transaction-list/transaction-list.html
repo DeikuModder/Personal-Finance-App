@@ -27,10 +27,10 @@
           >
             {{ signFor(transaction) }}{{ transaction.amount | currencyFormat | privacyMask: 'transactions' }}
           </span>
-          <button mat-icon-button class="edit-btn" (click)="onEdit(transaction.id, $event)">
+          <button mat-icon-button class="edit-btn" (click)="onEdit(transaction.id, $event)" aria-label="Edit transaction">
             <mat-icon>edit_outline</mat-icon>
           </button>
-          <button mat-icon-button class="delete-btn" (click)="onDelete(transaction.id, $event)">
+          <button mat-icon-button class="delete-btn" (click)="onDelete(transaction.id, $event)" aria-label="Delete transaction">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </div>

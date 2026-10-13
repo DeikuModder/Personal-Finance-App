@@ -220,6 +220,9 @@
       <span>Clear All Data</span>
       <mat-icon class="chevron">chevron_right</mat-icon>
     </button>
+    @if (dataStatus()) {
+      <span class="ai-status {{ dataStatus()!.ok ? 'ok' : 'bad' }}">{{ dataStatus()!.text }}</span>
+    }
   </div>
 
   <div class="settings-section">

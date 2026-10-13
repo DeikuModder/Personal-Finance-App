@@ -4,5 +4,6 @@ export declare class UpsertBudgetDto {
     amount: number;
     month: number;
     year: number;
+    type?: 'recurring' | 'one-time';
     createdAt?: string;
 }

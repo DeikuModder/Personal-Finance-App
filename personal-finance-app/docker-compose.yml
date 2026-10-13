@@ -34,6 +34,8 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM: ${SMTP_FROM:-FinTrack <no-reply@fintrack.app>}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      SIMULATOR_AI_MODEL: ${SIMULATOR_AI_MODEL:-openrouter/auto}
     depends_on:
       db:
         condition: service_healthy

@@ -32,6 +32,10 @@
     ]"
   />
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
+
   <div class="summary-row">
     <app-summary-cards
       [balance]="balance()"
@@ -47,9 +51,13 @@
   </div>
 
   <div class="charts-row">
-    <app-spending-by-category [transactions]="allTransactions()" />
+    <app-spending-by-category [transactions]="periodTransactions()" />
     <app-monthly-trend [transactions]="allTransactions()" />
   </div>
 
-  <app-recent-transactions [transactions]="recentTransactions()" />
+  @if (loading()) {
+    <app-list-skeleton [count]="6" />
+  } @else {
+    <app-recent-transactions [transactions]="recentTransactions()" />
+  }
 </div>

@@ -1,0 +1,13 @@
+@mixin accent-gradient($angle: 135deg) {
+  background: linear-gradient($angle, var(--accent), var(--accent-deep));
+}
+
+/* Darker variant for stat/total cards: keeps the theme hue but tinted
+   toward the surface, so light text stays readable on top. */
+@mixin accent-gradient-dark($angle: 135deg) {
+  background: linear-gradient(
+    $angle,
+    color-mix(in srgb, var(--accent) 35%, var(--surface)),
+    color-mix(in srgb, var(--accent-deep) 30%, var(--surface))
+  );
+}

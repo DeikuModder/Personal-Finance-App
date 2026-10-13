@@ -1,0 +1,74 @@
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: 12px;
+}
+
+.skeleton-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: 6px;
+}
+
+.skeleton-line.wide {
+  width: 60%;
+}
+
+.skeleton-line.narrow {
+  width: 35%;
+}
+
+.skeleton-amount {
+  width: 64px;
+  height: 12px;
+  border-radius: 6px;
+  flex: 0 0 auto;
+}
+
+.skeleton-circle,
+.skeleton-line,
+.skeleton-amount {
+  background: linear-gradient(90deg, var(--surface-2) 25%, rgba(255, 255, 255, 0.08) 37%, var(--surface-2) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-circle,
+  .skeleton-line,
+  .skeleton-amount {
+    animation: none;
+  }
+}

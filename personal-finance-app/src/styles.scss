@@ -1,37 +1,33 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
 
-$fin-red: (
-  0: #000000,
-  10: #410606,
-  20: #5c0d0d,
-  25: #6a1111,
-  30: #791515,
-  35: #8b1515,
-  40: #a81212,
-  50: #d62020,
-  60: #ff4b3e,
-  70: #ff8a72,
-  80: #ffb4a6,
-  90: #ffdad4,
-  95: #ffedea,
-  98: #fff8f7,
-  99: #fffbff,
-  100: #ffffff,
+/* Custom red. The tone ramps below define the theme's accent, while the
+   secondary/neutral/neutral-variant/error ramps are merged in from Material's
+   built-in red palette. Those extra ramps are required for `mat.theme()` to
+   emit valid `--mat-sys-*` tokens; without them every system token resolves to
+   an empty value and Material surfaces (menus, select panels, dialogs…) render
+   transparent. */
+$fin-red: map.merge(
+  mat.$red-palette,
+  (
+    0: #000000,
+    10: #410606,
+    20: #5c0d0d,
+    25: #6a1111,
+    30: #791515,
+    35: #8b1515,
+    40: #a81212,
+    50: #d62020,
+    60: #ff4b3e,
+    70: #ff8a72,
+    80: #ffb4a6,
+    90: #ffdad4,
+    95: #ffedea,
+    98: #fff8f7,
+    99: #fffbff,
+    100: #ffffff,
+  )
 );
-
-html {
-  color-scheme: dark;
-  @include mat.theme((
-    color: (
-      theme-type: dark,
-      primary: $fin-red,
-      tertiary: mat.$green-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}
 
 /* ============================================================
    Theme registry
@@ -57,7 +53,17 @@ $themes: (
       --bg: #121212,
       --surface: #1e1e1e,
       --surface-2: #2c2c2c,
-      --text-muted: #9e9e9e,
+      --text-muted: #b3b3b3,
+      --positive: #03dac6,
+      --positive-soft: rgba(3, 218, 198, 0.15),
+      --positive-border: rgba(3, 218, 198, 0.5),
+      --danger: #cf6679,
+      --danger-soft: rgba(207, 102, 121, 0.2),
+      --danger-border: rgba(207, 102, 121, 0.6),
+      --warning: #ffb74d,
+      --warning-soft: rgba(255, 183, 77, 0.16),
+      --info: #64b5f6,
+      --info-soft: rgba(100, 181, 246, 0.16),
     ),
   ),
   'blue': (
@@ -74,7 +80,17 @@ $themes: (
       --bg: #14161c,
       --surface: #1d2128,
       --surface-2: #2b313c,
-      --text-muted: #9aa2ae,
+      --text-muted: #b0b8c4,
+      --positive: #4db6ac,
+      --positive-soft: rgba(77, 182, 172, 0.16),
+      --positive-border: rgba(77, 182, 172, 0.5),
+      --danger: #e57373,
+      --danger-soft: rgba(229, 115, 115, 0.2),
+      --danger-border: rgba(229, 115, 115, 0.6),
+      --warning: #ffb74d,
+      --warning-soft: rgba(255, 183, 77, 0.16),
+      --info: #64b5f6,
+      --info-soft: rgba(100, 181, 246, 0.16),
     ),
   ),
   'cyan': (
@@ -91,7 +107,17 @@ $themes: (
       --bg: #121a1c,
       --surface: #1b2527,
       --surface-2: #293539,
-      --text-muted: #9aabaf,
+      --text-muted: #b2c2c6,
+      --positive: #66bb6a,
+      --positive-soft: rgba(102, 187, 106, 0.16),
+      --positive-border: rgba(102, 187, 106, 0.5),
+      --danger: #ef5350,
+      --danger-soft: rgba(239, 83, 80, 0.2),
+      --danger-border: rgba(239, 83, 80, 0.6),
+      --warning: #ffca28,
+      --warning-soft: rgba(255, 202, 40, 0.16),
+      --info: #4fc3f7,
+      --info-soft: rgba(79, 195, 247, 0.16),
     ),
   ),
   'violet': (
@@ -108,7 +134,17 @@ $themes: (
       --bg: #15121d,
       --surface: #1e1a2b,
       --surface-2: #2c2740,
-      --text-muted: #a29cb4,
+      --text-muted: #b8b2c9,
+      --positive: #81c784,
+      --positive-soft: rgba(129, 199, 132, 0.16),
+      --positive-border: rgba(129, 199, 132, 0.5),
+      --danger: #e57373,
+      --danger-soft: rgba(229, 115, 115, 0.2),
+      --danger-border: rgba(229, 115, 115, 0.6),
+      --warning: #ffd54f,
+      --warning-soft: rgba(255, 213, 79, 0.16),
+      --info: #64b5f6,
+      --info-soft: rgba(100, 181, 246, 0.16),
     ),
   ),
   'rose': (
@@ -125,7 +161,17 @@ $themes: (
       --bg: #1a1316,
       --surface: #231c21,
       --surface-2: #332a33,
-      --text-muted: #a89aa0,
+      --text-muted: #c0b2b8,
+      --positive: #81c784,
+      --positive-soft: rgba(129, 199, 132, 0.16),
+      --positive-border: rgba(129, 199, 132, 0.5),
+      --danger: #e57373,
+      --danger-soft: rgba(229, 115, 115, 0.2),
+      --danger-border: rgba(229, 115, 115, 0.6),
+      --warning: #ffcc80,
+      --warning-soft: rgba(255, 204, 128, 0.16),
+      --info: #f48fb1,
+      --info-soft: rgba(244, 143, 177, 0.16),
     ),
   ),
 );
@@ -141,13 +187,6 @@ html {
   @each $prop, $val in map.get(map.get($themes, 'red'), vars) {
     #{$prop}: #{$val};
   }
-  /* Semantic colors shared by every theme: money in / money out / destructive. */
-  --positive: #03dac6;
-  --positive-soft: rgba(3, 218, 198, 0.15);
-  --positive-border: rgba(3, 218, 198, 0.5);
-  --danger: #cf6679;
-  --danger-soft: rgba(207, 102, 121, 0.2);
-  --danger-border: rgba(207, 102, 121, 0.6);
 }
 
 /* Switched themes: apply by adding `theme-<id>` to <html>. */
@@ -184,21 +223,28 @@ body {
   box-sizing: border-box;
 }
 
+/* Visible keyboard focus ring for every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e1e1e;
+  background: var(--surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #424242;
+  background: var(--surface-2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: color-mix(in srgb, var(--text-muted) 45%, var(--surface-2));
 }
 
 /* ============================================================
@@ -287,6 +333,36 @@ $input-accent: var(--accent); /* bright brand color, readable on the app backgro
 /* Number input spinners keep some visibility */
 input[type='number']::-webkit-inner-spin-button {
   opacity: 0.5;
+}
+
+/* Native <select> dropdowns (dark): the closed control, the opened popup
+   and its options must all stay dark regardless of the OS color scheme. */
+select,
+select option,
+select optgroup {
+  color: #e8e8e8;
+}
+
+select {
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+}
+
+select optgroup,
+select option {
+  background: var(--surface-2);
+  color: #e8e8e8;
+}
+
+select option:checked {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+select:focus {
+  border-color: var(--accent);
+  outline: none;
 }
 
 /* Select dropdown panel (dark) */

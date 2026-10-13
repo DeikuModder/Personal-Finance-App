@@ -1,9 +1,8 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { Transaction } from '../../../core/models/transaction.model';
 import { TRANSACTION_REPOSITORY } from '../../../core/tokens/tokens';
 import { Repository } from '../../../core/repositories/repository.interface';
-import { toLocalDate } from '../../../core/utils/date.util';
 import { AccountService } from '../../accounts/services/account.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,36 +12,36 @@ export class TransactionService {
   private accountService = inject(AccountService);
   private transactions$ = new BehaviorSubject<Transaction[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((server) => {
-      const current = this.transactions$.value;
-      if (current.length === 0) {
-        this.transactions$.next(server);
-        return;
-      }
-      const serverIds = new Set(server.map((t) => t.id));
-      const localOnly = current.filter((t) => !serverIds.has(t.id));
-      this.transactions$.next([...localOnly, ...server]);
+    this.repo.getAll().subscribe({
+      next: (server) => {
+        const current = this.transactions$.value;
+        if (current.length === 0) {
+          this.transactions$.next(server);
+        } else {
+          const serverIds = new Set(server.map((t) => t.id));
+          const localOnly = current.filter((t) => !serverIds.has(t.id));
+          this.transactions$.next([...localOnly, ...server]);
+        }
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
     });
   }
 
   getTransactions(): Observable<Transaction[]> {
     this.init();
     return this.transactions$.asObservable();
-  }
-
-  getTransactionsByMonth(year: number, month: number): Observable<Transaction[]> {
-    return this.getTransactions().pipe(
-      map((transactions) =>
-        transactions.filter((t) => {
-          const date = toLocalDate(t.date);
-          return date.getFullYear() === year && date.getMonth() === month;
-        })
-      )
-    );
   }
 
   addTransaction(data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>): Observable<Transaction> {

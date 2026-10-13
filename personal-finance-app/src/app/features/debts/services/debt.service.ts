@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, map, BehaviorSubject } from 'rxjs';
 import { Debt } from '../../../core/models/debt.model';
 import { DEBT_REPOSITORY } from '../../../core/tokens/tokens';
@@ -11,11 +11,24 @@ export class DebtService {
   private repo = inject(DEBT_REPOSITORY) as Repository<Debt>;
   private debts$ = new BehaviorSubject<Debt[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((server) => this.debts$.next(server));
+    this.repo.getAll().subscribe({
+      next: (server) => {
+        this.debts$.next(server);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
+    });
   }
 
   getDebts(): Observable<Debt[]> {

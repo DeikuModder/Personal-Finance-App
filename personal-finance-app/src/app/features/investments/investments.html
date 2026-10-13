@@ -1,6 +1,13 @@
 <div class="investments-page">
   <app-page-header title="Investments" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="showForm.set(!showForm())" />
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
+  @if (saveError()) {
+    <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
+  }
+
   <app-section-help
     title="Investments — track your portfolio"
     [description]="'Keep track of everything you have invested — stocks, crypto, bonds, savings accounts, real estate and more. For each holding you record how many units you own and the current price, so the app can show your total portfolio value and an estimate of the income your investments produce each year and month.'"
@@ -43,5 +50,9 @@
     </div>
   }
 
-  <app-investment-list [investments]="investments()" (deleted)="onDelete($event)" />
+  @if (loading()) {
+    <app-list-skeleton />
+  } @else {
+    <app-investment-list [investments]="investments()" (deleted)="onDelete($event)" />
+  }
 </div>

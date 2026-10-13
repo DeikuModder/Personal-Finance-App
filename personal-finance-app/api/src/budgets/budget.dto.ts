@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpsertBudgetDto {
   @IsString()
@@ -15,6 +15,10 @@ export class UpsertBudgetDto {
 
   @IsInt()
   year: number;
+
+  @IsOptional()
+  @IsIn(['recurring', 'one-time'])
+  type?: 'recurring' | 'one-time';
 
   @IsOptional()
   @IsString()

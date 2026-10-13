@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,9 @@ import { MonthlyTrendComponent } from './components/monthly-trend/monthly-trend.
 import { NetWorthCardComponent } from './components/net-worth-card/net-worth-card.component';
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 import { toLocalDate } from '../../core/utils/date.util';
 
 @Component({
@@ -29,6 +32,8 @@ import { toLocalDate } from '../../core/utils/date.util';
     NetWorthCardComponent,
     SectionHelpComponent,
     PrivacyToggleComponent,
+    ErrorBannerComponent,
+    ListSkeletonComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
@@ -43,12 +48,32 @@ export class DashboardComponent implements OnInit {
   expenses = signal(0);
   recentTransactions = signal<Transaction[]>([]);
   allTransactions = signal<Transaction[]>([]);
+  periodTransactions = signal<Transaction[]>([]);
   accountsTotal = signal(0);
   investmentsValue = signal(0);
   investmentsIncome = signal(0);
 
   currentYear = signal(new Date().getFullYear());
   currentMonth = signal(new Date().getMonth());
+
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(
+    () =>
+      !this.dashboardService.ready() ||
+      !this.accountService.ready() ||
+      !this.investmentService.ready()
+  );
+  readonly loadError = computed(() => {
+    const err =
+      this.dashboardService.loadError() ??
+      this.accountService.loadError() ??
+      this.investmentService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
+
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
+  }
 
   ngOnInit(): void {
     this.dashboardService.getAllTransactions().subscribe((transactions) => {
@@ -79,6 +104,7 @@ export class DashboardComponent implements OnInit {
     this.income.set(this.dashboardService.getTotalIncome(periodTransactions));
     this.expenses.set(this.dashboardService.getTotalExpenses(periodTransactions));
     this.recentTransactions.set(this.dashboardService.getRecentTransactions(periodTransactions));
+    this.periodTransactions.set(periodTransactions);
   }
 
   prevMonth(): void {

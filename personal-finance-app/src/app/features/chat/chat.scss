@@ -1,3 +1,5 @@
+@use '../../shared/styles/gradients' as g;
+
 .chat-page {
   display: flex;
   flex-direction: column;
@@ -114,7 +116,7 @@
   }
 
   &.user .bubble {
-    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    @include g.accent-gradient;
     color: #ffffff;
     border-bottom-right-radius: 4px;
   }

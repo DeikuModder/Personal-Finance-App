@@ -1,0 +1,337 @@
+<div class="dev-page">
+  <header class="dev-header">
+    <div class="title">
+      <h1>Dev Console</h1>
+      <small>opencode-powered — edits the app repo live</small>
+    </div>
+    <div class="dev-header-actions">
+      <span class="health-pill" [class.bad]="!health()?.healthy" [title]="healthMsg()">
+        <span class="dot"></span>
+        {{ healthMsg() }}
+      </span>
+      <button mat-stroked-button (click)="refreshHealth()" title="Refresh server status">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" [disabled]="busy()" (click)="newSession()">
+        <mat-icon>add</mat-icon>
+        New session
+      </button>
+    </div>
+  </header>
+
+  <div class="dev-grid">
+    <!-- Sessions -->
+    <aside class="sessions">
+      <h2>Sessions</h2>
+      @if (sessions().length === 0) {
+        <p class="muted">No sessions yet.</p>
+      }
+      <ul>
+        @for (s of sessions(); track s.id) {
+          <li
+            class="session-item"
+            [class.active]="s.id === activeId()"
+            (click)="selectSession(s.id)"
+          >
+            <div class="session-info">
+              <span class="session-title">{{ sessionTitle(s) }}</span>
+              <small>{{ s.time.updated | date: 'MMM d, HH:mm' }}</small>
+            </div>
+            <button
+              class="session-delete"
+              title="Delete session"
+              (click)="$event.stopPropagation(); deleteSession(s.id)"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <!-- Chat -->
+    <section class="chat">
+      <div #thread class="thread">
+        @if (messages().length === 0 && !pendingPrompt()) {
+          <div class="empty-state">
+            <mat-icon>code</mat-icon>
+            <p>Ask me to build or fix anything in the app.</p>
+            <ul>
+              <li>I work on the repo this app is built from — changes land on disk.</li>
+              <li>Privileged actions (edits, builds, deploys) ask for your approval.</li>
+              <li>Say “run <code>docker compose up -d --build app</code>” to deploy your changes.</li>
+            </ul>
+          </div>
+        }
+
+        @for (message of messages(); track message.id) {
+          @for (part of message.parts; track part.id) {
+            @if (!part.hide) {
+              @switch (part.type) {
+                @case ('user') {
+                  <div class="row user">
+                    <div class="bubble-user">{{ part.text || part.metadata?.echo || '' }}</div>
+                  </div>
+                }
+                @case ('text') {
+                  <div class="row assistant">
+                    <div class="bubble-assistant">{{ part.text || '' }}</div>
+                  </div>
+                }
+                @case ('reasoning') {
+                  <div class="row reasoning">
+                    <pre>{{ part.text || '' }}</pre>
+                  </div>
+                }
+                @case ('agent') {
+                  <div class="row agent-chip">
+                    <mat-icon>memory</mat-icon>
+                    <span>{{ part.title || part.name || 'agent' }}</span>
+                  </div>
+                }
+                @case ('step') {
+                  <div class="step-divider"></div>
+                }
+                @case ('file') {
+                  <div class="file-chip">
+                    <mat-icon>description</mat-icon>
+                    <span>{{ part.metadata?.filePath || part.uri || part.name || '' }}</span>
+                  </div>
+                }
+                @case ('tool') {
+                  <div class="tool-card" [class.error]="partError(part)">
+                    <div class="tool-head">
+                      <mat-icon>construction</mat-icon>
+                      <span class="tool-name">{{ part.tool || 'tool' }}</span>
+                      @if (toolLabel(part) !== part.tool) {
+                        <span class="tool-title">{{ toolLabel(part) }}</span>
+                      }
+                      @if (!partDone(part) && !partError(part)) {
+                        <span class="tool-state running">running…</span>
+                      } @else if (partDone(part)) {
+                        <span class="tool-state done">done</span>
+                      } @else {
+                        <span class="tool-state err">error</span>
+                      }
+                    </div>
+                    @if (part.input) {
+                      <pre class="tool-io">{{ snippet(part.input) }}</pre>
+                    }
+                    @if (part.output && (partDone(part) || partError(part))) {
+                      <pre class="tool-io out">{{ snippet(part.output) }}</pre>
+                    }
+                  </div>
+                }
+                @case ('tool-invocation') {
+                  <div class="tool-card">
+                    <div class="tool-head">
+                      <mat-icon>widgets</mat-icon>
+                      <span class="tool-name">{{ part.tool || part.title || 'tool' }}</span>
+                    </div>
+                    @if (part.input) {
+                      <pre class="tool-io">{{ snippet(part.input) }}</pre>
+                    }
+                  </div>
+                }
+                @default {
+                  <div class="raw-part">
+                    <small>{{ part.type }}</small>
+                  </div>
+                }
+              }
+            }
+          }
+        }
+
+        @if (pendingPrompt(); as prompt) {
+          <div class="row user">
+            <div class="bubble-user">{{ prompt }}</div>
+          </div>
+        }
+
+        @if (running()) {
+          <div class="row assistant">
+            <div class="typing">…</div>
+          </div>
+        }
+
+        @for (b of badges(); track $index) {
+          <div class="badge-row {{ b.kind }}">
+            <mat-icon>{{ b.kind === 'error' ? 'error_outline' : 'info_outline' }}</mat-icon>
+            <span>{{ b.text }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="composer">
+        <textarea
+          class="composer-input"
+          [ngModel]="input()"
+          (ngModelChange)="input.set($event)"
+          rows="1"
+          maxlength="8000"
+          placeholder="Ask the coding agent… (Enter to send)"
+          (keydown)="onKeydown($event)"
+          [disabled]="!activeId()"
+        ></textarea>
+        <div class="composer-row">
+          <input
+            class="model-input"
+            [ngModel]="model()"
+            (ngModelChange)="model.set($event)"
+            placeholder="model override e.g. openrouter/…"
+            [disabled]="!activeId()"
+          />
+          <div class="composer-actions">
+            <button mat-mini-fab (click)="toggleSide()" class="side-toggle" title="Toggle panel">
+              <mat-icon>horizontal_split</mat-icon>
+            </button>
+            @if (running()) {
+              <button mat-mini-fab (click)="abort()" class="stop-btn" title="Stop">
+                <mat-icon>stop</mat-icon>
+              </button>
+            } @else {
+              <button
+                mat-mini-fab
+                class="send-btn"
+                (click)="send()"
+                [disabled]="!canSend"
+                title="Send"
+              >
+                <mat-icon>send</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Side panel -->
+    <aside class="side" [class.open]="sideOpen()">
+      <div class="side-tabs">
+        <button [class.active]="sideTab() === 'diffs'" (click)="openTab('diffs')">Diff</button>
+        <button [class.active]="sideTab() === 'todo'" (click)="openTab('todo')">Todo</button>
+        <button [class.active]="sideTab() === 'git'" (click)="openTab('git')">Git</button>
+        <button [class.active]="sideTab() === 'files'" (click)="openTab('files')">Files</button>
+        <button class="side-close" (click)="toggleSide()" title="Close panel">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="side-body">
+        @switch (sideTab()) {
+          @case ('diffs') {
+            @if (diffs().length === 0) {
+              <p class="muted">No diffs yet.</p>
+            }
+            @for (d of diffs(); track d.path) {
+              <div class="diff-file">
+                <div class="diff-head">
+                  <span class="diff-path">{{ d.newPath || d.path }}</span>
+                  <span class="diff-counts"
+                    ><i class="add">+{{ d.added }}</i> <i class="rm">-{{ d.removed }}</i></span
+                  >
+                </div>
+                @for (chunk of d.chunks; track $index) {
+                  <pre class="diff-block"><span
+                      >@for (line of diffLines(chunk); track $index) {<span
+                        class="diffln {{ line.cls }}">{{ line.text }}</span
+                      >}</span
+                    ></pre>
+                }
+              </div>
+            }
+          }
+          @case ('todo') {
+            @if (todos().length === 0) {
+              <p class="muted">No todo list for this session yet.</p>
+            }
+            <ul class="todo-list">
+              @for (t of todos(); track t.id) {
+                <li class="{{ todoStatus(t) }}">
+                  <mat-icon>
+                    {{ todoStatus(t) === 'done' ? 'check_circle' : todoStatus(t) === 'current' ? 'radio_button_checked' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                  <span>{{ t.content }}</span>
+                </li>
+              }
+            </ul>
+          }
+          @case ('git') {
+            @if (branch()) {
+              <p class="git-branch"><mat-icon>fork_right</mat-icon> {{ branch() }}</p>
+            }
+            @if (gitFiles().length === 0) {
+              <p class="muted">Working tree clean.</p>
+            }
+            <ul class="git-list">
+              @for (f of gitFiles(); track $index) {
+                <li>
+                  <span class="git-status {{ statusClass(f.status) }}">{{ statusMark(f.status) }}</span>
+                  <span class="git-path">{{ f.path }}</span>
+                </li>
+              }
+            </ul>
+          }
+          @case ('files') {
+            <div class="file-browser">
+              <div class="file-breadcrumb">
+                @for (c of fileCrumbs(); track $index) {
+                  <span>/ {{ c }}</span>
+                }
+              </div>
+              <div class="file-nav">
+                @if (filePath() !== '.') {
+                  <button class="file-dir" (click)="goUpDir()">
+                    <mat-icon>arrow_upward</mat-icon><span>..</span>
+                  </button>
+                }
+                @if (filesLoading()) {
+                  <p class="muted">loading…</p>
+                } @else {
+                  @for (n of fileNodes(); track n.path || n.fullPath) {
+                    <button class="file-dir" (click)="openFileNode(n)">
+                      <mat-icon>{{ n.type === 'directory' ? 'folder' : 'insert_drive_file' }}</mat-icon>
+                      <span>{{ n.name }}</span>
+                    </button>
+                  }
+                }
+              </div>
+              @if (fileOpen(); as fc) {
+                <div class="file-view">
+                  <div class="file-title">{{ fc.path }}</div>
+                  <pre>{{ fc.content }}</pre>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </aside>
+  </div>
+
+  <!-- Permission overlay -->
+  @if (permission(); as p) {
+    <div class="perm-overlay">
+      <div class="perm-card">
+        <div class="perm-head">
+          <mat-icon>shield</mat-icon>
+          <h3>Permission request</h3>
+        </div>
+        <p class="perm-type">{{ p.type }}</p>
+        @if (p.description) {
+          <p class="perm-desc">{{ p.description }}</p>
+        }
+        <div class="perm-actions">
+          <button mat-stroked-button (click)="respondPermission(true, false)">Allow once</button>
+          <button mat-stroked-button color="primary" (click)="respondPermission(true, true)">
+            Always allow
+          </button>
+          <button mat-stroked-button class="perm-deny" (click)="respondPermission(false, false)">
+            Deny
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

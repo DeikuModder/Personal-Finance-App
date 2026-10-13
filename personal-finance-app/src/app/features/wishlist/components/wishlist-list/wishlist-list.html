@@ -35,10 +35,10 @@
           } @else if (item.achievedAt) {
             <span class="achieved-chip">Got it {{ item.achievedAt }}</span>
           }
-          <button mat-icon-button class="edit-btn" (click)="onEdit(item, $event)">
+          <button mat-icon-button class="edit-btn" (click)="onEdit(item, $event)" aria-label="Edit wishlist item">
             <mat-icon>edit_outline</mat-icon>
           </button>
-          <button mat-icon-button class="delete-btn" (click)="onDelete(item.id, $event)">
+          <button mat-icon-button class="delete-btn" (click)="onDelete(item.id, $event)" aria-label="Delete wishlist item">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </div>

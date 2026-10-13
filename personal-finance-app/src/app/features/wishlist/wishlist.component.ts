@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { WishlistItem } from '../../core/models/wishlist.model';
@@ -10,18 +10,21 @@ import { SectionHelpComponent } from '../../shared/components/section-help/secti
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
 import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
 import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-wishlist',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, WishlistFormComponent, WishlistListComponent, SectionHelpComponent, PageHeaderComponent, ErrorBannerComponent, PrivacyToggleComponent],
+  imports: [MatIconModule, MatButtonModule, WishlistFormComponent, WishlistListComponent, SectionHelpComponent, PageHeaderComponent, ErrorBannerComponent, PrivacyToggleComponent, ListSkeletonComponent],
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.scss',
 })
 export class WishlistComponent {
   private wishlistService = inject(WishlistService);
   private effects = inject(EffectsService);
+  private confirm = inject(ConfirmService);
 
   items = signal<WishlistItem[]>([]);
   showForm = signal(false);
@@ -29,6 +32,12 @@ export class WishlistComponent {
   saveError = signal<string | null>(null);
   uploading = signal(false);
   uploadProgress = signal(0);
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(() => !this.wishlistService.ready());
+  readonly loadError = computed(() => {
+    const err = this.wishlistService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
 
   constructor() {
     this.wishlistService.getItems().subscribe((items) => {
@@ -82,10 +91,25 @@ export class WishlistComponent {
     this.editing.set(null);
   }
 
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
+  }
+
   onDelete(id: string): void {
-    this.wishlistService.deleteItem(id).subscribe({
-      error: (err) => this.saveError.set(toErrorMessage(err)),
-    });
+    const item = this.items().find((i) => i.id === id);
+    this.confirm
+      .confirm({
+        title: 'Delete wish',
+        message: `Delete "${item?.name ?? 'this item'}" from your wishlist? This cannot be undone.`,
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.wishlistService.deleteItem(id).subscribe({
+          error: (err) => this.saveError.set(toErrorMessage(err)),
+        });
+      });
   }
 
   onAchieved(item: WishlistItem): void {

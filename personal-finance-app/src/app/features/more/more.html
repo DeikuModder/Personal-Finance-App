@@ -1,7 +1,7 @@
 <div class="more-page">
   <h1>More</h1>
 
-  @for (group of groups; track group.label) {
+  @for (group of groups(); track group.label) {
     <h2 class="group-title">{{ group.label }}</h2>
     <div class="more-grid">
       @for (item of group.items; track item.route) {

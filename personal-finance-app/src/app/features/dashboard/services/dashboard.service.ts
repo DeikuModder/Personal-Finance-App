@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Transaction } from '../../../core/models/transaction.model';
 import { Account } from '../../../core/models/account.model';
@@ -11,10 +11,10 @@ export class DashboardService {
   private transactionService = inject(TransactionService);
   private accountService = inject(AccountService);
 
-  getCurrentMonthTransactions(): Observable<Transaction[]> {
-    const now = new Date();
-    return this.transactionService.getTransactionsByMonth(now.getFullYear(), now.getMonth());
-  }
+  readonly ready = computed(() => this.transactionService.ready() && this.accountService.ready());
+  readonly loadError = computed(
+    () => this.transactionService.loadError() ?? this.accountService.loadError()
+  );
 
   getAllTransactions(): Observable<Transaction[]> {
     return this.transactionService.getTransactions();

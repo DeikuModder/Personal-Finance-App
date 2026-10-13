@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Observable, map, BehaviorSubject } from 'rxjs';
 import { Goal } from '../../../core/models/goal.model';
 import { Account } from '../../../core/models/account.model';
@@ -13,11 +13,24 @@ export class GoalService {
   private repo = inject(GOAL_REPOSITORY) as Repository<Goal>;
   private goals$ = new BehaviorSubject<Goal[]>([]);
   private initialized = false;
+  private readySignal = signal(false);
+  private loadErrorSignal = signal<unknown | null>(null);
+  readonly ready = this.readySignal.asReadonly();
+  readonly loadError = this.loadErrorSignal.asReadonly();
 
   init(): void {
     if (this.initialized) return;
     this.initialized = true;
-    this.repo.getAll().subscribe((server) => this.goals$.next(server));
+    this.repo.getAll().subscribe({
+      next: (server) => {
+        this.goals$.next(server);
+        this.readySignal.set(true);
+      },
+      error: (err) => {
+        this.loadErrorSignal.set(err);
+        this.readySignal.set(true);
+      },
+    });
   }
 
   getGoals(): Observable<Goal[]> {

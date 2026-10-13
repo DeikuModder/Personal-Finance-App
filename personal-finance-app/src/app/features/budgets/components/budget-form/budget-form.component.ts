@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Budget } from '../../../../core/models/budget.model';
+import { Budget, BudgetType, RECURRING_BUDGET, ONE_TIME_BUDGET } from '../../../../core/models/budget.model';
 import { CategoryOption, NEW_CATEGORY_VALUE, CUSTOM_CATEGORY_ICONS } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
 
@@ -24,6 +24,9 @@ export class BudgetFormComponent {
 
   categories = signal<CategoryOption[]>([]);
   category = signal<string>('');
+  type = signal<BudgetType>(RECURRING_BUDGET);
+  readonly recurringType = RECURRING_BUDGET;
+  readonly oneTimeType = ONE_TIME_BUDGET;
   showNewCategory = signal(false);
   newCategoryLabel = signal('');
   newCategoryIcon = signal(CUSTOM_CATEGORY_ICONS[0]);
@@ -81,6 +84,7 @@ export class BudgetFormComponent {
       amount: 0,
       month: now.getMonth() + 1,
       year: now.getFullYear(),
+      type: this.type(),
     });
   }
 

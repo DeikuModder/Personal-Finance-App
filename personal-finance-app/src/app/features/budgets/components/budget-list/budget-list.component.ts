@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Budget, BudgetItem } from '../../../../core/models/budget.model';
+import { Budget, BudgetItem, ONE_TIME_BUDGET } from '../../../../core/models/budget.model';
 import { CurrencyFormatPipe } from '../../../../shared/pipes/currency-format.pipe';
 import { PrivacyMaskPipe } from '../../../../shared/pipes/privacy-mask.pipe';
 import { CategoryService } from '../../../../core/services/category.service';
@@ -46,6 +46,8 @@ export class BudgetListComponent {
   deleted = output<string>();
   itemAdded = output<NewBudgetItem>();
   itemDeleted = output<string>();
+
+  readonly oneTimeType = ONE_TIME_BUDGET;
 
   private itemForms = new Map<string, { name: string; price: number }>();
 

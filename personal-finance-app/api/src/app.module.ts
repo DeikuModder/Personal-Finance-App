@@ -15,6 +15,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { DebtsModule } from './debts/debts.module';
 import { GoalsModule } from './goals/goals.module';
 import { WishlistModule } from './wishlist/wishlist.module';
+import { CoderModule } from './coder/coder.module';
+import { SimulatorModule } from './simulator/simulator.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { WishlistModule } from './wishlist/wishlist.module';
     DebtsModule,
     GoalsModule,
     WishlistModule,
+    CoderModule,
+    SimulatorModule,
   ],
   providers: [
     {

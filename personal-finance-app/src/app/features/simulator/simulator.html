@@ -1,0 +1,296 @@
+<div class="simulator-page">
+  <app-section-help
+    title="Financial Simulator"
+    description="A Monte Carlo engine that replays your spending history thousands of times to show what your balances, savings and categories could look like — plus an AI assistant to read the scenario and answer 'what if' questions."
+    [howTo]="[
+      'Tune the sliders below to your assumptions (income, savings, inflation).',
+      'The engine samples realistic monthly variation from your own history.',
+      'Try: what if I save 5% more, or what if rent goes up.',
+    ]"
+  />
+
+  @if (loadingStats()) {
+    <div class="card muted-card">Loading your history…</div>
+  } @else if (!stats()) {
+    <div class="card muted-card">
+      Could not load simulation data. Make sure you are signed in.
+    </div>
+  } @else {
+    <div class="layout">
+      <!-- ============================ CONFIG PANEL ============================ -->
+      <section class="panel config">
+        <div class="panel-head">
+          <h2>Assumptions</h2>
+          <app-privacy-toggle section="transactions" />
+          @if (running()) {
+            <span class="run-indicator">
+              <mat-icon>av_timer</mat-icon> running
+            </span>
+          }
+        </div>
+
+        <div class="control">
+          <label>Forecast length</label>
+          <div class="slider-row">
+            <input type="range" min="1" max="36" step="1" [value]="horizon()"
+                   (input)="horizon.set(num($any($event.target).value)); scheduleRun()" />
+            <span class="slider-value">{{ horizon() }} months</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <label>Start month</label>
+          <input class="text-input" type="month" [value]="startMonth()"
+                 (change)="startMonth.set($any($event.target).value); scheduleRun()" />
+        </div>
+
+        <div class="control">
+          <label>Monthly income</label>
+          <div class="slider-row">
+            <input type="range" min="0" max="50000" step="100" [value]="income()"
+                   (input)="income.set(num($any($event.target).value)); scheduleRun()" />
+            <span class="slider-value">{{ usd(income()) }}</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <label>Income variability <small>(normal years: 5–10%)</small></label>
+          <div class="slider-row">
+            <input type="range" min="0.01" max="0.6" step="0.01" [value]="incomeVolatility()"
+                   (input)="incomeVolatility.set(num($any($event.target).value)); scheduleRun()" />
+            <span class="slider-value">{{ pct(incomeVolatility()) }}</span>
+          </div>
+        </div>
+
+        <div class="control">
+          <label>Saving mode</label>
+          <div class="segmented">
+            <button [class.active]="savingsMode() === 'rate'" (click)="savingsMode.set('rate'); scheduleRun()">% of income</button>
+            <button [class.active]="savingsMode() === 'fixed'" (click)="savingsMode.set('fixed'); scheduleRun()">Fixed</button>
+          </div>
+          @if (savingsMode() === 'rate') {
+            <div class="slider-row sub">
+              <input type="range" min="0" max="0.5" step="0.01" [value]="savingsRate()"
+                     (input)="savingsRate.set(num($any($event.target).value)); scheduleRun()" />
+              <span class="slider-value">{{ pct(savingsRate()) }}</span>
+            </div>
+          } @else {
+            <div class="slider-row sub">
+              <input type="range" min="0" max="10000" step="50" [value]="fixedSavings()"
+                     (input)="fixedSavings.set(num($any($event.target).value)); scheduleRun()" />
+              <span class="slider-value">{{ usd(fixedSavings()) }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="control">
+          <label>Inflation drift (annual %)</label>
+          <div class="slider-row">
+            <input type="range" min="-5" max="15" step="0.5" [value]="inflationDrift()"
+                   (input)="inflationDrift.set(num($any($event.target).value)); scheduleRun()" />
+            <span class="slider-value">{{ inflationDrift() > 0 ? '+' : '' }}{{ inflationDrift() }}%</span>
+          </div>
+        </div>
+
+        <div class="control toggles">
+          <span class="switch">
+            <input type="checkbox" [checked]="includeGoals()" (change)="includeGoals.set(!includeGoals()); scheduleRun()" />
+            Include goals
+          </span>
+          <span class="switch">
+            <input type="checkbox" [checked]="includeDebts()" (change)="includeDebts.set(!includeDebts()); scheduleRun()" />
+            Include debts
+          </span>
+          <span class="switch">
+            <input type="checkbox" [checked]="includeWishlist()" (change)="includeWishlist.set(!includeWishlist()); scheduleRun()" />
+            Include wishlist
+          </span>
+        </div>
+
+        <div class="control">
+          <div class="label-row">
+            <label>Category spending</label>
+            <button class="text-btn" (click)="resetMultipliers()">reset</button>
+          </div>
+          @for (c of topCategories(); track c.category) {
+            <div class="cat-row">
+              <span class="cat-name">{{ c.category }}</span>
+              <input type="range" class="cat-slider" min="0.3" max="3" step="0.05"
+                     [value]="multiplierOf(c.category)"
+                     (input)="setMultiplier(c.category, $event)" />
+              <span class="cat-val" [class.warn]="multiplierOf(c.category) > 1.5">{{ multiplierOf(c.category).toFixed(2) }}×</span>
+            </div>
+          }
+        </div>
+
+        <div class="control">
+          <div class="label-row">
+            <label>One-off events</label>
+            <button class="text-btn" (click)="addOneOff()">+ add</button>
+          </div>
+          @if (wishlistOptions().length) {
+            <div class="wish-quick">
+              <span>From wishlist:</span>
+              @for (w of wishlistOptions(); track w.name) {
+                <button class="chip" (click)="addWishlistOneOff(w.name, w.price)">{{ w.name }} · {{ usd(w.price) }}</button>
+              }
+            </div>
+          }
+          @for (o of oneOffs(); track $index) {
+            <div class="oneoff-row">
+              <select class="text-input slim" [value]="o.monthOffset"
+                      (change)="updateOneOff($index, { monthOffset: +$any($event.target).value })">
+                @for (m of monthsList(); track $index) {
+                  <option [value]="$index">{{ m }}</option>
+                }
+              </select>
+              <input class="text-input slim" type="text" placeholder="e.g. Car repair"
+                     [value]="o.category" (change)="updateOneOff($index, { category: $any($event.target).value })" />
+              <input class="text-input slim amount" type="number" min="0" step="50" placeholder="$"
+                     [value]="o.amount" (change)="updateOneOff($index, { amount: +$any($event.target).value })" />
+              <button class="icon-btn" (click)="removeOneOff($index)" aria-label="Remove">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          } @empty {
+            <p class="hint">Optional — add a one-time cost like a trip or car repair on a specific month.</p>
+          }
+        </div>
+
+        <!-- AI what-if -->
+        <div class="ai-box">
+          <div class="label-row">
+            <label>Ask the AI</label>
+            <mat-icon>auto_awesome</mat-icon>
+          </div>
+          <p class="hint">Describe a change in plain words, e.g. “increase my income by 20% and add a $1,000 vacation in August”.</p>
+          <textarea class="text-input" rows="3" placeholder="What if…"
+                    [value]="interpretText()"
+                    (input)="interpretText.set($any($event.target).value)"></textarea>
+          <div class="btn-row">
+            <button class="btn" (click)="interpret()" [disabled]="interpretLoading()">
+              {{ interpretLoading() ? 'Thinking…' : 'Interpret' }}
+            </button>
+            <button class="btn btn-ghost" (click)="generateReport()" [disabled]="reportLoading()">
+              {{ reportLoading() ? 'Writing…' : 'Run AI review' }}
+            </button>
+          </div>
+          @if (pendingInterpret(); as p) {
+            <div class="pending-preview">
+              <div class="label-row">
+                <strong>Proposed changes</strong>
+                <span class="spacer"></span>
+                <button class="text-btn" (click)="discardPending()">discard</button>
+                <button class="btn small" (click)="applyPending()">Apply</button>
+              </div>
+              @if (p.message) { <p class="hint">{{ p.message }}</p> }
+              @if (p.patch.monthlyIncome != null) { <p class="hint">Income → {{ usd(p.patch.monthlyIncome) }}</p> }
+              @if (p.patch.savingsRate != null) { <p class="hint">Savings rate → {{ pct(p.patch.savingsRate) }}</p> }
+              @if (p.patch.fixedSavings != null) { <p class="hint">Fixed savings → {{ usd(p.patch.fixedSavings) }}</p> }
+              @if (p.patch.inflationDrift != null) { <p class="hint">Inflation drift → {{ p.patch.inflationDrift }}%</p> }
+              @if (p.patch.categoryMultipliers && hasKeys(p.patch.categoryMultipliers)) {
+                <p class="hint">
+                  Categories: @for (pair of p.patch.categoryMultipliers | keyvalue; track pair.key) {
+                    <span>{{ pair.key }} ×{{ pair.value }}</span>
+                  }
+                </p>
+              }
+              @if (p.patch.oneOffs && p.patch.oneOffs.length) {
+                <p class="hint">New one-offs: {{ p.patch.oneOffs.length }}</p>
+              }
+              @if (p.clear.length) { <p class="hint">Reset: {{ p.clear.join(', ') }}</p> }
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- ============================ RESULTS ============================= -->
+      <section class="panel results">
+        <div class="panel-head">
+          <h2>Outlook</h2>
+          @if (running()) { <span class="run-indicator"><mat-icon>autorenew</mat-icon> simulating…</span> }
+        </div>
+
+        @if (!result()) {
+          <div class="empty-state">
+            <mat-icon>insights</mat-icon>
+            <p>Adjust the assumptions on the left to see a projection.</p>
+          </div>
+        } @else {
+          @let r = result()!;
+          <div class="summary-cards">
+            <div class="sum-card">
+              <span class="sum-label">Final balance (P50)</span>
+              <span class="sum-value">{{ usd(r.totals.finalBalanceP50) }}</span>
+              <span class="sum-sub">{{ usd(r.totals.savedP50) }} saved over {{ r.horizonMonths }} mo</span>
+            </div>
+            <div class="sum-card">
+              <span class="sum-label">Total spent</span>
+              <span class="sum-value">{{ usd(r.totals.spentP50) }}</span>
+              <span class="sum-sub">P25 {{ usd(r.totals.spentP25) }} · P75 {{ usd(r.totals.spentP75) }}</span>
+            </div>
+            <div class="sum-card" [class.danger]="r.negativeBalanceProbability > 5">
+              <span class="sum-label">Chance of shortfall</span>
+              <span class="sum-value">{{ pct(r.negativeBalanceProbability) }}</span>
+              <span class="sum-sub">any month balance &lt; $0</span>
+            </div>
+            @if (r.goalProbability != null) {
+              <div class="sum-card" [class.good]="r.goalProbability >= 70">
+                <span class="sum-label">Goal success</span>
+                <span class="sum-value">{{ pct(r.goalProbability) }}</span>
+                <span class="sum-sub">chance goals are funded</span>
+              </div>
+            }
+          </div>
+
+          <div class="chart-block">
+            <div class="chart-title">Balance projection</div>
+            <div echarts [options]="balanceChart()" class="chart chart-fan"></div>
+          </div>
+
+          <div class="chart-block">
+            <div class="chart-title">Monthly cash flow</div>
+            <div echarts [options]="spendChart()" class="chart chart-fan"></div>
+          </div>
+
+          <div class="chart-block">
+            <div class="chart-title">Where it goes</div>
+            <div echarts [options]="categoryChart()" class="chart chart-donut"></div>
+          </div>
+
+          @if (aiError()) {
+            <div class="ai-error"><mat-icon>error_outline</mat-icon>{{ aiError() }}</div>
+          }
+          @if (report(); as rep) {
+            <div class="ai-report">
+              <div class="label-row">
+                <strong>AI review</strong>
+                <button class="text-btn" (click)="generateReport()">
+                  <mat-icon>refresh</mat-icon> regenerate
+                </button>
+              </div>
+              <p>{{ rep.summary }}</p>
+              @if (rep.highlights.length) {
+                <ul class="report-list">
+                  @for (h of rep.highlights; track h) { <li class="hi">{{ h }}</li> }
+                </ul>
+              }
+              @if (rep.risks.length) {
+                <ul class="report-list">
+                  @for (h of rep.risks; track h) { <li class="risk">{{ h }}</li> }
+                </ul>
+              }
+              @if (rep.topLevers.length) {
+                <div class="levers">
+                  <strong>Biggest levers:</strong>
+                  @for (h of rep.topLevers; track h) { <span class="chip">{{ h }}</span> }
+                </div>
+              }
+            </div>
+          }
+          <p class="disclaimer">Simulation is probabilistic, not financial advice. Past performance does not guarantee future results.</p>
+        }
+      </section>
+    </div>
+  }
+</div>

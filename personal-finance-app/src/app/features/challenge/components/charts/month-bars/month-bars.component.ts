@@ -37,8 +37,10 @@ export class MonthBarsComponent {
   chartOptions = computed<EChartsOption>(() => {
     this.theme.current();
     const hide = this.privacy.hiddenFor('challenge');
-    const accent = cssVar('--accent');
-    const danger = cssVar('--danger');
+    // Theme colors come from the live CSS variables (styles.scss is the single
+    // source of truth). If unavailable, ECharts falls back to its default palette.
+    const accent = cssVar('--accent') || undefined;
+    const danger = cssVar('--danger') || undefined;
     const weeks = this.weeks();
     const labels = weeks.map((w) => w.label);
     const spent = weeks.map((w) => w.spent);
@@ -87,7 +89,7 @@ export class MonthBarsComponent {
           itemStyle: {
             borderRadius: [4, 4, 0, 0],
             color: (params: any) =>
-              params.value > caps[params.dataIndex] ? danger : accent,
+              (params.value > caps[params.dataIndex] ? danger : accent) as string,
           },
         },
         {

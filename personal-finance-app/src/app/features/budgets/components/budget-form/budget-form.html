@@ -36,6 +36,7 @@
             class="icon-cell"
             [class.selected]="newCategoryIcon() === icon"
             (click)="newCategoryIcon.set(icon)"
+            [attr.aria-label]="'Select icon ' + icon"
           >
             <mat-icon>{{ icon }}</mat-icon>
           </button>
@@ -55,6 +56,30 @@
       </div>
     </div>
   }
+
+  <span class="type-title">How often does this budget repeat?</span>
+  <div class="type-options">
+    <button
+      type="button"
+      class="type-option"
+      [class.active]="type() === recurringType"
+      (click)="type.set(recurringType)"
+    >
+      <mat-icon>repeat</mat-icon>
+      <span class="type-label">Monthly</span>
+      <span class="type-desc">Shows up every month until deleted</span>
+    </button>
+    <button
+      type="button"
+      class="type-option"
+      [class.active]="type() === oneTimeType"
+      (click)="type.set(oneTimeType)"
+    >
+      <mat-icon>event</mat-icon>
+      <span class="type-label">One time</span>
+      <span class="type-desc">Only for this month</span>
+    </button>
+  </div>
 
   <p class="form-hint">
     You will set up this budget by adding products to it — the total budget is the sum

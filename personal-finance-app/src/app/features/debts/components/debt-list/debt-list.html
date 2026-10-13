@@ -28,10 +28,10 @@
             @if (debt.status === 'active' && isReceivable(debt)) {
               <button mat-flat-button class="collect-btn" (click)="onCollected(debt, $event)">Collected</button>
             }
-            <button mat-icon-button class="edit-btn" (click)="onEdit(debt, $event)">
+            <button mat-icon-button class="edit-btn" (click)="onEdit(debt, $event)" aria-label="Edit debt">
               <mat-icon>edit_outline</mat-icon>
             </button>
-            <button mat-icon-button class="delete-btn" (click)="onDelete(debt.id, $event)">
+            <button mat-icon-button class="delete-btn" (click)="onDelete(debt.id, $event)" aria-label="Delete debt">
               <mat-icon>delete_outline</mat-icon>
             </button>
           </div>

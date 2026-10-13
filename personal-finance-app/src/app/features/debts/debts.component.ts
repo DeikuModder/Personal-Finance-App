@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,8 @@ import {
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
 import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
@@ -38,6 +40,7 @@ import { toErrorMessage } from '../../shared/utils/http-error.util';
     SectionHelpComponent,
     PageHeaderComponent,
     ErrorBannerComponent,
+    ListSkeletonComponent,
   ],
   templateUrl: './debts.html',
   styleUrl: './debts.scss',
@@ -47,12 +50,19 @@ export class DebtsComponent {
   private reminderService = inject(DebtReminderService);
   private transactionService = inject(TransactionService);
   private dialog = inject(MatDialog);
+  private confirm = inject(ConfirmService);
 
   debts = signal<Debt[]>([]);
   banner = signal<DebtReminder[]>([]);
   showForm = signal(false);
   editing = signal<Debt | null>(null);
   saveError = signal<string | null>(null);
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(() => !this.debtService.ready());
+  readonly loadError = computed(() => {
+    const err = this.debtService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
 
   constructor() {
     this.debtService.getDebts().subscribe((debts) => {
@@ -156,9 +166,20 @@ export class DebtsComponent {
   }
 
   onDelete(id: string): void {
-    this.debtService.deleteDebt(id).subscribe({
-      error: (err) => this.saveError.set(toErrorMessage(err)),
-    });
+    const debt = this.debts().find((d) => d.id === id);
+    this.confirm
+      .confirm({
+        title: 'Delete debt',
+        message: `Delete the debt with "${debt?.creditor ?? 'this party'}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.debtService.deleteDebt(id).subscribe({
+          error: (err) => this.saveError.set(toErrorMessage(err)),
+        });
+      });
   }
 
   onPayOff(debt: Debt): void {
@@ -217,5 +238,9 @@ export class DebtsComponent {
 
   dismissReminder(id: string): void {
     this.reminderService.dismiss(id);
+  }
+
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
   }
 }

@@ -1,17 +1,25 @@
 <div class="budgets-page">
   <app-page-header title="Budgets" [fabIcon]="showForm() ? 'close' : 'add'" (fabClicked)="showForm.set(!showForm())" />
 
+  @if (loadError()) {
+    <app-error-banner [message]="loadError()" (dismissed)="dismissLoadError()" />
+  }
+  @if (saveError()) {
+    <app-error-banner [message]="saveError()" (dismissed)="saveError.set(null)" />
+  }
+
   <span class="month-label">{{ currentMonth }}</span>
 
   <app-section-help
     title="Budgets — plan your spending"
-    [description]="'Budgets let you set a monthly spending limit per category (for example groceries, transport or entertainment). The app automatically compares what you have spent on those categories from your Expense transactions and shows a progress bar, so you always know whether you are on track or over.'"
+    [description]="'Budgets let you set a monthly spending limit per category (for example groceries, transport or entertainment). The app automatically compares what you have spent on those categories from your Expense transactions and shows a progress bar, so you always know whether you are on track or over. Monthly budgets carry over automatically to next month, so you only set them up once.'"
     [howTo]="[
-      'Tap the + button to add a budget for the current month: pick a category.',
+      'Tap the + button to add a budget: pick a category.',
+      'Choose how often it repeats — Monthly budgets carry over to every following month until you delete them, One time budgets apply only to the current month.',
       'Once created, add products to the budget by typing a name and price next to the Add button. The total budget is the sum of all product prices.',
       'The totals card shows your combined budget and how much you have spent so far this month.',
       'Each budget shows a progress bar — it turns red as you get close to or exceed the limit.',
-      'Budgets are per month. Add budgets again next month; delete any you no longer need with the trash icon.'
+      'Delete any budget you no longer need with the trash icon.'
     ]"
   />
 
@@ -47,5 +55,9 @@
     </div>
   }
 
-  <app-budget-list [budgets]="budgets()" (deleted)="onDelete($event)" (itemAdded)="onItemAdded($event)" (itemDeleted)="onItemDeleted($event)" />
+  @if (loading()) {
+    <app-list-skeleton />
+  } @else {
+    <app-budget-list [budgets]="budgets()" (deleted)="onDelete($event)" (itemAdded)="onItemAdded($event)" (itemDeleted)="onItemDeleted($event)" />
+  }
 </div>

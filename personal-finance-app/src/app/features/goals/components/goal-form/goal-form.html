@@ -24,7 +24,7 @@
   <span class="section-title">Pick an icon</span>
   <div class="icon-grid">
     @for (opt of customIcons; track opt) {
-      <button mat-icon-button class="icon-cell" [class.selected]="icon() === opt" (click)="icon.set(opt)">
+      <button mat-icon-button class="icon-cell" [class.selected]="icon() === opt" (click)="icon.set(opt)" [attr.aria-label]="'Select icon ' + opt">
         <mat-icon>{{ opt }}</mat-icon>
       </button>
     }

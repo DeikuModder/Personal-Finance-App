@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,10 @@ import { TransactionListComponent } from './components/transaction-list/transact
 import { SectionHelpComponent } from '../../shared/components/section-help/section-help';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/privacy-toggle.component';
+import { ConfirmService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
+import { ErrorBannerComponent } from '../../shared/components/error-banner/error-banner.component';
+import { ListSkeletonComponent } from '../../shared/components/list-skeleton/list-skeleton.component';
+import { toErrorMessage } from '../../shared/utils/http-error.util';
 
 @Component({
   selector: 'app-transactions',
@@ -28,6 +32,8 @@ import { PrivacyToggleComponent } from '../../shared/components/privacy-toggle/p
     SectionHelpComponent,
     PageHeaderComponent,
     PrivacyToggleComponent,
+    ErrorBannerComponent,
+    ListSkeletonComponent,
   ],
   templateUrl: './transactions.html',
   styleUrl: './transactions.scss',
@@ -36,6 +42,7 @@ export class TransactionsComponent {
   private transactionService = inject(TransactionService);
   private categoryService = inject(CategoryService);
   private router = inject(Router);
+  private confirm = inject(ConfirmService);
 
   allTransactions = signal<Transaction[]>([]);
   filteredTransactions = signal<Transaction[]>([]);
@@ -45,6 +52,12 @@ export class TransactionsComponent {
   monthFilter = signal<'all' | 'current' | 'last' | 'thisYear'>('current');
 
   categories = signal<CategoryOption[]>([]);
+  private loadErrorDismissed = signal(false);
+  readonly loading = computed(() => !this.transactionService.ready());
+  readonly loadError = computed(() => {
+    const err = this.transactionService.loadError();
+    return !this.loadErrorDismissed() && err ? toErrorMessage(err) : null;
+  });
 
   constructor() {
     this.categoryService.getAllOptions().subscribe((options) => {
@@ -99,13 +112,28 @@ export class TransactionsComponent {
   }
 
   onDelete(id: string): void {
-    this.transactionService.deleteTransaction(id).subscribe(() => {
-      this.applyFilters();
-    });
+    const transaction = this.allTransactions().find((t) => t.id === id);
+    this.confirm
+      .confirm({
+        title: 'Delete transaction',
+        message: `Delete "${transaction?.description || 'this transaction'}"? This cannot be undone.`,
+        confirmText: 'Delete',
+        destructive: true,
+      })
+      .subscribe((ok) => {
+        if (!ok) return;
+        this.transactionService.deleteTransaction(id).subscribe(() => {
+          this.applyFilters();
+        });
+      });
   }
 
   onEdit(id: string): void {
     this.router.navigate(['/transactions', id, 'edit']);
+  }
+
+  dismissLoadError(): void {
+    this.loadErrorDismissed.set(true);
   }
 
   goToAdd(): void {
